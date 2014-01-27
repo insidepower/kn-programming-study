@@ -1,0 +1,3 @@
+[submodule "cpptest"]
+	path = cpptest
+	url = git@github.com:insidepower/cpptest.git
