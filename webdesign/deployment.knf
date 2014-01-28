@@ -1,0 +1,45 @@
+[ Resource Planning ]
+[ --- start ---- ]
+Website Language
+HTML5
+CSS3
+Web Framework
+Python
+Web Server
+Apache
+CMS, Content Management System
+to avoid hand code
+E.g. Joomla
+Free and open-source content management framework
+use PHP and object oriented
+MySQL
+features such as page caching, RSS feeds, printable versions of pages, news flashes, blogs, polls, search, and support for language internationalization
+Over 6,000 free and commercial extensions
+estimated to be the second most used content management system (CMS) on the Internet after WordPress
+can be run on a LAMP stack
+[ ---  end  ---- ]
+
+[ Language ]
+PHP is a server-side scripting language
+Perl
+high-level, general-purpose, interpreted, dynamic programming languages
+borrow features from other programming languages including C, shell scripting (sh), AWK, and sed.
+Perl 5 gained widespread popularity in the late 1990s as a CGI scripting language, in part due to its parsing abilities.
+
+
+[ Vocabulary ]
+LAMP
+Linux, the operating system (i.e. not just the Linux kernel, but also glibc and some other essential components of an operating system);
+Apache HTTP Server, the web server;
+As of June 2013, Apache was estimated to serve 54.2% of all active websites and 53.3% of the top servers across all domains
+MySQL, MariaDB or MongoDB, the database management system;
+CGI scripting: PHP, Perl, or Python, the scripting languages (respectively programming languages) used for dynamic web pages and web development.
+CGI = Common Gateway Interface
+standard method used to generate dynamic content on web pages and web applications
+A plain HTML document that the Web daemon retrieves is static,which means it exists in a constant state: a text file that doesn't change.A CGI program, on the other hand, is executed in real-time, so that it can output dynamic information.
+CGI and JAVA are fundamentally different, and for most applications are NOT interchangable.
+CGI is a protocol for running programs on a WWW server.  Whilst JAVA can also be used for that, and even has a standardised API (the servlet, which is indeed an alternative to CGI), the major role of JAVA on the Web is for clientside programming (the applet).
+In certain instances the two may be combined in a single application: for example a JAVA applet to define a region of interest from a geographical map, together with a CGI script to process a query for the area defined.
+The common gateway interface (CGI) is a standard way for a Web server to pass a Web user's request to an application program and to receive data back to forward to the user. When the user requests a Web page (for example, by clicking on a highlighted word or entering a Web site address), the server sends back the requested page. However, when a user fills out a form on a Web page and sends it in, it usually needs to be processed by an application program. The Web server typically passes the form information to a small application program that processes the data and may send back a confirmation message. This method or convention for passing data back and forth between the server and the application is called the common gateway interface (CGI). It is part of the Web's Hypertext Transfer Protocol (HTTP).
+Example CGI: c, c++, java, perl, ASP
+

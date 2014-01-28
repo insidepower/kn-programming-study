@@ -1,0 +1,193 @@
+=== [ topic ][ setup ] ===
+[ --- start ---- ]
+sudo apt-get install tasksel
+sudo tasksel install lamp-server
+## note: only use tasksel to install, not to remove task (due to bugs)
+[ ---  end  ---- ]
+
+=== [ topic ][ apache2 ] ===
+[ --- start ---- ]
+- testing
+http://localhost
+- server file should be stored in /var/www
+- run, stop, test, restart
+$ sudo /usr/sbin/apache2ctl start
+$ sudo /usr/sbin/apache2ctl stop
+$ sudo /usr/sbin/apache2ctl configtest
+$ sudo /usr/sbin/apache2ctl restart
+or
+$ sudo /etc/init.d/apache2 restart
+or 
+$ sudo service apache2 restart
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ local dev-only ] ===
+[ --- start ---- ]
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ virtual host ] ===
+[ --- start ---- ]
+- Apache2 can have many sites, each with different configuration file
+- the config file stored in /etc/apache2/sites-available/
+- default config file is /etc/apche2/sites-available/default
+
+to create new site
+- $ echo '<b>Hello! It is working!</b>' > /home/user/public_html/index.html
+- cp /etc/apche2/sites-available/default /etc/apche2/sites-available/mysite.conf
+- Change the DocumentRoot to point to the new location. For example, /home/user/public_html/
+- Change the Directory directive, replace <Directory /var/www/> to <Directory /home/user/public_html/>
+- You can also set separate logs for each site. To do this, change the ErrorLog and CustomLog directives
+- deactivate the old site, and activate our new one
+( a2ensite (apache2enable site) and a2dissite (apache2disable site). )
+$ sudo a2dissite default && sudo a2ensite mysite
+$ sudo /etc/init.d/apache2 restart
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ problem ] ===
+[ --- start ---- ]
+{ problem: }
+Could not determine the server's fully qualified domain name
+{ solution: }
+sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.bak
+sudo vim /etc/apache2/apache2.conf
+add a new line
+ServerName localhost
+[ ---  end  ---- ]
+
+
+=== [ topic ][ php ] ===
+[ --- start ---- ]
+- php configuration file
+/usr/share/php5/php.ini-development
+/usr/share/php5/php.ini-production
+- to change configuration file to development
+/// backup
+sudo mv /etc/php5/apache2/php.ini /etc/php5/apache2/php.ini.bak
+/// create soft link
+sudo cp -s /usr/share/php5/php.ini-development /etc/php5/apache2/php.ini
+[ ---  end  ---- ]
+
+=== [ topic ][ php ][ status ] ===
+[ --- start ---- ]
+sudo sh -c 'echo "<?php phpinfo(); ?>" >> /var/www/testphp.php'
+http://localhost/testphp.php
+[ ---  end  ---- ]
+
+=== [ topic ][ php ][ admin ] ===
+[ --- start ---- ]
+- set current user to be the PHP pages administrator
+sudo vim /etc/apache2/envvars"
+Search both the strings starting by "APACHE_RUN_USER" and 
+"APACHE_RUN_GROUP", and change the names to the current username and 
+groupname you are using. Then you'll need to restart Apache. (look at the 
+next chapter concerning apache commands)
+
+Configuration options relating specifically to user websites (accessed 
+through localhost/~username) are in 
+/etc/apache2/mods-enabled/userdir.conf.
+[ ---  end  ---- ]
+
+=== [ topic ][ php ][ suPHP ] ===
+[ --- start ---- ]
+sudo apt-get install libapache2-mod-suphp
+sudo a2enmod suphp
+sudo nano /etc/apache2/mods-available/php5.conf
+make a new empty line at the top of the content, then add
+<Directory /usr/share>
+make a new empty line at the bottom of the content, then add
+</Directory>
+- set what documents to be allowed
+sudo nano /etc/suphp/suphp.conf
+- change docroot
+docroot=/var/www/:${HOME}/public_html
+sudo /etc/init.d/apache2 restart
+echo "<?php echo 'whoim = '.exec('/usr/bin/whoami');?>" | tee /home/user/public_html/whomi.php
+sudo find /home/user/public_html/ -type f -exec chmod 644 {} \;
+sudo find /home/user/public_html/ -type d -exec chmod 755 {} \;
+sudo chown user:group -R /home/user/public_html/
+[ ---  end  ---- ]
+
+=== [ topic ][ mysql ] ===
+[ --- start ---- ]
+- before can access database from other computer in the network, 
+  MySQL bind address need to be changed. possible security thread
+- skip this step if only access from same machine
+sudo vim /etc/mysql/my.cnf
+change bind-address = localhost to the server ip
+if server ip is dynamic, comment out this line
+/// if already set password for mysql root
+$ mysql -u root -p
+/// else create a new password
+$ mysql -u root
+/// remember to end statement with colon
+mysql > SET PASSWORD FOR 'root'@'localhost' = PASSWORD('yourpassword');
+
+Note: If you have already set a password for the mysql root, you will need to use:
+[ ---  end  ---- ]
+
+=== [ topic ][ mysql ][ diagnose ] ===
+[ --- start ---- ]
+mysql -u root -p
+mysql> show databases;
+[ ---  end  ---- ]
+
+=== [ topic ][ mysql ][ create ] ===
+[ --- start ---- ]
+CREATE DATABASE database1;
+/// For creating a new user with all privileges (use only for troubleshooting), at mysql prompt type:
+$ mysql> GRANT ALL PRIVILEGES ON *.* TO 'yourusername'@'localhost' IDENTIFIED BY 'yourpassword' WITH GRANT OPTION;
+/// creating a new user with fewer privileges
+$ mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON database1.* TO 'yourusername'@'localhost' IDENTIFIED BY 'yourpassword';
+/// localhost is the location which gets access to your database. You can 
+// change it to '%' (or to hostnames or ip addresses) to allow connections 
+// from every location (or only from specific locations) to the database.
+/// Note, that this can be a security problem and should only be used for testing purposes!
+[ ---  end  ---- ]
+
+=== [ topic ][ mysql ][ config ] ===
+[ --- start ---- ]
+Default options are read from the following files in the given order:
+/etc/my.cnf /etc/mysql/my.cnf /usr/etc/my.cnf ~/.my.cnf
+
+log files
+/var/log/mysql
+
+config setting about log
+log_error = /var/log/mysql/error.log
+
+library
+/var/lib/mysql
+- one directory for each database
+
+backup database
+- don't copy while the database is alive, as someone may writing to it
+- ideal solution is to lock the database, then copy, then unlock
+mysql -u root -p -e "FLUSH TABLES WITH READ LOCK;"
+mysql -u root -p -e "UNLOCK TABLES;"
+if running in a script:
+mysql -u root -p"password" -e "FLUSH TABLES WITH READ LOCK;"
+mysql -u root -p"password" -e "UNLOCK TABLES;"
+[ ---  end  ---- ]
+
+=== [ topic ][ phpMyAdmin ] ===
+[ --- start ---- ]
+- web interface to manage MySQL
+
+to install:
+	sudo apt-get install phpmyadmin
+
+to setup under apache:
+	sudo vim /etc/apache2/apache2.conf
+	sudo /etc/init.d/apache2 restart
+
+http://localhost/phpmyadmin/:
+[ ---  end  ---- ]
+
+=== [ topic ][ removal ] ===
+[ --- start ---- ]
+- simulate before actual removal
+- use -purge to remove debconf data as well
+apache2 apache2-mpm-prefork apache2-utils apache2.2-common libapache2-mod-php5 libapr1 libaprutil1 libdbd-mysql-perl libdbi-perl libnet-daemon-perl libplrpc-perl libpq5 mysql-client-5.5 mysql-common mysql-server mysql-server-5.5 php5-common php5-mysql
+
+mysql-client-core-5.5 mysql-server-core-5.5
+[ ---  end  ---- ]

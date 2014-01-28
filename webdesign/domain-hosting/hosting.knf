@@ -1,0 +1,144 @@
+=== [ topic ][ free hosting ] ===
+[ --- start ---- ]
+- Byethost
+1000 MB Space
+50 GB Monthly Bandwidth
+5 Addon domains
+5 Parked domains
+5 Sub domains
+24/7 support
+Script installer
+PHP 5
+MySQL
+FTP
+
+- 000webhost
+1500 MB Space
+100 GB Monthly Bandwidth
+5 Addon Domains
+5 Sub Domains
+5 Email Accounts
+PHP
+MySQL
+1 FTP Account
+99% Uptime Guarantee
+Script installer
+Custom Error Page
+
+- Biz.nf
+250 MB Space
+5000 MB Bandwidth
+1-Click wordpress installation
+Free wordpress plugins
+Free sub domain
+1 addon domain
+No-ads
+PHP 5
+MySQL
+FTP
+
+- Zymic
+6000 MB Space
+50 GB Monthly Bandwidth
+FTP
+MySQL
+No-ads
+Free community based support
+Sub domains
+Unlimited Accounts
+
+- 100webspace
+100 MB Space
+3000 MB Monthly Bandwidth
+1 Domain
+PHP
+MySQL
+FTP
+CGI-BIN / Perl
+3 Email Accounts
+Bandwidth usage stats
+24/7 Support
+
+- Freehostia
+250 MB Space
+6 GB Monthly Bandwidth
+PHP
+MySQL
+Perl Free Script Installer
+5 Domains Hosted
+15 Sub Domains
+50 Parked Domains
+Custom MX and A Records
+NS Records
+3 Email Accounts
+Email Auto-responder
+Custom Error Page
+1 FTP Account
+[ ---  end  ---- ]
+
+=== [ topic ][ oversea ] ===
+[ --- start ---- ]
+consideration:
+- web hosting services which offer unlimited domain hosting
+- hosting in malaysia may not be faster unless have a lot of images/videos
+- feature rich cpanel
+
+Fatcow Unlimited Domain Web Hosting Package -about RM168 per year
+Hostgator Unlimited Domain Web Hosting Package – use coupon code discount25forever to get 25% off for any hosting plan.
+[ ---  end  ---- ]
+
+[ --- start ---- ]
+reference:
+http://blog.winterwong.com/information-technology/cheap-web-hosting-malaysia-comparison.html
+[ ---  end  ---- ]
+
+=== [ topic ][ hosting plan ] ===
+[ --- start ---- ]
+Type of Hosting Account:
+- Free WordPress Hosting
+- Shared Hosting
+- Virtual Private Server (VPS)
+- Dedicated Hosting
+- Managed Hosting
+
+Free WordPress Hosting
+- have some sort of catch : put banner ads, text link in the footer ...
+
+Shared Hosting
+- common and quite cheap (under $10/mo)
+- take slightly longer to load
+- need to keep website updated and secure from malware and hackers
+- most effective solution for small biz and gets started with bloggers
+
+VPS:
+- offer more control over your website for development
+- scalability can be limited to the Server
+- high traffic load may cause server to run out of processing power, 
+  and website performance can drop
+- great for medium-sized biz, aspiring designers/developers, high traffic blog
+
+Dedicated server:
+- give complete control over all technical aspects of hosting
+- sys admin should know about the Nginx and Apches and know about object caching
+- sys admin also need to know MySQL database and to control security firewall and protocol
+[ ---  end  ---- ]
+
+=== [ topic ][ CMS ][ WordPress hosting ] ===
+[ --- start ---- ]
+- Hosting Requirement:
+	MySQL (>5.0.15) and PHP version (>5.2.4)
+- OS
+	Apache web-server and Linux
+- Disk Space and monthly transfer
+	estimate how many posts they can publish every monthly
+	how many videos and pictures they can put for each post
+	WP needs only 20MB
+- Security
+	SFTP and SSH
+- Price
+- Customer Service
+- Uptime > 99%
+- Scalability
+- Speed
+- Cpanel provided
+[ ---  end  ---- ]

@@ -1,0 +1,50 @@
+=== [ topic ][ login ] ===
+[ --- start ---- ]
+mysql -h host -u user -p
+/// from same machine then can omit host
+mysql -u root -p
+quit
+[ ---  end  ---- ]
+
+=== [ topic ][ switching table ] ===
+[ --- start ---- ]
+USE test;
+use wordpress;
+[ ---  end  ---- ]
+
+=== [ topic ][ permission ] ===
+[ --- start ---- ]
+mysql> GRANT ALL ON menagerie.* TO 'your_mysql_name'@'your_client_host';
+[ ---  end  ---- ]
+
+=== [ topic ][ basic ] ===
+[ --- start ---- ]
+- letter insensitive
+select user();
+[ ---  end  ---- ]
+
+=== [ topic ][ math ] ===
+[ --- start ---- ]
+SELECT SIN(PI()/4), (4+1)*5;
+[ ---  end  ---- ]
+
+=== [ topic ][ example ] ===
+[ --- start ---- ]
+SELECT * FROM my_table WHERE name = 'Smith AND age < 30;
+[ ---  end  ---- ]
+
+=== [ topic ][ tutorial ] ===
+[ --- start ---- ]
+mysql> GRANT ALL ON menagerie.* TO 'your_mysql_name'@'your_client_host';
+mysql> CREATE DATABASE menagerie;
+mysql> USE menagerie
+/// show all the tables contained in menagerie
+mysql> show tables;
+/// to login and use database menagerie
+shell> mysql -h host -u user -p menagerie
+[ ---  end  ---- ]
+
+=== [ topic ][ version ] ===
+[ --- start ---- ]
+SELECT VERSION(), CURRENT_DATE;
+[ ---  end  ---- ]

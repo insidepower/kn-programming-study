@@ -1,0 +1,147 @@
+=== [ topic ][ rules ] ===
+[ --- start ---- ]
+- New features should be based on HTML, CSS, DOM, and JavaScript
+- The need for external plugins (like Flash) should be reduced
+- Error handling should be easier than in previous versions
+- Scripting has to be replaced by more markup
+- HTML5 should be device-independent
+- The development process should be visible to the public
+[ ---  end  ---- ]
+
+=== [ topic ][ intro ] ===
+[ --- start ---- ]
+- evolution, most of HTML4 and XHTML elements still work
+- HTML5 is not trying to replace CSS3, Adobe Flash, Design
+- native audio & video control, without plugins
+- create mobile experiences, one code base for both desktop & phone
+- using offline application when not connected to internet
+[ ---  end  ---- ]
+
+=== [ topic ][ features ] ===
+[ --- start ---- ]
+Some of the most interesting new features in HTML5 are:
+	The <canvas> element for 2D drawing
+	The <video> and <audio> elements for media playback
+	Support for local storage
+	New content-specific elements, like <article>, <footer>, <header>, <nav>, <section>
+	New form controls, like calendar, date, time, email, url, search
+[ ---  end  ---- ]
+
+=== [ topic ][ new ] ===
+[ --- start ---- ]
+The New <canvas> Element
+Note: The links in the tables below point to our HTML 5 Reference. However, you will learn more about these new elements in this tutorial. 
+
+================================================================================
+Tag	Description
+================================================================================
+<canvas>	Defines graphic drawing using JavaScript
+--------------------------------------------------------------------------------
+
+New Media Elements
+================================================================================
+Tag	Description
+================================================================================
+<audio>  	Defines sound or music content
+<video>  	Defines video or movie content
+<source> 	Defines sources for <video> and <audio>
+<track>  	Defines tracks for <video> and <audio>
+<embed>  	Defines containers for external applications (like plug-ins)
+--------------------------------------------------------------------------------
+
+New Form Elements
+================================================================================
+Tag			Description
+================================================================================
+<datalist>	Defines pre-defined options for input controls
+<keygen>	Defines a key-pair generator field (for forms)
+<output>	Defines the result of a calculation
+--------------------------------------------------------------------------------
+
+New Semantic/Structural Elements
+================================================================================
+Tag			 Description
+================================================================================
+<header>     Defines a header for the document or a section
+<nav>        Defines navigation links in the document
+<section>    Defines a section in the document
+<article>    Defines an article in the document
+<aside>      Defines content aside from the page content
+<footer>     Defines a footer for the document or a section
+<details>    Defines additional details that the user can view or hide
+<summary>    Defines a visible heading for a <details> element
+<figure>     Defines self-contained content, like illustrations, diagrams, photos, code listings, etc.
+<figcaption> Defines a caption for a <figure> element
+<mark>       Defines marked or highlighted text
+<time>       Defines a date/time
+<bdi>        Defines a part of text that might be formatted in a different direction from other text outside it
+<wbr>        Defines a possible line-break
+<dialog>     Defines a dialog box or window
+<command>    Defines a command button that a user can invoke
+<meter>      Defines a scalar measurement within a known range (a gauge)
+<progress>   Defines the progress of a task
+<ruby>       Defines a ruby annotation (for East Asian typography)
+<rt>         Defines an explanation/pronunciation of characters (for East Asian typography)
+<rp>         Defines what to show in browsers that do not support ruby annotations
+--------------------------------------------------------------------------------
+[ ---  end  ---- ]
+
+=== [ topic ][ doctype ] ===
+[ --- start ---- ]
+<!DOCTYPE html>
+[ ---  end  ---- ]
+
+=== [ topic ][ minimum ] ===
+[ --- start ---- ]
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Title of the document</title>
+</head>
+
+<body>
+Content of the document......
+</body>
+
+</html>
+[ ---  end  ---- ]
+
+=== [ topic ][ video ] ===
+[ --- start ---- ]
+<!DOCTYPE html>
+<html>
+<body>
+
+<video width="320" height="240" controls autoplay>
+  <source src="movie.mp4" type="video/mp4">
+  <source src="movie.ogg" type="video/ogg">
+Your browser does not support the video tag.
+</video>
+
+</body>
+</html>
+[ ---  end  ---- ]
+
+=== [ topic ][ html4 ][ remove ] ===
+[ --- start ---- ]
+Removed Elements
+The following HTML 4.01 elements has been removed from HTML5:
+
+<acronym>
+<applet>
+<basefont>
+<big>
+<center>
+<dir>
+<font>
+<frame>
+<frameset>
+<noframes>
+<strike>
+<tt>
+[ ---  end  ---- ]
+
+=== [ topic ][ unsorted ] ===
+[ --- start ---- ]
+[ ---  end  ---- ]

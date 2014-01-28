@@ -1,0 +1,12 @@
+=== [ topic ][ setup ] ===
+[ --- start ---- ]
+sudo apt-get install wordpress
+sudo ln -s /usr/share/wordpress /var/www/wordpress
+sudo gzip -d /usr/share/doc/wordpress/examples/setup-mysql.gz
+/// uncompress and install ///
+/// create user wordpress and MySQL database localhost
+sudo bash /usr/share/doc/wordpress/examples/setup-mysql -n wordpress localhost
+/// if know the domain, then replace the localhost with the url
+sudo bash /usr/share/doc/wordpress/examples/setup-mysql -n wordpress_mydomain_org wordpress.mydomain.org
+http://localhost/wordpress
+[ ---  end  ---- ]
