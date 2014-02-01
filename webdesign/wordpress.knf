@@ -10,3 +10,16 @@ sudo bash /usr/share/doc/wordpress/examples/setup-mysql -n wordpress localhost
 sudo bash /usr/share/doc/wordpress/examples/setup-mysql -n wordpress_mydomain_org wordpress.mydomain.org
 http://localhost/wordpress
 [ ---  end  ---- ]
+
+=== [ topic ][ mysql ][ create database ] ===
+[ --- start ---- ]
+CREATE USER wordpressuser@localhost;
+SET PASSWORD FOR wordpressuser@localhost= PASSWORD("password");
+GRANT ALL PRIVILEGES ON wordpress.* TO wordpressuser@localhost IDENTIFIED BY 'password';
+flush privileges;
+[ ---  end  ---- ]
+
+=== [ topic ][ script ] ===
+[ --- start ---- ]
+mysql db_name < script.sql > output.tab
+[ ---  end  ---- ]

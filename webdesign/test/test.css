@@ -1,0 +1,65 @@
+body
+{
+    background-color: rgb(255, 255, 255);
+    background-image:url('gradient2.png');
+    background-repeat:repeat-x;
+}
+
+table, td, tr
+{
+    border: 1px solid grey;
+    padding: 10px;
+}
+
+table.reference, table.tecspec {
+    border-collapse: collapse;
+    width: 60%;
+}
+table, th, td, input, textarea {
+    font-size: 100%;
+}
+
+element.style {
+    width: 55%;
+}
+table.reference th {
+    background-color: #555555;
+    border: 1px solid #555555;
+    color: #FFFFFF;
+    padding: 3px;
+    text-align: left;
+    vertical-align: top;
+}
+table, th, td, input, textarea {
+    font-size: 100%;
+}
+
+table.reference tr:nth-child(odd)	{background-color:#F6F4F0;}
+table.reference tr:nth-child(even)	{background-color:#ffffff;}
+
+body, p, h1, h2, h3, h4, table, td, th, ul, ol, textarea, input {
+    font-family: verdana,helvetica,arial,sans-serif;
+}
+
+caption
+{
+    font-family:"Times New Roman", Times, serif;
+    font-style:italic;
+    font-size:12px;
+}
+
+ul.a {list-style-type:circle;}
+ul.b {list-style-type:square;}
+ol.c {list-style-type:upper-roman;}
+ol.d {list-style-type:lower-alpha;}
+ol.e {list-style-image:url('square.png');}
+
+#text-line-through
+{
+    text-decoration:line-through;
+}
+
+#text-overline
+{
+    text-decoration:overline;
+}

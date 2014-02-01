@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+</title>
+</head>
+<body>
+=== [ topic ][ basic ] ===
+[ --- start ---- ]
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Layout</title>
+</head>
+<body>
+</body>
+</html>
+[ ---  end  ---- ]
+
+=== [ topic ][ comment ] ===
+[ --- start ---- ]
+<!-- ... -->
+[ ---  end  ---- ]
+
+=== [ topic ][ pre ] ===
+[ --- start ---- ]
+- <pre> = pre-format
+- white space, tabs, new-line will be preserved and not ignored
+<pre>public class Hello {
+   public static void main(String[] args) {
+      System.out.println("Hello");
+   }
+}</pre>
+
+produces:
+
+public class Hello {
+   public static void main(String[] args) {
+      System.out.println("Hello");
+   }
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ p ] ===
+[ --- start ---- ]
+- paragraph
+
+<p>See   how the   white    spaces,
+      tabs  and
+    line-breaks    are   ignored  by  the
+                browser.</p>
+
+produces:
+See how the white spaces, tabs and line-breaks are ignored by the browser.
+[ ---  end  ---- ]
+
+=== [ topic ][ body ] ===
+[ --- start ---- ]
+- <body> </body>
+- attributes inside body are deprecated, and shall be controlled by css
+- reference attributes
+text="color": color of body text.
+bgcolor="color": background color.
+background="url": URL of an image to be used as the background.
+link="color": color of un-visited links.
+vlink="color": color of visited links.
+alink="color": color of active (clicked) links.
+[ ---  end  ---- ]
+
+=== [ topic ][ tooltip ] ===
+[ --- start ---- ]
+The title="tooltip-text" attribute is applicable to almost all of the HTML tags 
+(e.g., <p>, <h1></h1> to <h6></h6>, <img>).
+[ ---  end  ---- ]
+
+=== [ topic ][ list ][ unordered ] ===
+[ --- start ---- ]
+<ul>
+	<li> unordered list item1 </li>
+	<li> unordered list item2 </li>
+</ul>
+[ ---  end  ---- ]
+
+=== [ topic ][ list ][ ordered ] ===
+[ --- start ---- ]
+<ol>
+	<li> ordered list start with number 1. </li>
+		<ol>
+			<li> then continued with a. </li>
+			<li> then continued with b. </li>
+		</ol>
+	</li>
+	<li> then continue with number 2. </li>
+</ol>
+[ ---  end  ---- ]
+
+=== [ topic ][ list ][ definition ] ===
+[ --- start ---- ]
+<dl>
+	<dt>Abbr term</dt><dd> abbreviation definition </dd>
+	<dt>HTTP</dt><dd>HyperText Transfer Protocol</dd>
+</dl>
+[ ---  end  ---- ]
+
+=== [ topic ][ table ] ===
+<a id="anchorTable">
+[ --- start ---- ]
+- <thead>...</thead>, 
+- <tbody>...</tbody>, 
+- <tfoot>...</tfoot>: for table header, body, and footer.
+- <colgroup>...</colgroup> and 
+- <col>...</col>: for applying styles to column group and column respectively.
+- rowspan
+- colspan
+- deprecated tag:
+	- border="n" (specifies the width of borders, in pixels), 
+	- cellspacing="n" (specifies the spacing between cells, in pixels), 
+	- and cellpadding="n" (define the spacing between the content of the cell and its boundaries, in pixels)
+
+Example:
+<table>
+	<caption> Inventory List </caption>
+	<tr>
+		<th> Invetory </th>
+		<th> Quantity </th>
+	</tr>
+	<tr>
+		<td> Pencil </td>
+		<td> 30pcs </td>
+	</tr>
+	<tr>
+		<td> Rules </td>
+		<td> 5pcs </td>
+	</tr>
+</table>
+
+Example:
+<table>
+  <tr>
+    <td colspan="2" rowspan="2">11111</td>
+    <td>22222</td>
+  </tr>
+  <tr>
+    <td>33333</td>
+  </tr>
+  <tr>
+    <td>44444</td>
+    <td>55555</td>
+    <td>66666</td>
+  </tr>
+</table>
+
+Example:
+<table>
+  <!-- col group 1 spans 3 columns -->
+  <colgroup span="3" style="background-color:lightgrey"></colgroup>
+  <tr>
+    <td>Col 1 is in the group</td>
+    <td>Col 2 is in the group</td>
+    <td>Col 3 is in the group</td>
+    <td>Col 4 is NOT in the group</td>
+  </tr>
+  <tr>
+    <td>Col 1 is in the group</td>
+    <td>Col 2 is in the group</td>
+    <td>Col 3 is in the group</td>
+    <td>Col 4 is NOT in the group</td>
+  </tr>
+</table>
+
+Example:
+<table>
+  <!--  colgroup 1 consists of col 1 and col 2 -->
+  <colgroup>
+    <col style="background-color:lightyellow" />
+    <col style="background-color:white"  />
+  </colgroup>
+  <!--  colgroup 2 consists of col 3 and col 4 -->
+  <colgroup style="background-color:lightgrey" >
+    <col span="2" />
+  </colgroup>
+  <tr>
+    <td>Col 1 in the group 1</td>
+    <td>Col 2 in the group 1</td>
+    <td>Col 3 in the group 2</td>
+    <td>Col 4 in the group 2</td>
+  </tr>
+  <tr>
+    <td>Col 1 in the group 1</td>
+    <td>Col 2 in the group 1</td>
+    <td>Col 3 in the group 2</td>
+    <td>Col 4 in the group 2</td>
+  </tr>
+</table>
+[ ---  end  ---- ]
+
+=== [ topic ][ special characters ][ entity refereces ] ===
+[ --- start ---- ]
+- memorize the first five: " (&quot;), < (&lt;), > (&gt;), & (&amp;) and (&nbsp;).
+================================================================================
+Character				Entity Reference
+================================================================================
+"						&quot;
+<						&lt;
+>						&gt;
+&						&amp;
+non-breaking space		&nbsp;
+→ ⇒ ↔ ⇔					&rarr; &rArr; &harr; &hArr;
+° (degree)				&deg;
+© ® € ¢ ¥				&copy; &reg; &euro; &cent; &yen;
+˜						&tilde;
+× ± ∞					&times; &plusmn; &infin;
+π Π σ Σ ω Ω				&pi; &Pi; &sigma; &Sigma; &omega; &Omega;
+≥ ≤ ≡ ≈					&ge; &le; &equiv; &asymp;
+--------------------------------------------------------------------------------
+- to escape hr etc, use <xmp></xmp>
+<xmp id="snippet-container">
+<hr />
+<br />
+</xmp>
+[ ---  end  ---- ]
+
+=== [ topic ][ named anchor ] ===
+[ --- start ---- ]
+- <a name="xxx"> used in older html, <a id="xxx"> is more preferred now
+- id="anchorName" can be attached to any html tag (h1, p, ul...)
+<a id="anchorName"></a>
+<a href="#anchorName">Go to anchorName</a>
+<a href="#anchorTable">Go to Table</a>
+<a href="#snippet-container">Go to Xmp</a>
+[ ---  end  ---- ]
+
+=== [ topic ][ misc ] ===
+[ --- start ---- ]
+- standalone tag like <hr> can be closed with a matching tag, e.g. <hr></hr>
+< hr />: (standalone tag)
+	horizontal line
+
+< br />: (standalone tag)
+	break a line
+
+<img src="xxx.jpg">
+<img src="imageUrl"
+  alt="alternate-text-if-image-cannot-be-shown"
+  width="pixels|n%"
+  height="pixels|n%"
+  title="tooltip-text" />
+- image as hyperlink
+<a href="http://abc.com/">
+  <img src="logo.gif" alt="logo Image" width="30" height="20">
+</a>
+<a href="http://www.w3c.org">W3C Home Page</a>
+<a href="url" target="_blank"> opens the new page in a new blank tab </a>
+
+Logical-Style Tag	Meaning
+<strong>...</strong>	strong emphasis (bold)
+<em>...</em>	emphasis (italic)
+<code>...</code>	program code (fixed-width monospace font)
+<q>...</q>	quotation (enclosed in curly double quotes)
+<ins>...</ins>	inserted
+<del>...</del>	deleted
+<def>...</def>	definition (bold or bold-italic)
+<cite>...</cite>	citation (italic)
+<kbd>...</kbd>	Keyboard (fixed-width monospace font)
+<samp>...</samp>	sample text (fixed-width monospace font)
+<abbr>...</abbr>	abbreviation (dotted underline, with title as tool tip)
+<acronym>...</acronym>	acronym (dotted underline, with title as tool tip)
+<address>...</address>	address
+<var>...</var>	variable (fixed-width or italic)
+
+e.g.
+<p>Lorem <q>curly quoted</q>, consectetur adipisicing elit, 
+sed do <cite>citation</cite> incididunt ut labore et dolore magna aliqua. 
+Ut enim ad minim veniam, quis <samp>sample</samp> exercitation ullamco laboris nisi 
+ut <code>code</code> ex ea <kbd>keyboard</kbd> consequat. Duis aute irure dolor in 
+reprehenderit in <def>definition</def> velit esse cillum dolore eu fugiat nulla pariatur.
+Excepteur <ins>insert</ins> occaecat <del>delete</del> non proident,
+sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+Physical-style formatting: (now controlled via css) (reference only)
+<b>...</b>	bold
+<i>...</i>	italic
+<u>...</u>	underline
+<big>...</big>	large font
+<small>...</small>	small font
+<sup>...</sup>	superscript
+<sub>...</sub>	subscript
+<tt>...</tt>	teletype (typewriter, in monospace font)
+[ ---  end  ---- ]
+
+=== [ topic ][ url ] ===
+[ --- start ---- ]
+- URLs (Uniform Resource Locators)
+- made up of 4 parts
+Protocol://hostname:port/path_and_filename
+
+Protocol: e.g., http, ftp, mailto, file, telnet and others.
+Server hostname (e.g., www.w3c.org) or IP address (e.g., 127.0.0.1). The DNS (Domain Name Service) translates a domain name to an IP address.
+Port number (optional): the TCP port number on which the server application is running. The default TCP port number is used if port number is omitted from the URL. For example, default TCP port number 80 will be used for HTTP, 21 for FTP.
+Directory path and file name: Unix-style forward-slash '/' is used as the path separator (instead of Windows-style back-slash '\'). Directory path and filename of the URL are case sensitive.
+
+Examples:
+http://www.w3c.org/css/index.html
+http://www.mytest.com:8080/default.html
+ftp://ftp.faqs.org
+news:soc.culture.singapore
+mailto:help@zzz.com
+[ ---  end  ---- ]
+
+=== [ topic ][ absolute vs relative url ] ===
+[ --- start ---- ]
+- use relative url when referencing the documents in the same server for portability
+- relative url: ../home.html
+[ ---  end  ---- ]
+</body>

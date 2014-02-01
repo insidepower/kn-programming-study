@@ -1,0 +1,361 @@
+=== [ topic ][ why ] ===
+[ --- start ---- ]
+The original aim of HTML is to let the content providers concentrate on 
+the content of the document and leave the appearance to be handled by the 
+browsers. Authors markup the document content using markup tags (such as 
+<p>, <h1>, <ul>, <table>, <img>) to indicate its semantic meaning ("This 
+is a paragraph", "This is heading Level 1", "This is an unordered list", 
+"This is a table", "This is an image"). The browser then decides on how 
+to display or present the content on the browser's window.
+
+However, HTML has gone out of control in the early years. Tons of markup 
+tags and attributes were created for marking the appearance and the 
+display styles (e.g., <font>, <center>, align, color, bgcolor, link, 
+alink, vlink are concerned about the appearance in font, color and 
+alignment) rather than the meaning of the content. It is important to 
+separate the content and presentation of a document. Document contents 
+are provided by the document authors or content providers, whereas 
+presentation is usually done by a graphic designers.
+
+The W3C (World-Wide Web Consortium @ www.w3c.org) responded to the need 
+of separating document's content and presentation by introducing a style 
+sheet language called CSS (Cascading Style Sheet). CSS can be viewed as 
+an extension (or companion) of HTML, which allows web graphic designer to 
+spice up the web pages, so that the content providers can focus on the 
+document contents.
+[ ---  end  ---- ]
+
+=== [ topic ][ what ] ===
+[ --- start ---- ]
+- css = cascading style sheet
+- collection of style rules
+- style rules control the appearance of HTML elements
+    - font, color, alignment, margin, border, padding, positioning properties
+- cascading = multiple style rules can be applied to the same HTML element
+[ ---  end  ---- ]
+
+=== [ topic ][ syntax ] ===
+[ --- start ---- ]
+syntax:
+selector { declaration 1 ; declaration 2 ; }
+- each declaration ends with a semicolon ;
+
+Example:
+h1 { color:purple; font-size:10px; }
+[ ---  end  ---- ]
+
+=== [ topic ][ comment ] ===
+[ --- start ---- ]
+/* comment */
+[ ---  end  ---- ]
+
+=== [ topic ][ id ][ class ] ===
+[ --- start ---- ]
+- css also allows use of own selectors called "id" and "class"
+[ ---  end  ---- ]
+
+=== [ topic ][ id ] ===
+[ --- start ---- ]
+- id cannot starts with a number
+- in css, id is identified with "#"
+Example:
+#my-id { color: blue; font-size:10px; }
+
+<p id="my-id"> my text </p>
+[ ---  end  ---- ]
+
+=== [ topic ][ class ] ===
+[ --- start ---- ]
+- specify a style for a group of elements
+- in css, class is identified with a "."
+
+Example:
+.my-class { color: blue; font-size:10px; }
+[ ---  end  ---- ]
+
+=== [ topic ][ insert css ] ===
+[ --- start ---- ]
+- 3 ways to insert css: external, internal, inline style
+[ External ]
+- external: ideal when applied to many pages
+    * Each page link to the css using <link>
+    * css page should not contains any html tags
+    * saved with .css extension
+    * Example: 
+        <head>
+        <link rel="stylesheet" type="text/css" href="mystyle.css">
+        </head>
+
+[ Internal ]
+- used when a single page has unique style
+    * Example:
+        <head>
+        <style>
+        hr {color:sienna;}
+        p {margin-left:20px;}
+        body {background-image:url("images/back40.gif");}
+        </style>
+        </head>
+
+[ Inline ]
+- mix code and css
+- use sparingly!
+    * Example:
+        <p style="color:sienna;margin-left:20px;">This is a paragraph.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ multiple css ] ===
+[ --- start ---- ]
+- if a selector has been set by external and internal css, internal css 
+  will be used, only extra properties from external css will be taken.
+- Rules of multiple css (from least to most priority)
+1. Browser default
+2. External style sheet
+3. Internal style sheet (in the head section)
+4. Inline style (inside an HTML element)
+- Note: If the link to the external style sheet is placed after the 
+  internal style sheet in HTML <head>, the external style sheet will 
+  override the internal style sheet!
+
+Example:
+< External CSS>
+h3 { color:red; text-align:left; font-size:8pt; }
+
+< Internal CSS >
+h3 { text-align:right; font-size:20pt; }
+
+< RESULT >
+color:red; text-align:right; font-size:20pt; 
+[ ---  end  ---- ]
+
+=== [ topic ][ tips ] ===
+[ --- start ---- ]
+- don't add space between property value and unit 
+    * e.g. 
+      font-size:10 px;   /* wrong */
+      font-size:10px;    /* correct */
+[ ---  end  ---- ]
+
+=== [ topic ][ background ] ===
+[ --- start ---- ]
+- by default, background-image property repeats an image both horizontally and
+  vertically
+
+================================================================================
+Property                Description
+================================================================================
+background	            Sets all the background properties in one declaration
+background-color	    Sets the background color of an element
+background-image	    Sets the background image for an element
+background-repeat	    Sets how a background image will be repeated
+background-attachment	Sets whether a background image is fixed or scrolls with the rest of the page
+background-position	    Sets the starting position of a background image
+--------------------------------------------------------------------------------
+
+background-color:blue
+background-image:url('bg.gif')
+/* repeat horizontally */
+background-repeat:repeat-x;
+background-repeat:no-repeat;
+background-position:right top;
+/* 200px to the right edge is blanked */
+margin-right:200px;
+/* shorthand property */
+/* background-color background-image background-repeat background-attachment background-position */
+background:#ffffff url('img_tree.png') no-repeat right top;
+[ ---  end  ---- ]
+
+=== [ topic ][ color ] ===
+[ --- start ---- ]
+a HEX value - like "#ff0000"
+an RGB value - like "rgb(255,0,0)"
+a color name - like "red"
+[ ---  end  ---- ]
+
+=== [ topic ][ text ] ===
+[ --- start ---- ]
+text-align:center;
+text-align:right;
+text-align:justify;
+text-decoration:none;
+/* line on top of text */
+text-decoration:overline;
+/* strikethrough */
+text-decoration:line-through;
+text-decoration:underline;
+text-transfrorm:uppercase|lowercase|capitalize;
+text-indentation: 20px;
+[ ---  end  ---- ]
+
+=== [ topic ][ font ] ===
+[ --- start ---- ]
+- Tips: On computer screens, sans-serif fonts are considered easier to read 
+  than serif fonts
+- Tips: If the name of a font family is more than one word, it must be in 
+  quotation marks, like: "Times New Roman".
+- generic family = san-serif, serif, Monospace
+- font family = Arial, Times New Roman
+- san-serif fonts are without the protruding edges
+- san-serif: Arial, Verdana
+- serif: Times New Roman, Georgia
+- Monospace: Courier New, Lucida Console 
+  (All monospace characters have the same width)
+- font-family property should holds several font names as fallback,
+  if browser doesn't support the first, it tries the next font
+- start with desired font, then end with generic family
+- http://www.w3schools.com/cssref/css_websafe_fonts.asp
+- font-size are to be used with html tags h1-h6, and p for paragraphs
+- font size can be absolute or relative
+
+Property:
+/* oblique="leaning" (oblique is very similar to italic, but less supported) */
+font-style:italic|normal|oblique;
+font-size: 100%;
+font-size:12px;
+font-size:2.5em;
+font-size:1.875em;
+[ ---  end  ---- ]
+
+=== [ topic ][ links ] ===
+[ --- start ---- ]
+a:link {color:#FF0000;}          /* unvisited link  */ 
+a:visited {color:#00FF00;}       /* visited link    */ 
+a:hover {color:#FF00FF;}         /* mouse over link */ 
+a:active {color:#0000FF;}        /* when link is clicked  */ 
+text-decoration:none;            /* usually used to remove underline */
+a:active {background-color:#FF704D;}
+[ ---  end  ---- ]
+
+=== [ topic ][ list ] ===
+[ --- start ---- ]
+ul.a {list-style-type: circle;}
+ul.b {list-style-type: square;}
+ol.c {list-style-type: upper-roman;}
+ol.d {list-style-type: lower-alpha;}
+ul { list-style-image: url('mycircle.gif');}
+shorthand:
+list-style: square url("sqpurple.gif");
+shorthand order:
+list-style-type -> list-style-position -> list-style-image
+
+Example: cross-browser solution:
+ul
+{
+list-style-type: none;
+padding: 0px;
+margin: 0px;
+}
+ul li
+{
+background-image: url(sqpurple.gif);
+background-repeat: no-repeat;
+background-position: 0px 5px; 
+padding-left: 14px; 
+}
+
+Explained:
+For ul:
+    Set the list-style-type to none to remove the list item marker
+    Set both padding and margin to 0px (for cross-browser compatibility)
+For all li in ul:
+    Set the URL of the image, and show it only once (no-repeat)
+    Position the image where you want it (left 0px and down 5px)
+    Position the text in the list with padding-left
+[ ---  end  ---- ]
+
+=== [ topic ][ table ] ===
+[ --- start ---- ]
+border: 1px solid black;
+
+tr.d0 td {
+    background-color: #CC9999; color: black;
+}
+tr.d1 td {
+    background-color: #9999CC; color: black;
+}
+
+<table>
+<tr class="d0"><td>One</td><td>one</td></tr>
+<tr class="d1"><td>Two</td><td>two</td></tr>
+</table>
+[ ---  end  ---- ]
+
+=== [ topic ][ box model ] ===
+[ --- start ---- ]
+- Important: When you set the width and height properties of an element with 
+  CSS, you just set the width and height of the content area. To calculate the 
+  full size of an element, you must also add the padding, borders and margins.
+- Total element width = width + left padding + right padding + left border + 
+  right border + left margin + right margin
+- Total element height = height + top padding + bottom padding + top border + 
+  bottom border + top margin + bottom margin
+- IE8 and earlier versions of IE, included padding and border in the width property.
+  To fix this problem, add a <!DOCTYPE html> to the HTML page.
+Reference:
++------------------------------------------------------
+|<--margin-->|<--Border-->|<--Padding-->|<--Content-->
+
+Example:
+width:250px;
+padding:10px;
+border:5px solid gray;
+margin:10px;
+
+250px (width)
++ 20px (left + right padding)
++ 10px (left + right border)
++ 20px (left + right margin)
+= 300px
+
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ] ===
+[ --- start ---- ]
+tr:nth-child(even) {
+    background-color: #000000;
+}
+Note: No support in IE, even IE 8.
+[ ---  end  ---- ]
+
+=== [ topic ][ tips ] ===
+[ --- start ---- ]
+<!--
+	View source is a feature, not a bug. Thanks for your curiosity and
+	interest in participating!
+
+	Here are the submission guidelines for the new and improved csszengarden.com:
+
+	- CSS3? Of course! Prefix for ALL browsers where necessary.
+	- go responsive; test your layout at multiple screen sizes.
+	- your browser testing baseline: IE9+, recent Chrome/Firefox/Safari, and iOS/Android
+	- Graceful degradation is acceptable, and in fact highly encouraged.
+	- use classes for styling. Don't use ids.
+	- web fonts are cool, just make sure you have a license to share the files. Hosted 
+	  services that are applied via the CSS file (ie. Google Fonts) will work fine, but
+	  most that require custom HTML won't. TypeKit is supported, see the readme on this
+	  page for usage instructions: https://github.com/mezzoblue/csszengarden.com/
+
+	And a few tips on building your CSS file:
+
+	- use :first-child, :last-child and :nth-child to get at non-classed elements
+	- use ::before and ::after to create pseudo-elements for extra styling
+	- use multiple background images to apply as many as you need to any element
+	- use the Kellum Method for image replacement, if still needed. http://goo.gl/GXxdI
+	- don't rely on the extra divs at the bottom. Use ::before and ::after instead.
+-->
+[ ---  end  ---- ]
+
+=== [ topic ][ case ][ alternating row color ] ===
+[ --- start ---- ]
+tr:nth-child(even) {
+    background-color: #000000;
+}
+Note: No support in IE, even IE 8.
+
+Or, if you have jQuery:
+
+$(document).ready(function()
+{
+  $("tr:even").css("background-color", "#000000");
+});
+[ ---  end  ---- ]
