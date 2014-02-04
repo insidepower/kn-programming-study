@@ -1,0 +1,85 @@
+<!DOCTYPE html">
+<html>
+<head>
+<script src="/home/knxy/confignewpc/jquery/jquery-1.10.1.min.js">
+</script>
+<script>
+if (document.images) {
+    img1 = new Image();
+    img1.src = "plus3.jpg";
+    img2 = new Image();
+    img2.src = "minusb.jpg";
+}
+
+
+$(document).ready(function () {
+    $('.section').hide();
+    $('h2').click(function () {
+        $(this).toggleClass("open");
+        $(this).next().toggle();
+    }); //end toggle
+
+    $('#expandall').click(function () {
+        $('.section').show();
+        $('h2').addClass("open");
+    });
+
+    $('#collapseall').click(function () {
+        $('.section').hide();
+        $('h2').removeClass("open");
+    });
+
+}); //end ready
+</script>
+<style>
+h2 {
+    cursor: pointer;
+    color: #696;
+    font-weight:bold;
+    background-image:url('plus3.jpg');
+    background-repeat:no-repeat;
+    text-indent:23px;
+    background-position:4px 8px;
+}
+.open {
+    background-image:url('minusb.jpg');
+}
+</style>
+</head>
+<body>
+
+<button id="expandall">Expand All</button>
+<button id="collapseall">Collapse All</button>
+
+<h2>First section</h2>
+
+<div class="section">Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+    Quisque dolor magna, elementum sit amet adipiscing vitae, varius vitae 
+    erat. Phasellus sodales, arcu sit amet facilisis condimentum, magna mi 
+    fermentum augue, eget feugiat elit nulla euismod ligula. In mollis viverra 
+    magna sed placerat.</div>
+
+<h2>Second section</h2>
+
+<div class="section">this is another answe. Pellentesque varius, urna id 
+    laoreet luctus, est ante molestie ante, fringilla congue tortor orci non 
+    arcu. Nullam quis imperdiet justo. Pellentesque sit amet justo ipsum, vitae 
+    feugiat elit. Suspendisse tincidunt metus nec ante molestie mattis. 
+    Curabitur diam velit, posuere bibendum iaculis ac, egestas at lacus. Aenean 
+    hendrerit ullamcorper lorem sit amet euismod. In a metus lectus, non 
+    elementum neque.</div>
+ <h2>Third section</h2>
+
+<div class="section">this is another answe. Lorem ipsum dolor sit amet, 
+    consectetur adipiscing elit. Quisque dolor magna, elementum sit amet 
+    adipiscing vitae, varius vitae erat. Phasellus sodales, arcu sit amet 
+    facilisis condimentum, magna mi fermentum augue, eget feugiat elit nulla 
+    euismod ligula. In mollis viverra magna sed placerat. Pellentesque varius, 
+    urna id laoreet luctus, est ante molestie ante, fringilla congue tortor 
+    orci non arcu. Nullam quis imperdiet justo. Pellentesque sit amet justo 
+    ipsum, vitae feugiat elit. Suspendisse tincidunt metus nec ante molestie 
+    mattis. Curabitur diam velit, posuere bibendum iaculis ac, egestas at 
+    lacus. Aenean hendrerit ullamcorper lorem sit amet euismod. In a metus 
+    lectus, non elementum neque.</div>
+</body>
+</html>

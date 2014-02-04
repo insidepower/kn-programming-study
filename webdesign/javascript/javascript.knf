@@ -1,0 +1,146 @@
+=== [ topic ][  ] ===
+[ --- start ---- ]
+[ ---  end  ---- ]
+
+=== [ topic ][ write html ] ===
+[ --- start ---- ]
+document.write("<h1>This is a heading</h1>");
+document.write("<p>This is a paragraph</p>");
+[ ---  end  ---- ]
+
+=== [ topic ][ button ] ===
+[ --- start ---- ]
+<button type="button" onclick="alert('Welcome!')">Click Me!</button>
+[ ---  end  ---- ]
+
+=== [ topic ][ innerHTML ] ===
+[ --- start ---- ]
+Example 1:
+<script>
+function myFunction() {
+document.getElementById("demo").innerHTML = Date(); }
+</script>
+<p id="demo"></p>
+<button type="button" onclick="myFunction()">Try it</button>
+
+Example 2: Changing html content
+x=document.getElementById("demo")  //Find the element
+x.innerHTML="Hello JavaScript";    //Change the content
+[ ---  end  ---- ]
+
+=== [ topic ][ src ][ match ] ===
+[ --- start ---- ]
+<script>
+function changeImage() {
+    element=document.getElementById('myimage')
+        if (element.src.match("bulbon")) {
+            element.src="pic_bulboff.gif";
+        } else {
+            element.src="pic_bulbon.gif";
+        }
+}
+</script>
+
+<img id="myimage" onclick="changeImage()"
+src="pic_bulboff.gif" width="100" height="180">
+
+<p>Click the light bulb to turn on/off the light</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ style ] ===
+[ --- start ---- ]
+x=document.getElementById("demo") // Find the element
+x.style.color="#ff0000";          // Change the style
+[ ---  end  ---- ]
+
+=== [ topic ][ value ] ===
+[ --- start ---- ]
+function myFunction() {
+    var x=document.getElementById("demo").value;
+    if(x==""||isNaN(x))
+        {
+        alert("Not Numeric");
+        }
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ parameter ] ===
+[ --- start ---- ]
+Example 1:
+<button onclick="myFunction('Harry Potter','Wizard')">Try it</button>
+
+<script>
+function myFunction(name,job) {
+alert("Welcome " + name + ", the " + job); }
+</script>
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ return ] ===
+[ --- start ---- ]
+Example 1:
+function myFunction(a,b) {
+return a*b;
+}
+
+document.getElementById("demo").innerHTML=myFunction(4,3);
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ variable ] ===
+[ --- start ---- ]
+- local variable, declared using var
+   var local_var = 5;
+[ ---  end  ---- ]
+
+=== [ topic ][ sibling ] ===
+[ --- start ---- ]
+<div id="foo1"></div>
+<div id="foo2"></div>
+<div id="foo3"></div>
+
+document.getElementById('foo2').nextSibling; // #foo3
+document.getElementById('foo2').previousSibling; // #foo1
+[ ---  end  ---- ]
+
+=== [ topic ][ sibling ][ ignore whitespace] ===
+[ --- start ---- ]
+- in non-IE browsers, whitespace between elements in HTML is considered 
+a text node. You may want to ignore these whitespace nodes when considering 
+what the next sibling of each link is. The following will do that:
+
+var menu = document.getElementById('menu');
+var links = menu.getElementsByTagName('a');
+
+function isWhitespace(node) {
+    return node.nodeType == 3 && /^\s*$/.test(node.data);
+}
+
+// Iterate over the links
+for (var i = 0, len = links.length, link, next; i < len; ++i) {
+    link = links[i];
+    next = link.nextSibling;
+    if (next && isWhitespace(next)) {
+        next = next.nextSibling;
+    }
+    if (next && next.nodeName == "DIV") {
+        alert("Next sibling is DIV! " + link.innerHTML);
+    }
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ mouseover ] ===
+[ --- start ---- ]
+Example 1:
+var lastID = null;
+
+var handleMouseover = function (e) {
+    var target = e.target || e.srcElement;
+    lastID = target.id;
+};
+
+if (document.addEventListener) {
+    document.addEventListener('mouseover', handleMouseover, false);
+}
+else {
+    document.attachEvent('onmouseover', handleMouseover);
+}
+[ ---  end  ---- ]

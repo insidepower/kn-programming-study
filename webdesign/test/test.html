@@ -3,6 +3,23 @@
 <head>
     <title> Playing with CSS and HTML property </title>
     <link rel="stylesheet" type="text/css" href="test.css">
+    <script>
+    function removeElement() {
+        document.getElementById("imgbox1").style.display="none"; }
+    function changeVisibility() {
+        document.getElementById("imgbox2").style.visibility="hidden"; }
+    function resetElement() {
+        document.getElementById("imgbox1").style.display="block";
+        document.getElementById("imgbox2").style.visibility="visible";
+    }
+    function ShowHideSection(my_id){
+        prev_id=document.getElementById(my_id).previousSibling.previousSibling;
+        className=prev_id.className;
+alert("myid="+my_id+"; nodeName:"+className);
+        /* alert("myid="+my_id+"; nodeName:"+prev_id.nodeName); */
+    }
+    </script>
+
 </head>
 <body>
 <table>
@@ -132,6 +149,58 @@
     </tr>
 </table>
 
+<hr>
+
+<table style="width:50%">
+    <caption>
+    </caption>
+    <tr>
+        <td id="text1">
+            <div class="example">
+                <h2 class="example"> Example </h2>
+                <div class="example_code notranslate">
+                    <pre>
+The border-color property is used to set the color of the border. The color can be set by:
+
+name - specify a color name, like "red"
+RGB - specify a RGB value, like "rgb(255,0,0)"
+Hex - specify a hex value, like "#ff0000"
+    </pre>
+                </div>
+        </td>
+    </tr>
+</table>
+
+<!-- [ transparet_start ] -->
+<hr>
+<h2> Transparent box </h2>
+<div class="background">
+<div class="transparentbox">
+    <p> 
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+</p>
+</div>
+</div>
+<!-- [ transparet_end ] -->
+<!-- [ visibility_start ] -->
+<hr>
+<h2> Visibility </hr>
+<div class="section">
+<img id="imgbox1" src="sunset.jpg" onclick="removeElement()">
+<img id="imgbox2" src="sunset.jpg" onclick="changeVisibility()">
+<img id="imgbox3" src="sunset.jpg" onclick="resetElement()">
+</div>
+<button id="button" type="button" onclick="ShowHideSection(this.id)"> Show </button>
+<!-- [ visibility_end ] -->
+
+<!-- [ transparet_start ] -->
+<hr>
+<!-- [ transparet_end ] -->
 <table>
     <caption>
     </caption>

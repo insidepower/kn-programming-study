@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<title>Example of 100% width and height</title>
+<style>
+html, body { height: 100%; width: 100%; margin: 0; background: blue; }
+div { height: 100%; width: 100%; background: red; }
+div.page { height: 100%; }
+img{ 
+    padding:0; border:0; margin:0; 
+    opacity:0.7; 
+    /* For IE8 and earlier */
+    filter:alpha(opacity=70); }
+
+img:hover {
+    opacity:1.0;
+    /* for ie8 and earlier */
+    filter:alpha(opacity=100);
+}
+</style>
+<body>
+    <img src="square.png" style="width:100%">
+</body>
+</html>

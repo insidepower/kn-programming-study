@@ -172,6 +172,19 @@ an RGB value - like "rgb(255,0,0)"
 a color name - like "red"
 [ ---  end  ---- ]
 
+=== [ topic ][ gradient ] ===
+[ --- start ---- ]
+div.example {
+	width:auto;color:#000000;
+	background-color: #000000;margin:0px;padding:5px;border:1px solid #d4d4d4;
+	background-image: linear-gradient( #FFFFFF , #463655 1000px);
+}
+
+div.example_code {
+	width:auto;background-color:#ffffff;padding:5px;border:1px solid #d4d4d4;font-size:14px;font-family:"courier new";
+}
+[ ---  end  ---- ]
+
 === [ topic ][ text ] ===
 [ --- start ---- ]
 text-align:center;
@@ -309,12 +322,238 @@ margin:10px;
 
 [ ---  end  ---- ]
 
+=== [ topic ][ box model ][ border ] ===
+[ --- start ---- ]
+- using border-color alone does not work, border-style must be set first 
+- using border-width alone does not work, border-style must be set first 
+- no border appear to be same as hidden?
+- shorthand: { border-width; border-style (required); border-color; }
+  border:5px solid red;
+- border-width:medium;
+  border-width:1px;
+- diffent sides can use different border (top, side)
+
+Example 1:
+  shorthand: border-style:dotted solid;
+p {
+border-top-style:dotted;
+border-right-style:solid;
+border-bottom-style:dotted;
+border-left-style:solid;
+}
+
+Example 2:
+  border-style:dotted solid double dashed; ==  (top, right, bottom, left)
+  { top border is dotted    right border is solid
+    bottom border is double left border is dashed }
+
+Example 3:
+border-style:dotted solid double; { top, right/left, bottom }
+{ top border is dotted
+right and left borders are solid
+bottom border is double }
+
+Example:
+p.none {border-style:none;}
+p.dotted {border-style:dotted;}
+p.dashed {border-style:dashed;}
+p.solid {border-style:solid;}
+p.double {border-style:double;}
+p.groove {border-style:groove;}
+p.ridge {border-style:ridge; border-color:rgb(152, 191, 33);}
+p.inset {border-style:inset;}
+p.outset {border-style:outset;}
+p.hidden {border-style:hidden;}
+
+<p class="none">No border.</p>
+<p class="dotted">A dotted border.</p>
+<p class="dashed">A dashed border.</p>
+<p class="solid">A solid border.</p>
+<p class="double">A double border.</p>
+<p class="groove">A groove border.</p>
+<p class="ridge">A ridge border.</p>
+<p class="inset">An inset border.</p>
+<p class="outset">An outset border.</p>
+<p class="hidden">A hidden border.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ box model ][ outline ] ===
+[ --- start ---- ]
+- An outline is a line that is drawn around elements (outside the borders)
+Reference:
++------------------------------------------------------
+|<--margin-->|<-- Outline -->|<--Border-->|<--Padding-->|<--Content-->
+[ ---  end  ---- ]
+
+=== [ topic ][ box model ][ margin ] ===
+[ --- start ---- ]
+- margin is transparent, doesn't have background color
+- value: auto, length(px, pt, cm,...), %, inherit
+- shorthand:
+margin: top, right, bottom, left;
+margin: top, right/left, bottom;
+margin: top/bottom, right/left;
+[ ---  end  ---- ]
+
+<<< [ topic ][ css advanced ] >>>
+
+=== [ topic ][ css advanced ][ grouping ][ nesting ] ===
+[ --- start ---- ]
+- grouping selectors with same style
+h1 { color: yellow; }
+p { color: yellow; }
+become
+h1, p { color: yellow; }
+
+- nesting
+Example:
+p { color:blue; text-align:center; }
+.marked { background-color:yellow; }
+.marked p { color:grey; }
+
+<p>This paragraph has blue text, and is center aligned.</p>
+<div class="marked"> This isn't a paragraph, therefore has no blue text nor 
+alignment.  </div>
+
+<div class="marked"> <p>p elements inside a "marked" classed element keeps the 
+alignment style, but has a different text color.</p> </div>
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ dimension ] ===
+[ --- start ---- ]
+- when a % is assigned to a property, its parents need to have explicit height
+  e.g. to set a page class inside div
+html, body { height: 100%; width: 100%; margin: 0; }
+div { height: 100%; width: 100%; background: red; }
+div.page { height: 100%; }
+- height:{auto, length, %, inherit}
+- min-height
+- max-height
+- width
+- min-width
+- max-width
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ display ][ visibility ] ===
+[ --- start ---- ]
+- when visibility is set to hidden, the space of the element is reserved
+visibility:hidden;
+h1.hidden {display:none;}
+
+Example 1:
+<script>
+function removeElement() {
+    document.getElementById("imgbox1").style.display="none"; }
+function changeVisibility() {
+    document.getElementById("imgbox2").style.visibility="hidden"; }
+function resetElement() {
+    document.getElementById("imgbox1").style.display="block";
+    document.getElementById("imgbox2").style.visibility="visible";
+}
+</script>
+
+<div style="width:394px;height:150px;margin-left:auto;margin-right:auto;text-align:left;border:1px solid gray;">
+<div class="imgbox" id="imgbox1" style="display: block;">Box 1<br>
+<img class="thumbnail" src="sunset.jpg" alt="Klematis"><br>
+<input class="box" type="button" onclick="removeElement()" value="Remove">
+</div>
+<div class="imgbox" id="imgbox2" style="visibility: visible;">Box 2<br>
+<img class="thumbnail" src="sunset.jpg" alt="Klematis">
+<input class="box" type="button" onclick="changeVisibility()" value="Hide">
+</div>
+<div class="imgbox">Box 3<br>
+<img class="thumbnail" src="sunset.jpg" alt="Klematis">
+<input class="box" type="button" onclick="resetElement()" value="Reset All">
+</div>
+</div>
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ display ] ===
+[ --- start ---- ]
+- block elements takes full width avaiable and has line break b4/after its
+- Example of block elements, <h1>, <p>, <div>
+
+- inline elements only takes up as much width, no line break
+- Example: <span>, <a>
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ opacity ] ===
+[ --- start ---- ]
+Example 1:
+img { opacity:0.4;
+filter:alpha(opacity=40); /* For IE8 and earlier */ }
+
+img:hover { opacity:1.0;
+filter:alpha(opacity=100); /* For IE8 and earlier */ }
+
+Example 2:
+div.background {
+    width: 800px;
+    height: 300px;
+    /* background: blue; */
+    background: url("sunset.jpg") repeat;
+    border: 2px solid black;
+}
+
+div.transparentbox {
+    margin: 30px 50px;
+    background-color: white;
+    border: 1px solid black;
+    opacity:0.6;
+    /* for ie8 and earlier */
+    filter:alpha(opacity=60);
+}
+
+div.transparentbox p {
+    margin: 30px 40px;
+    font-weight: bold;
+}
+
+<div class="background">
+<div class="transparentbox">
+    <p> 
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+    Text inside the transparent box, and it looks nice.
+</p>
+</div>
+</div>
+
+
+[ ---  end  ---- ]
+
 === [ topic ][ selector ] ===
 [ --- start ---- ]
+Example 1:
 tr:nth-child(even) {
     background-color: #000000;
 }
 Note: No support in IE, even IE 8.
+
+Example 2:
+<div class="postinner">
+    <article itemtype="http://schema.org/Article" itemscope="" role="article">
+        <div itemprop="headline">
+            <h1 class="pagetitle">Hello World!</h1>
+        </div>
+    </article>
+</div>
+
+div[itemprop="headline"] h1 { color: yellow; }
+[ ---  end  ---- ]
+
+=== [ topic ][ gradient ] ===
+[ --- start ---- ]
+[ ---  end  ---- ]
+
+=== [ topic ][ reference ] ===
+[ --- start ---- ]
+shorthand : color, style, width
+width: { thin medium thick}
+style: { none dotted dashed solid double groove ridge inset outset inherit}
 [ ---  end  ---- ]
 
 === [ topic ][ tips ] ===
@@ -358,4 +597,10 @@ $(document).ready(function()
 {
   $("tr:even").css("background-color", "#000000");
 });
+[ ---  end  ---- ]
+
+=== [ topic ][ to know ] ===
+[ --- start ---- ]
+-webkit-margin-end
+-itemprop
 [ ---  end  ---- ]

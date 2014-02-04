@@ -63,3 +63,43 @@ ol.e {list-style-image:url('square.png');}
 {
     text-decoration:overline;
 }
+
+div.example {
+	width:auto;
+    color:#000000;
+	background-color: #000000;margin:0px;padding:5px;border:1px solid #d4d4d4;
+	background-image: linear-gradient( #FFFFFF , #463655 1000px);
+}
+
+div.example_code {
+	width:auto;background-color:#ffffff;padding:5px;border:1px solid #d4d4d4;font-size:14px;font-family:"courier new";
+}
+
+pre {
+}
+
+div.section {
+    display: none;
+}
+
+div.background {
+    width: 800px;
+    height: 300px;
+    /* background: blue; */
+    background: url("sunset.jpg") repeat;
+    border: 2px solid black;
+}
+
+div.transparentbox {
+    margin: 30px 50px;
+    background-color: white;
+    border: 1px solid black;
+    opacity:0.6;
+    /* for ie8 and earlier */
+    filter:alpha(opacity=60);
+}
+
+div.transparentbox p {
+    margin: 30px 40px;
+    font-weight: bold;
+}
