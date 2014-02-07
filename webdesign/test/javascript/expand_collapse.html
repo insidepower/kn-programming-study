@@ -29,9 +29,94 @@ $(document).ready(function () {
         $('h2').removeClass("open");
     });
 
+    /// -------- expandable 1 ---------- ///
+    $('.fulltext').hide();
+
+    $('.blog-item .readmore').click(function (event) {
+        event.preventDefault();
+        $(this).parent().find('.fulltext').slideToggle('slow');
+        $(this).text($(this).text() == 'Close Deals' ? 'More Deals' : 'Close Deals');
+    });
+
+    /// -------- expandable 2 ---------- ///
+    $('.expandableText').hide();
+
+    $('.expandable .expandable_readmore').click(function(event) {
+        event.preventDefault();
+        // $('.expandableText').toggle();
+        $('.expandableText').slideToggle('slow');
+        $(this).text($(this).text() == 'READ MORE'? 'COLLAPSE' : 'READ MORE');
+    });
+
 }); //end ready
 </script>
+<script src="/home/knxy/confignewpc/jquery/jquery-1.10.1.min.js">
+
+(function ($) {
+    $.fn.roviToggle = function (args) {
+        return this.each(function () {
+            var obj = $(this);
+            if (obj.hasClass('initialized') == true) {
+                return false
+            } else {
+                obj.addClass('initialized')
+            };
+            var content = args.content ? obj.find(args.content) : obj.find('.toggle-box-content');
+            var toggle = args.toggle ? obj.find(args.toggle) : obj.find('.toggle-box-toggle');
+            var toggleButton = toggle.children("a");
+            var toggleArrow = toggleButton.next("span");
+            var textContainer = args.textContainer ? obj.find(args.textContainer) : obj.find('.toggle-box-toggle a');
+            var moreText = textContainer.html() ? textContainer.html() : 'more';
+            var lessText = args.lessText ? args.lessText : 'less';
+            var moreClass = args.moreClass ? args.moreClass : 'active';
+            var lessClass = args.lessClass ? args.lessClass : 'collapsed';
+            var lessHeight = content.height();
+            var moreHeight = content.find('div.toggle-text').height();
+            if (moreHeight - lessHeight >= 40) {
+                $(".toggle.fade").show();
+                toggle.show();
+            } else {
+                content.css('height', 'auto');
+            }
+            var flipFlop = function () {
+                if (obj.hasClass(moreClass) == false) {
+                    content.animate({
+                        height: moreHeight
+                    }, 500, function () {});
+                    textContainer.html(lessText);
+                    toggleArrow.removeClass("btn-arrow-down-sm").addClass("btn-arrow-up-sm expanded");
+                    obj.addClass(moreClass);
+                    obj.removeClass(lessClass);
+                    toggleButton.addClass("expanded");
+                } else {
+                    content.animate({
+                        height: lessHeight
+                    }, 500, function () {});
+                    textContainer.html(moreText);
+                    toggleArrow.removeClass("btn-arrow-up-sm expanded").addClass("btn-arrow-down-sm");
+                    obj.removeClass(moreClass);
+                    obj.addClass(lessClass)
+                    toggleButton.removeClass("expanded");
+                }
+            }
+            toggle.click(function (e) {
+                e.preventDefault();
+                flipFlop();
+            });
+            if (obj.hasClass('start-open') == true) {
+                flipFlop();
+            }
+        });
+    }
+})(jQuery);
+
+
+</script>
 <style>
+body {
+    background-image:url('../gradient2.png');
+    background-repeat: repeat-x;
+}
 h2 {
     cursor: pointer;
     color: #696;
@@ -44,6 +129,43 @@ h2 {
 .open {
     background-image:url('minusb.jpg');
 }
+
+.toggle.fade{
+    padding-top:35px;
+    background:linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,1) 100%);
+    background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,1) 100%);
+    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,1) 100%);
+    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,1) 100%) 
+} 
+
+a:hover { text-decoration: underline; }
+a {
+color: #A50336;
+outline: none;
+text-decoration: none;
+position: relative;
+font-weight: bold;
+width: 25px;
+font-size: 9px;
+bottom: 5px;
+background: #fff;
+padding: 1px 13px 6px 6px;
+}
+
+.box-more {
+margin: 0;
+height: 8px;
+text-align: center;
+text-transform: uppercase;
+font-size: .75em;
+cursor: pointer;
+line-height: 16px;
+position: relative;
+background: white url(../bg-toggle.png) repeat-x;
+}
+
+
 </style>
 </head>
 <body>
@@ -81,5 +203,93 @@ h2 {
     mattis. Curabitur diam velit, posuere bibendum iaculis ac, egestas at 
     lacus. Aenean hendrerit ullamcorper lorem sit amet euismod. In a metus 
     lectus, non elementum neque.</div>
+
+<hr>
+
+<div class="blog-item">
+    <div class='fulltext'>Read more text will be here.</div>
+    <a class="readmore" href="#">Read more..</a>
+</div>
+
+<hr>
+<div class="expandable" style="width:50%;">
+    <div class='expandableText'> HTML is all about applying meaning to content. Whereas most HTML tags 
+        apply meaning (p makes a paragraph, h1 makes a heading etc.), the span and 
+        div tags apply no meaning at all. This might sound about as useful as a 
+        foam hammer but they are actually used quite extensively in conjunction 
+        with CSS.
+        They are used to group together a chunk of HTML and hook some information onto 
+        that chunk, most commonly with the attributes class and id to associate the 
+        element with a </div>
+    <div class="toggle fade" style="display: block;"></div>
+    <div class="toggle-box-toggle box-more" style="display: block;">
+        <a href="#" class="expandable_readmore">READ MORE</a><span class="sprite btn-arrow-down-sm"></span></div>
+</div>
+
+<hr>
+
+<div class="tab-content" style="display:None;">
+    <div class="tab-content-t">
+        <div class="toggle-box initialized collapsed">
+            <div class="toggle-box-content no-scroll scroll-box  " style="height: 334px;">
+                <div class="toggle-text" itemprop="description" style="">            
+                    <p style="">HTML is all about applying meaning to content. 
+                    Whereas most HTML tags apply meaning (p makes a paragraph, 
+                    h1 makes a heading etc.), the span and div tags apply no 
+                    meaning at all. This might sound about as useful as a foam 
+                    hammer but they are actually used quite extensively in 
+                    conjunction with CSS.
+        They are used to group together a chunk of HTML and hook some 
+        information onto that chunk, most commonly with the attributes class 
+        and id to associate the element with aHTML is all about applying 
+        meaning to content. Whereas most HTML tags apply meaning (p makes a 
+        paragraph, h1 makes a heading etc.), the span and div tags apply no 
+        meaning at all. This might sound about as useful as a foam hammer but 
+        they are actually used quite extensively in conjunction with CSS.
+        They are used to group together a chunk of HTML and hook some 
+        information onto that chunk, most commonly with the attributes class 
+        and id to associate the element with aHTML is all about applying 
+        meaning to content. Whereas most HTML tags apply meaning (p makes a 
+        paragraph, h1 makes a heading etc.), the span and div tags apply no 
+        meaning at all. This might sound about as useful as a foam hammer but 
+        they are actually used quite extensively in conjunction with CSS.
+        They are used to group together a chunk of HTML and hook some 
+        information onto that chunk, most commonly with the attributes class 
+        and id to associate the element with aHTML is all about applying 
+        meaning to content. Whereas most HTML tags apply meaning (p makes a 
+        paragraph, h1 makes a heading etc.), the span and div tags apply no 
+        meaning at all. This might sound about as useful as a foam hammer but 
+        they are actually used quite extensively in conjunction with CSS.
+        They are used to group together a chunk of HTML and hook some 
+        information onto that chunk, most commonly with the attributes class 
+        and id to associate the element with aHTML is all about applying 
+        meaning to content. Whereas most HTML tags apply meaning (p makes a 
+        paragraph, h1 makes a heading etc.), the span and div tags apply no 
+        meaning at all. This might sound about as useful as a foam hammer but 
+        they are actually used quite extensively in conjunction with CSS.
+        They are used to group together a chunk of HTML and hook some 
+        information onto that chunk, most commonly with the attributes class 
+        and id to associate the element with aHTML is all about applying 
+        meaning to content. Whereas most HTML tags apply meaning (p makes a 
+        paragraph, h1 makes a heading etc.), the span and div tags apply no 
+        meaning at all. This might sound about as useful as a foam hammer but 
+        they are actually used quite extensively in conjunction with CSS.
+        They are used to group together a chunk of HTML and hook some 
+        information onto that chunk, most commonly with the attributes class 
+        and id to associate the element with aHTML is all about applying 
+        meaning to content. Whereas most HTML tags apply meaning (p makes a 
+        paragraph, h1 makes a heading etc.), the span and div tags apply no 
+        meaning at all. This might sound about as useful as a foam hammer but 
+        they are actually used quite extensively in conjunction with CSS.
+        They are used to group together a chunk of HTML and hook some 
+        information onto that chunk, most commonly with the attributes class 
+        and id to associate the element with a</p> </div>
+            </div>
+            <div class="toggle fade" style="display: block;"></div>
+            <div class="toggle-box-toggle box-more" style="display: block;"><a href="#" class="">READ MORE</a><span class="sprite btn-arrow-down-sm"></span></div>    
+        </div>      
+    </div>
+</div>
+
 </body>
 </html>

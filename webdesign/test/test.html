@@ -3,6 +3,8 @@
 <head>
     <title> Playing with CSS and HTML property </title>
     <link rel="stylesheet" type="text/css" href="test.css">
+<script src="/home/knxy/confignewpc/jquery/jquery-1.10.1.min.js">
+</script>
     <script>
     function removeElement() {
         document.getElementById("imgbox1").style.display="none"; }
@@ -15,6 +17,8 @@
     function ShowHideSection(my_id){
         prev_id=document.getElementById(my_id).previousSibling.previousSibling;
         className=prev_id.className;
+        document.getElementById(className).style.display="block";
+        document.getElementById(className).style.Visibility="visible";
 alert("myid="+my_id+"; nodeName:"+className);
         /* alert("myid="+my_id+"; nodeName:"+prev_id.nodeName); */
     }
@@ -189,7 +193,7 @@ Hex - specify a hex value, like "#ff0000"
 <!-- [ transparet_end ] -->
 <!-- [ visibility_start ] -->
 <hr>
-<h2> Visibility </hr>
+<div class=Title> Visibility </div>
 <div class="section">
 <img id="imgbox1" src="sunset.jpg" onclick="removeElement()">
 <img id="imgbox2" src="sunset.jpg" onclick="changeVisibility()">
@@ -199,14 +203,155 @@ Hex - specify a hex value, like "#ff0000"
 <!-- [ visibility_end ] -->
 
 <!-- [ transparet_start ] -->
-<hr>
 <!-- [ transparet_end ] -->
-<table>
-    <caption>
-    </caption>
-    <tr>
-        <td id="text1">
-        </td>
-    </tr>
-</table>
+
+<!-- [ Iframe_start ] -->
+<hr>
+<div class="Title">Iframe/Fixed Position</div>
+<div class=section>
+<iframe id="iframeResult" class="result_output" frameborder="0" name="view" src="iframe_fixed_position.html" width="400"> </iframe>
+</div>
+<!-- [ Iframe_end ] -->
+<hr>
+<div class=Title>Float 1</div>
+<div>
+    <div class=section style="width:50%">
+    <p style="padding:0; margin:0;"> 
+How to Practice Random Acts of Kindness
+Random acts of kindness are a means by which we make a deliberate attempt to 
+brighten another person's day by doing something thoughtful, nice, and caring 
+for them. Kindness is a way of showing others that they count and that even in 
+the face of hostility and selfishness, you're making a stand for kindness.
+Originally associated with Anne Herbert, who is said to have once written 
+"Practice random acts of kindness and senseless acts of beauty" on a place mat 
+    <img src="sunset.jpg" style="float: right; padding: 0; margin: 0">
+in a restaurant,[1] this concept has become an organized celebration through 
+various events around the world, as well as referring to a general call to 
+action in the name of kindness. And you don't need to wait for someone else to 
+instigate a day or week of celebrations to practice random acts of kindness; 
+you can put them into play any time you like!
+By doing kind acts for others, you're helping to create kindness-aware 
+communities that value generosity of spirit and action and kindness toward 
+others as essential parts of a healthy community. Here are some suggestions for 
+encouraging others with your random acts of kindness.
+</p>
+    </div>
+</div>
+
+<hr>
+<div class=Title>Float 2</div>
+<div>
+    <div class=section>
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    <img src="sunset.jpg" class="float-img">
+    </div>
+</div>
+
+<hr>
+<div class=Title>Clear</div>
+<p>
+The whole problem is that floated objects do not add to the height of the 
+object the reside in properly. As you can see below, these divs with the class 
+"floated_box" are within the div "main_container", yet on the page they are 
+outside that container div.
+<br>
+<br>
+solution:
+Put this empty div AFTER your last floated object
+<code class=" language-markup"><span class="token tag"><span class="token 
+            tag"><span class="token punctuation">&lt;</span>div</span> <span 
+            class="token attr-name">style</span><span class="token 
+            attr-value"><span class="token punctuation">=</span>"clear: 
+            both;"</span><span class="token 
+            punctuation">&gt;</span></span><span class="token tag"><span 
+            class="token tag"><span class="token 
+                punctuation">&lt;/</span>div</span><span class="token 
+            punctuation">&gt;</span></span></code>
+</p>
+<div>
+    <div class=section>
+        <div id="main_container">
+            <p>Some content.</p>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+        </div>
+
+    </div>
+    <div class=section>
+        <div id="main_container">
+            <p>Some content.</p>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+            <div class="floated_box"></div>
+            <div style="clear: both;"></div>
+
+        </div>
+
+    </div>
+</div>
+
+<hr>
+<div class=Title>:after</div>
+<div>
+    <div class=section>
+        <p id="after-test"> this is random. </p>
+        <p id="after-test"> this is nothing. </p>
+    </div>
+</div>
+
+<hr>
+<div class=Title></div>
+<div>
+    <div class=section>
+    </div>
+</div>
+
+<hr>
+<div class=Title></div>
+<div>
+    <div class=section>
+    </div>
+</div>
+
+<hr>
+<div class=Title></div>
+<div>
+    <div class=section>
+    </div>
+</div>
+
+<hr>
+<div class=Title></div>
+<div>
+    <div class=section>
+    </div>
+</div>
+
+<hr>
+<div class=Title></div>
+<div>
+    <div class=section>
+    </div>
+</div>
+
+<hr>
+<div class=Title></div>
+<div>
+    <div class=section>
+    </div>
+</div>
+
+
 </body>

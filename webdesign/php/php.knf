@@ -1,3 +1,40 @@
+=== [ topic ][ install ] ===
+[ --- start ---- ]
+- use php on a web hosting
+- install local web server with php and sql
+[ ---  end  ---- ]
+
+=== [ topic ][ insert ][ include ][ require ] ===
+[ --- start ---- ]
+- include/require are identical except upon failure
+  include: produce warning (E_WARNING) and continue script
+  require: produce fatal error (E_COMPILE_ERROR) and stop script
+
+Example: <menu.php>
+echo '<a href="/default.php">Home</a>
+<a href="/tutorials.php">Tutorials</a>
+<a href="/references.php">References</a>
+<a href="/examples.php">Examples</a> 
+<a href="/about.php">About Us</a> 
+<a href="/contact.php">Contact Us</a>';
+
+/// usage
+<body>
+<div class="leftmenu">
+<?php include 'menu.php'; ?>
+</div>
+</body>
+[ ---  end  ---- ]
+
+=== [ topic ][ var ] ===
+[ --- start ---- ]
+Example: <vars.php>
+<?php $weather='sunny'; $location='Johor'>
+
+/// usage
+<?php include 'vars.php'; echo "weather of $location today is $weather">
+[ ---  end  ---- ]
+
 === [ topic ][ password ] ===
 [ --- start ---- ]
 <input name="admin_password" type="password" id="pass1" size="25" value="" />
@@ -5,4 +42,45 @@
 <div id="pass-strength-result"><?php _e('Strength indicator'); ?></div>
 <p><?php _e('Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols like ! " ? $ % ^ &amp; ).'); ?></p>
 
+[ ---  end  ---- ]
+
+=== [ topic ][ regular expression search and replace ] ===
+[ --- start ---- ]
+- Pattern Modifiers
+  ( http://my1.php.net/manual/en/reference.pcre.pattern.modifiers.php )
+  i = match both uppper and lowercase
+  m = multiline
+  s = match all characters, including newline. If without, newline is excluded.
+
+Example: 
+$string = 'April 15, 2003';
+$pattern = '/(\w+) (\d+), (\d+)/i';
+$replacement = '${1}1,$3';
+echo preg_replace($pattern, $replacement, $string);
+< output >: April1,2003
+[ ---  end  ---- ]
+
+=== [ topic ][ list files ] ===
+[ --- start ---- ]
+function directoryToArray($directory, $recursive) {
+    $array_items = array();
+    if ($handle = opendir($directory)) {
+        while (false !== ($file = readdir($handle))) {
+            if ($file != "." && $file != "..") {
+                if (is_dir($directory. "/" . $file)) {
+                    if($recursive) {
+                        $array_items = array_merge($array_items, directoryToArray($directory. "/" . $file, $recursive));
+                    }
+                    $file = $directory . "/" . $file;
+                    $array_items[] = preg_replace("/\/\//si", "/", $file);
+                } else {
+                    $file = $directory . "/" . $file;
+                    $array_items[] = preg_replace("/\/\//si", "/", $file);
+                }
+            }
+        }
+        closedir($handle);
+    }
+    return $array_items;
+}
 [ ---  end  ---- ]

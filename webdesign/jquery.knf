@@ -3,4 +3,27 @@
 jQuery is a JavaScript Library.
 jQuery greatly simplifies JavaScript programming.
 jQuery is easy to learn.
+- Using JQuery would take care of that browser inconsistency.
+[ ---  end  ---- ]
+
+=== [ topic ][ insert html ] ===
+[ --- start ---- ]
+Example:
+$('#yourDivName').html('yourtHTML');
+// add as the last item of the selected div
+$('#yourDivName').append('yourtHTML');
+// add as the first item in the selected div
+$('#yourDivName').prepend('yourtHTML');
+[ ---  end  ---- ]
+
+=== [ topic ][ jquery vs javascript ] ===
+[ --- start ---- ]
+jQuery
+$ (‘body’) .css (‘background’, ‘#ccc’);
+
+JavaScript
+Function changeBachground(color) {
+        Document.body.style.background = color;
+}
+Onload=”changeBackground (‘red’);”
 [ ---  end  ---- ]

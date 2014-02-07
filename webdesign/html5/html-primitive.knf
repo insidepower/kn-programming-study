@@ -67,6 +67,34 @@ vlink="color": color of visited links.
 alink="color": color of active (clicked) links.
 [ ---  end  ---- ]
 
+=== [ topic ][ q ] ===
+[ --- start ---- ]
+- The <q> tag defines a short quotation.
+- Browsers normally insert quotation marks around the quotation.
+
+Example:
+<p>WWF's goal is to: 
+<q>Build a future where people live in harmony with nature.</q>
+We hope they succeed.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ code ] ===
+[ --- start ---- ]
+- phrase tag. it defines a pieces of computer code.
+
+Example:
+/// italic
+<em>Emphasized text</em><br>
+<dfn>Definition term</dfn><br>
+<var>Variable</var>
+<kbd>Keyboard input</kbd><br>
+/// bold
+<strong>Strong text</strong><br>
+/// monospace
+<code>A piece of computer code</code><br>
+<samp>Sample output from a computer program</samp><br>
+[ ---  end  ---- ]
+
 === [ topic ][ tooltip ] ===
 [ --- start ---- ]
 The title="tooltip-text" attribute is applicable to almost all of the HTML tags 
@@ -96,10 +124,19 @@ The title="tooltip-text" attribute is applicable to almost all of the HTML tags
 
 === [ topic ][ list ][ definition ] ===
 [ --- start ---- ]
+- dl=description list
+- dt=define term/names
+- dd=definition
 <dl>
 	<dt>Abbr term</dt><dd> abbreviation definition </dd>
 	<dt>HTTP</dt><dd>HyperText Transfer Protocol</dd>
 </dl>
+
+output:
+Coffee
+    Black hot drink
+Milk
+    White cold drink
 [ ---  end  ---- ]
 
 === [ topic ][ table ] ===

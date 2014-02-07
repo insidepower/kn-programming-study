@@ -2,6 +2,17 @@
 [ --- start ---- ]
 [ ---  end  ---- ]
 
+=== [ topic ][ insert ] ===
+[ --- start ---- ]
+- <script src="xxx.js"></script> can be placed in <head> or <body>
+- script behave as if it was located exactly where the <script> tag is placed
+
+Example:
+<body>
+<script src="myScript.js"></script>
+</body>
+[ ---  end  ---- ]
+
 === [ topic ][ write html ] ===
 [ --- start ---- ]
 document.write("<h1>This is a heading</h1>");

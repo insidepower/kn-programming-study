@@ -8,6 +8,7 @@ quit
 
 === [ topic ][ switching table ] ===
 [ --- start ---- ]
+show databases;
 USE test;
 use wordpress;
 [ ---  end  ---- ]

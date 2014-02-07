@@ -49,12 +49,14 @@ h1 { color:purple; font-size:10px; }
 /* comment */
 [ ---  end  ---- ]
 
-=== [ topic ][ id ][ class ] ===
+=== [ topic ][ id ][ vs ][ class ] ===
 [ --- start ---- ]
 - css also allows use of own selectors called "id" and "class"
+- id is unique, can only used once
+- class is common, can be used by same elements multiple time, and used by different elements
 [ ---  end  ---- ]
 
-=== [ topic ][ id ] ===
+=== [ topic ][ id ][ .id ] ===
 [ --- start ---- ]
 - id cannot starts with a number
 - in css, id is identified with "#"
@@ -64,7 +66,7 @@ Example:
 <p id="my-id"> my text </p>
 [ ---  end  ---- ]
 
-=== [ topic ][ class ] ===
+=== [ topic ][ class ][ #class ] ===
 [ --- start ---- ]
 - specify a style for a group of elements
 - in css, class is identified with a "."
@@ -174,6 +176,7 @@ a color name - like "red"
 
 === [ topic ][ gradient ] ===
 [ --- start ---- ]
+- background: linear-gradient(direction, color-stop1, color-stop2, ...);
 div.example {
 	width:auto;color:#000000;
 	background-color: #000000;margin:0px;padding:5px;border:1px solid #d4d4d4;
@@ -183,6 +186,23 @@ div.example {
 div.example_code {
 	width:auto;background-color:#ffffff;padding:5px;border:1px solid #d4d4d4;font-size:14px;font-family:"courier new";
 }
+[ ---  end  ---- ]
+
+=== [ topic ][ opacity ][ transparent ] ===
+[ --- start ---- ]
+img {
+opacity:0.4;
+filter:alpha(opacity=40); /* For IE8 and earlier */
+}
+img:hover {
+opacity:1.0;
+filter:alpha(opacity=100); /* For IE8 and earlier */
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ image ][ sprites ] ===
+[ --- start ---- ]
+- image sprites is a collection of images put into a single image
 [ ---  end  ---- ]
 
 === [ topic ][ text ] ===
@@ -229,8 +249,30 @@ font-size:2.5em;
 font-size:1.875em;
 [ ---  end  ---- ]
 
+=== [ topic ][ text-shadow ] ===
+[ --- start ---- ]
+
+1. value = The X-coordinate
+2. value = The Y-coordinate
+3. value = The blur radius
+4. value = The color of the shadow
+
+Example:
+p { text-shadow: 1px 1px 1px #000; }
+
+Example: multiple shadow
+p { text-shadow: 1px 1px 1px #000, 3px 3px 5px blue; }
+
+Example: transparent color
+p { text-shadow: 0px 2px 2px rgba(255, 255, 255, 0.4); }
+[ ---  end  ---- ]
+
 === [ topic ][ links ] ===
 [ --- start ---- ]
+- can consider to use :focus to replace :hover
+- :hover has no effect on those using keyboard to navigate to the link
+- :focus will select the link that are currently under the keyboard 
+- :focus can be used on inputs and textarea
 a:link {color:#FF0000;}          /* unvisited link  */ 
 a:visited {color:#00FF00;}       /* visited link    */ 
 a:hover {color:#FF00FF;}         /* mouse over link */ 
@@ -525,6 +567,127 @@ div.transparentbox p {
 
 [ ---  end  ---- ]
 
+=== [ topic ][ css advanced ][ positioning ][ fixed ] ===
+[ --- start ---- ]
+- An element with fixed position is positioned relative to the browser window.
+p.pos_fixed {
+    position:fixed;
+    top: 30px;
+    right: 20px;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ positioning ][ relative ] ===
+[ --- start ---- ]
+- A relative positioned element is positioned relative to its normal position.
+Example 1:
+h2.pos_left { position:relative; left:-20px; }
+h2.pos_right { position:relative; left:20px; }
+
+<h2>This is a heading with no position</h2>
+<h2 class="pos_left">This heading is moved left according to its normal position</h2>
+<h2 class="pos_right">This heading is moved right according to its normal position</h2>
+
+Example 2:
+h2.pos_top {
+position:relative;
+top:-50px; }
+
+<h2>This is a heading with no position</h2>
+<h2 class="pos_top">This heading is moved upwards according to its normal 
+position</h2>
+<p><b>Note:</b> Even if the content of the relatively positioned element is 
+moved, the reserved space for the element is still preserved in the normal 
+flow.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ positioning ][ absolute ] ===
+[ --- start ---- ]
+- relative to the first parent element which has explicit position
+- if not such element is found, the containing block is <html>
+- Absolutely positioned elements are removed from the normal flow. The document 
+  and other elements behave like the absolutely positioned element does not 
+  exist.
+- Absolutely positioned elements can overlap other elements.
+
+Example 1:
+h2 {
+    position:absolute;
+    left:100px;
+    top:150px;
+}
+
+<h2>This is a heading with an absolute position</h2>
+<p>With absolute positioning, an element can be placed anywhere on a page. The 
+heading below is placed 100px from the left of the page and 150px from the top 
+of the page.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ positioning ][ overlap ] ===
+[ --- start ---- ]
+- When elements are positioned outside the normal flow, they can overlap other 
+  elements.
+- The z-index property specifies the stack order of an element (which element 
+  should be placed in front of, or behind, the others).
+Example 1:
+img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    z-index:-1;
+}
+
+<h1>This is a heading</h1>
+<img src="w3css.gif" width="100" height="140" />
+<p>Because the image has a z-index of -1, it will be placed behind the text.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ css advanced ][ align ] ===
+[ --- start ---- ]
+- block element can be center-aligned by setting the left and right margin to auto
+
+Example:
+.center {
+margin-left:auto;
+margin-right:auto;
+width:70%;
+}
+
+Example 2: cross browswer
+body {
+margin:0;
+padding:0;
+}
+.container {
+position:relative;
+width:100%;
+}
+.right {
+position:absolute;
+right:0px;
+width:300px;
+background-color:#b0e0e6;
+}
+<div class="container">
+<div class="right">
+<p><b>Note: </b>When aligning using the position property, always include the !DOCTYPE declaration! If missing, it can produce strange results in IE browsers.</p>
+</div>
+</div>
+[ ---  end  ---- ]
+
+=== [ topic ][ clip ] ===
+[ --- start ---- ]
+- rect (top, right, bottom, left)
+- The clip property does not work if "overflow:visible"
+- javascript syntax: object.style.clip="rect(0px,50px,50px,0px)"
+Example: 
+img {
+position:absolute;
+clip:rect(0px,60px,200px,0px);
+}
+<img src="w3css.gif" width="100" height="140" />
+[ ---  end  ---- ]
+
 === [ topic ][ selector ] ===
 [ --- start ---- ]
 Example 1:
@@ -545,8 +708,231 @@ Example 2:
 div[itemprop="headline"] h1 { color: yellow; }
 [ ---  end  ---- ]
 
+=== [ topic ][ selector ][ * ] ===
+[ --- start ---- ]
+- select everything
+- slow down on browser
+* {
+ margin: 0;
+ padding: 0;
+}  
+
+- child selector
+Example: select every child of #container div
+#container * {
+    border: 1px solid black;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ X Y ] ===
+[ --- start ---- ]
+- descendant
+- never do this: X Y Z A B.subclass
+
+Example: applied to anchor in unordered list
+ul a{
+    text-decoration: none;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ X > Y ] ===
+[ --- start ---- ]
+- select direct children
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ X + Y ] ===
+[ --- start ---- ]
+- adjacent selector
+
+Example: select first <p> that is immediately preceded by <ul>
+ul + p { color: red; }
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ X ~ Y ] ===
+[ --- start ---- ]
+- similar to X + Y, however, it's less strict
+Example: select any <p> as long as they follow a ul
+ul ~ p { color: red; }
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ attribute ][ X[title] ] ===
+[ --- start ---- ]
+- attributes selector, select those with the attribute specified
+
+Example: select those anchor that has a title attribute
+a[tite] { color: red; }
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ attribute ][ X[href="foo"] ] ===
+[ --- start ---- ]
+Example:
+a[href="http://www.w3schools.com"]{color:blue;}
+
+Example: select any href with value w3schools in it
+a[href*="w3schools"]{color:yellow;}
+
+Example: select any href begin with "http"
+a[href^="http"]{color:purple;}
+
+Example: select any href ends with ".jpg"
+a[href$=".jpg"]{color:blue;}
+
+Example: select image data-type (than create a all the a[href$=".png"], jpg,... )
+a[data-filetype="image"]{color:brown;}
+<a href="path/to/image.jpg" data-filetype="image"> Image Link </a>
+
+Example: select attribute with space in between
+a[data-info~="external"] { color: red; }
+a[data-info~="image"] { border: 1px solid black; }
+<a href="http://www.google.com" data-info="external">consectetur</a>
+<a href="http://www.google.com" data-info="external image">consectetur</a>
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ :checked ] ===
+[ --- start ---- ]
+- applied to element that has been checked, like a button, checkbox
+
+Example:
+input[type=radio]:checked { border: 1px solid black; }
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ :hover ] ===
+[ --- start ---- ]
+Example:
+div:hover { background: yellow; }
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ not ] ===
+[ --- start ---- ]
+Example: select every div element, except the one with id=container
+div:not(#container){ color: white; }
+
+Example 2: select every single element (not advised), except for paragraph
+*:not(p){ color: green; }
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ ::first-line ][ pseudoElement ] ===
+[ --- start ---- ]
+- use two colons ::, however user-agent accept single colon usage too
+- The following properties apply to the "first-line" pseudo-element:
+font properties
+color properties
+background properties
+word-spacing
+letter-spacing
+text-decoration
+vertical-align
+text-transform
+line-height
+clear
+
+Example:
+p::first-line { background: yellow; }
+p::first-letter { background: yellow; }
+
+Example:
+a:link {color:#FF0000;}      /* unvisited link */
+a:visited {color:#00FF00;}  /* visited link */
+a:hover {color:#FF00FF;}  /* mouse over link */
+a:active {color:#0000FF;}  /* selected link */
+a.red:visited {color:#FF0000;}
+<a class="red" href="css_syntax.asp">CSS Syntax</a>
+[ ---  end  ---- ]
+
+=== [ topic ][ pseudo-class ][ lang ] ===
+[ --- start ---- ]
+Example:
+q:lang(new-lang) {
+    quotes: "::" "::";
+}
+<p> This is some text with a quote in <q lang="new-lang">this phrase</q>.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ nth-child(n) ][ nth-last-child(n) ] ===
+[ --- start ---- ]
+Example: 
+li:nth-child(3) { color: green; }
+
+Example: select second last child in a <li>
+li:nth-last-child(2){ color: grey; }
+
+Example: 
+ul li:first-child {border: none; }
+ul li:last-child {border: none; }
+
+Example:
+div:first-child{
+    color: red;
+}
+<div> This is the first child of div. The text color will be in red.  </div>
+<div> This is the second child of div. The text color will be default (black).  </div>
+
+Example:
+p > b:first-child{
+    background: yellow;
+    color: purple;
+}
+<p> First bold element will be in <b> purple </b>. 
+    Second bold element will be in <b> default(black)</b> </p>
+
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ nth-of-type(n) ][ nth-last-of-type(n) ] ===
+[ --- start ---- ]
+Example: select the third <li> of of <ul> type
+ul:nth-of-type(3){ color:white; }
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ :after ] ===
+[ --- start ---- ]
+
+Example: after the <p> add content
+p:after { 
+content:"- Remember this";
+background-color:yellow;
+color:red;
+font-weight:bold;
+}
+
+<p>My name is Donald</p>
+<p>I live in Ducksburg</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ pseudo-class ][ summary ] ===
+[ --- start ---- ]
+Selector	    Example	        Example description
+:link	        a:link	        Selects all unvisited links
+:visited	    a:visited	    Selects all visited links
+:active	        a:active	    Selects the active link
+:hover	        a:hover	        Selects links on mouse over
+:focus	        input:focus	    Selects the input element which has focus
+:first-letter	p:first-letter	Selects the first letter of every <p> element
+:first-line	    p:first-line	Selects the first line of every <p> element
+:first-child	p:first-child	Selects every <p> elements that is the first child of its parent
+:before	        p:before	    Insert content before every <p> element
+:after	        p:after	        Insert content after every <p> element
+:lang(language)	p:lang(it)	    Selects every <p> element with a lang attribute value starting with "it"
+[ ---  end  ---- ]
+
 === [ topic ][ gradient ] ===
 [ --- start ---- ]
+[ ---  end  ---- ]
+
+=== [ topic ][ font-face ] ===
+[ --- start ---- ]
+Example:
+@font-face {
+	font-family: 'MyWebFont';
+	src: url('webfont.eot'); /* IE9 Compat Modes */
+	src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('webfont.woff') format('woff'), /* Modern Browsers */
+	     url('webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+	     url('webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+	}
+
+body {
+       font-family: 'MyFontFamily', Fallback, sans-serif;
+}
 [ ---  end  ---- ]
 
 === [ topic ][ reference ] ===
@@ -554,10 +940,164 @@ div[itemprop="headline"] h1 { color: yellow; }
 shorthand : color, style, width
 width: { thin medium thick}
 style: { none dotted dashed solid double groove ridge inset outset inherit}
+
+More Complete:
+.reset-this {
+    animation : none;
+    animation-delay : 0;
+    animation-direction : normal;
+    animation-duration : 0;
+    animation-fill-mode : none;
+    animation-iteration-count : 1;
+    animation-name : none;
+    animation-play-state : running;
+    animation-timing-function : ease;
+    backface-visibility : visible;
+    background : 0;
+    background-attachment : scroll;
+    background-clip : border-box;
+    background-color : transparent;
+    background-image : none;
+    background-origin : padding-box;
+    background-position : 0 0;
+    background-position-x : 0;
+    background-position-y : 0;
+    background-repeat : repeat;
+    background-size : auto auto;
+    border : 0;
+    border-style : none;
+    border-width : medium;
+    border-color : inherit;
+    border-bottom : 0;
+    border-bottom-color : inherit;
+    border-bottom-left-radius : 0;
+    border-bottom-right-radius : 0;
+    border-bottom-style : none;
+    border-bottom-width : medium;
+    border-collapse : separate;
+    border-image : none;
+    border-left : 0;
+    border-left-color : inherit;
+    border-left-style : none;
+    border-left-width : medium;
+    border-radius : 0;
+    border-right : 0;
+    border-right-color : inherit;
+    border-right-style : none;
+    border-right-width : medium;
+    border-spacing : 0;
+    border-top : 0;
+    border-top-color : inherit;
+    border-top-left-radius : 0;
+    border-top-right-radius : 0;
+    border-top-style : none;
+    border-top-width : medium;
+    bottom : auto;
+    box-shadow : none;
+    box-sizing : content-box;
+    caption-side : top;
+    clear : none;
+    clip : auto;
+    color : inherit;
+    columns : auto;
+    column-count : auto;
+    column-fill : balance;
+    column-gap : normal;
+    column-rule : medium none currentColor;
+    column-rule-color : currentColor;
+    column-rule-style : none;
+    column-rule-width : none;
+    column-span : 1;
+    column-width : auto;
+    content : normal;
+    counter-increment : none;
+    counter-reset : none;
+    cursor : auto;
+    direction : ltr;
+    display : inline;
+    empty-cells : show;
+    float : none;
+    font : normal;
+    font-family : inherit;
+    font-size : medium;
+    font-style : normal;
+    font-variant : normal;
+    font-weight : normal;
+    height : auto;
+    hyphens : none;
+    left : auto;
+    letter-spacing : normal;
+    line-height : normal;
+    list-style : none;
+    list-style-image : none;
+    list-style-position : outside;
+    list-style-type : disc;
+    margin : 0;
+    margin-bottom : 0;
+    margin-left : 0;
+    margin-right : 0;
+    margin-top : 0;
+    max-height : none;
+    max-width : none;
+    min-height : 0;
+    min-width : 0;
+    opacity : 1;
+    orphans : 0;
+    outline : 0;
+    outline-color : invert;
+    outline-style : none;
+    outline-width : medium;
+    overflow : visible;
+    overflow-x : visible;
+    overflow-y : visible;
+    padding : 0;
+    padding-bottom : 0;
+    padding-left : 0;
+    padding-right : 0;
+    padding-top : 0;
+    page-break-after : auto;
+    page-break-before : auto;
+    page-break-inside : auto;
+    perspective : none;
+    perspective-origin : 50% 50%;
+    position : static;
+    /* May need to alter quotes for different locales (e.g fr) */
+    quotes : '\201C' '\201D' '\2018' '\2019';
+    right : auto;
+    tab-size : 8;
+    table-layout : auto;
+    text-align : inherit;
+    text-align-last : auto;
+    text-decoration : none;
+    text-decoration-color : inherit;
+    text-decoration-line : none;
+    text-decoration-style : solid;
+    text-indent : 0;
+    text-shadow : none;
+    text-transform : none;
+    top : auto;
+    transform : none;
+    transform-style : flat;
+    transition : none;
+    transition-delay : 0s;
+    transition-duration : 0s;
+    transition-property : none;
+    transition-timing-function : ease;
+    unicode-bidi : normal;
+    vertical-align : baseline;
+    visibility : visible;
+    white-space : normal;
+    widows : 0;
+    width : auto;
+    word-spacing : normal;
+    z-index : auto;
+}
 [ ---  end  ---- ]
 
 === [ topic ][ tips ] ===
 [ --- start ---- ]
+- kn: css is case sensitive!
+  div.title is different than div.Title
 <!--
 	View source is a feature, not a bug. Thanks for your curiosity and
 	interest in participating!
@@ -603,4 +1143,27 @@ $(document).ready(function()
 [ --- start ---- ]
 -webkit-margin-end
 -itemprop
+-overflow
+- cursor
+- text-align: left !important;
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ] ===
+[ --- start ---- ]
+[ Problem ] 
+Description: text-align: right is not working
+div.desc {
+    display: inline-block;
+    text-align: right;
+    font-family: Trebuchet MS, Helvetica, sans-serif;
+    font-size: 15px;
+    color: rgb(83, 83, 83);
+}
+Solution: remove the display element
+div.desc {
+    text-align: right;
+    font-family: Trebuchet MS, Helvetica, sans-serif;
+    font-size: 15px;
+    color: rgb(83, 83, 83);
+}
 [ ---  end  ---- ]

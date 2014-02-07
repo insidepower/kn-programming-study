@@ -11,6 +11,11 @@ sudo bash /usr/share/doc/wordpress/examples/setup-mysql -n wordpress_mydomain_or
 http://localhost/wordpress
 [ ---  end  ---- ]
 
+=== [ topic ][ config ] ===
+[ --- start ---- ]
+/etc/wordpress/config-localhost.php
+[ ---  end  ---- ]
+
 === [ topic ][ mysql ][ create database ] ===
 [ --- start ---- ]
 CREATE USER wordpressuser@localhost;
@@ -22,4 +27,30 @@ flush privileges;
 === [ topic ][ script ] ===
 [ --- start ---- ]
 mysql db_name < script.sql > output.tab
+[ ---  end  ---- ]
+
+=== [ topic ][ mysql ] ===
+[ --- start ---- ]
+/// key in password during prompt
+mysql -u username -p
+/// attach password
+mysql -u username -p password -h localhost
+show databases;
+create database desired_database_name;
+use wordpress;
+show tables;
+select * from wp_users;
+/// show table in vertical format, no need to place semicolon
+select * from wp_users\G
+/// change password of wordpress user "admin"
+update wp_users set user_pass=md5('new_password') where user_login='admin'
+/// delete all spam comments
+delete from `wp_comments` where comment_approved='spam';
+[ ---  end  ---- ]
+
+=== [ topic ][ mysql ][ backup ] ===
+[ --- start ---- ]
+mysqldump -uWORDPRESS_MYSQL_USERNAME -pWORDPRESS_MYSQL_PASSWORD -hWORDPRESS_MYSQL_HOSTNAME WORDPRESS_DATABASE_NAME >/your/current/path/databasename.sql
+Example usage:
+mysqldump -ucodex -pmypassword -hlocalhost wordpress >/home/codex-m/wordpress.sql
 [ ---  end  ---- ]
