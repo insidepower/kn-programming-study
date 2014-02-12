@@ -1,0 +1,7 @@
+=== [ topic ][ list ] ===
+[ --- start ---- ]
+- missing semicolon at the end of a element;
+- replace : as = when declaring the element-value pair.
+  e.g.: <div style="width=50px;"> /// error, value ignored by browswer
+  e.g.: <div style="width:50px;"> /// correct
+[ ---  end  ---- ]

@@ -267,6 +267,19 @@ non-breaking space		&nbsp;
 <a href="#snippet-container">Go to Xmp</a>
 [ ---  end  ---- ]
 
+=== [ topic ][ Fieldset ][ legend ] ===
+[ --- start ---- ]
+Example 1:
+<h1>Fieldset</h1>
+<fieldset style="width: 300px">
+    <legend>
+        Fieldset's legend goes here
+    </legend>
+    Name: <input type="TEXT"><br>
+    Contact: <input type="TEXT"><br>
+</fieldset>
+[ ---  end  ---- ]
+
 === [ topic ][ misc ] ===
 [ --- start ---- ]
 - standalone tag like <hr> can be closed with a matching tag, e.g. <hr></hr>
@@ -348,5 +361,18 @@ mailto:help@zzz.com
 [ --- start ---- ]
 - use relative url when referencing the documents in the same server for portability
 - relative url: ../home.html
+[ ---  end  ---- ]
+
+=== [ topic ][ deprecated ] ===
+[ --- start ---- ]
+- <tt>: (teletype text) defined in HTML4.01 but deprecated in html5
+
+[ ---  end  ---- ]
+
+=== [ topic ][ favicon ] ===
+[ --- start ---- ]
+- size: 16x16 or 32x32
+- color depth: 8 bits or 24 bits
+- format of the image must be one of PNG (a W3C standard), GIF, or ICO.
 [ ---  end  ---- ]
 </body>

@@ -56,7 +56,7 @@ h1 { color:purple; font-size:10px; }
 - class is common, can be used by same elements multiple time, and used by different elements
 [ ---  end  ---- ]
 
-=== [ topic ][ id ][ .id ] ===
+=== [ topic ][ id ][ #id ] ===
 [ --- start ---- ]
 - id cannot starts with a number
 - in css, id is identified with "#"
@@ -66,13 +66,35 @@ Example:
 <p id="my-id"> my text </p>
 [ ---  end  ---- ]
 
-=== [ topic ][ class ][ #class ] ===
+=== [ topic ][ class ][ .class ] ===
 [ --- start ---- ]
 - specify a style for a group of elements
 - in css, class is identified with a "."
 
 Example:
 .my-class { color: blue; font-size:10px; }
+[ ---  end  ---- ]
+
+=== [ topic ][ multiple ][ classes and ids ] ===
+[ --- start ---- ]
+- http://css-tricks.com/multiple-class-id-selectors/
+
+Example 1: select the descendant of "id=id_one" with class name is "class=classA"
+#id_one .classA { color: red; }
+p<id=id_one><div class=classA> xxx </div></p>
+
+Example 2: select the element with "id=id_one" and with class name "class=classA"
+#id_one.classA { color: blue; }
+p<id=id_one class=classA></p>
+
+Example 3: specificity (used in overriding, instead of using !important)
+.classA { color: tomato; }
+.classB { color: orange; }
+.classA.classB { color: gold; }
+p < class="classA classB" > this para in gold </p>
+rather than using
+.classA { color: gold !important; }
+
 [ ---  end  ---- ]
 
 === [ topic ][ insert css ] ===
@@ -104,6 +126,13 @@ Example:
 - use sparingly!
     * Example:
         <p style="color:sienna;margin-left:20px;">This is a paragraph.</p>
+
+[ @import ]
+- import can be placed anywhere?
+{
+color: red;
+@import "mysetl.css"
+}
 [ ---  end  ---- ]
 
 === [ topic ][ multiple css ] ===
@@ -167,11 +196,114 @@ margin-right:200px;
 background:#ffffff url('img_tree.png') no-repeat right top;
 [ ---  end  ---- ]
 
+=== [ topic ][ background vs img ] ===
+[ --- start ---- ]
+Proper uses of IMG
+- Use IMG if you intend to have people print your page and you want the image 
+  to be included by default. —JayTee
+- Use IMG (with alt text) when the image has an important semantic meaning, 
+  such as a warning icon. This ensures that the meaning of the image can be 
+  communicated in all user-agents, including screen readers.
+
+Pragmatic uses of IMG
+- Use IMG if you intend to have people print your page and you want the image 
+  to be included by default. —JayTee
+- Use IMG if you rely on browser scaling to render an image in proportion to 
+  text size.
+- Use IMG for multiple overlay images in IE6.
+- Use IMG with a z-index in order to stretch a background image to fill its 
+  entire window.
+- Using img instead of background-image can dramatically improve performance of 
+  animations over a background.??
+- better for SEO (can provide additional information about the image in the ALT 
+  attribute of the image tag)
+- Foreground = img.
+- Con: overlays. What if I want an css inner shadow on my image 
+  (box-shadow:inset 0 0 5px rbg(0,0,0,.5))? In this case, since can't have 
+  child elements, you need to use positioning and add empty elements which 
+  equates to useless markup.
+
+When to use CSS background-image
+- Use CSS background images if the image is not part of the content. 
+  —sanchothefat
+- Use CSS background images when doing image-replacement of text eg. 
+  paragraphs/headers. —sanchothefat
+- if the image is used many placed and will be changed in future. So rather 
+  changing the src of <img> everywhere, just have to change 'background' in css.
+- Use background-image if you intend to have people print your page and you do 
+  not want the image to be included by default. —JayTee
+- Use background-image if you need to improve download times, as with CSS 
+  sprites. (and for using different image when mouseover (xxx:hover{}))
+- Use background-image if you need for only a portion of the image to be 
+  visible, as with CSS sprites.
+- User can't right-click and save as image, need to use the view source function 
+- Background = CSS background
+- When you want to add rounded corners to the image. If you use img, the image 
+  leaks out of the rounded corners.
+- Con: need to absolutely specify the dimensions. This can be a significant 
+  problem if you don't actually know them in advance or cannot determine them
+
+Extra:
+- CSS background-images being animated vs IMG tags being animated you will see 
+the paint times are drastically shorter for the CSS background-images.
+- A small input, I have had problems with responsive images slowing down the 
+  rendering on iphone for up to a minute, even with small images:
+<!-- Was super slow -->
+<div class="stuff">
+    <img src=".." width="100%" />
+</div>
+But when switching to using background images the problem went away, this is 
+only viable if targeting newer browsers.
+- I think by using background-image attribute in the div, the page layout gets 
+  loaded first and image present in the divs loaded later after the dom is 
+  loaded. so by using background-image the html layout is loaded faster on the 
+  web browser.
+[ ---  end  ---- ]
+
+=== [ topic ][ image ][ resize with original ratio ] ===
+[ --- start ---- ]
+img {
+    display: block;
+    max-width:230px;
+    max-height:95px;
+    width: auto;
+    height: auto;
+}
+
+- css approach
+div.image{
+    height: xxx px;
+    weight: yyy px; /* div need size as it don't have height/width itself */
+    background-image: url("your/url/here");
+    background-size:contain;
+    background-repeat:no-repeat;
+    background-position:center;
+}
+[ ---  end  ---- ]
+
 === [ topic ][ color ] ===
 [ --- start ---- ]
 a HEX value - like "#ff0000"
 an RGB value - like "rgb(255,0,0)"
+an RGB value - like "rgb(100%,100%,100%)"
+an RGB value - like with opacity: rgba(255, 0, 0, 0.5);
 a color name - like "red"
+operating system color - color: WindowInfoBackground;
+gold, wheat, tomato, orange, firebrick;
+[ ---  end  ---- ]
+
+=== [ topic ][ color ][ text selection color ] ===
+[ --- start ---- ]
+- most mobile browser not yet supported
+- only very recent major desktop browser supported it
+Example 1:
+.green::selection {
+    background: hsl(152, 100%, 80%);
+}
+<h2 class="topic green">Text selection will be in green</h2>
+<p class="green">
+Select all elements that are in the progress of an animation at the time the selector is run.
+</p>
 [ ---  end  ---- ]
 
 === [ topic ][ gradient ] ===
@@ -203,6 +335,65 @@ filter:alpha(opacity=100); /* For IE8 and earlier */
 === [ topic ][ image ][ sprites ] ===
 [ --- start ---- ]
 - image sprites is a collection of images put into a single image
+
+Example 1:
+.sprites_href{
+    width: 112px;
+    height: 104px;
+    background: url('../image/angry_birds_2.png') 0 0;
+}
+
+.sprites_href:hover{
+    /* using url again and again in sprites will cause chrome to refetch image */
+    /* this will cause a flickering, use background-position instead; */
+    /* background: url('../image/angry_birds_2.png') 0 -208px;*/
+    background-position: 0 -208px;
+}
+<div class="sprites_href">
+[ ---  end  ---- ]
+
+=== [ topic ][ sprites ][ navigation ] ===
+[ --- start ---- ]
+Example 1:
+.navigation_list {
+    position: relative;
+}
+
+.navigation_li {
+    margin: 0;
+    padding: 0;
+    width: 112px;
+    height: 104px;
+    list-style: none;
+    position: absolute;
+    display: inline-block;
+}
+
+a {
+    display: block;
+    padding: 0;
+    margin: 0;
+    width: 112px;
+    height: 104px;
+}
+
+<div class="navigation_list">
+    <ul>
+        <li class="navigation_li" style="left:0px;"><a class="navigation_bird1" href="#part1"></a>
+        </li> 
+        <li class="navigation_li" style="left:120px;"><a class="navigation_bird2" href="#part2"></a>
+        </li> 
+    </ul>
+</div>
+[ ---  end  ---- ]
+
+=== [ topic ][ image ][ sprites ][ tools ] ===
+[ --- start ---- ]
+compass
+- available with ruby
+$ gem update --system
+$ gem install compass
+$ compass create <myproject>
 [ ---  end  ---- ]
 
 === [ topic ][ text ] ===
@@ -247,6 +438,16 @@ font-size: 100%;
 font-size:12px;
 font-size:2.5em;
 font-size:1.875em;
+
+font-weight: normal, bold
+[ ---  end  ---- ]
+
+=== [ topic ][ font ][ size ] ===
+[ --- start ---- ]
+em: 1em == size of current font
+ex: height of letter 'x'
+pt: point = 1/72 inch (for printing)
+pc: pica = 12 points, 1/16 inch
 [ ---  end  ---- ]
 
 === [ topic ][ text-shadow ] ===
@@ -265,6 +466,49 @@ p { text-shadow: 1px 1px 1px #000, 3px 3px 5px blue; }
 
 Example: transparent color
 p { text-shadow: 0px 2px 2px rgba(255, 255, 255, 0.4); }
+[ ---  end  ---- ]
+
+=== [ topic ][ box shadow ] ===
+[ --- start ---- ]
+- h-shadow (+ve on right, -ve on left)
+- v-shadow (+ve towards bottom, -ve towards top)
+box-shadow: h-shadow v-shadow blur spread color inset;
+
+Example 0: multiple box-shadow
+box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.03) inset, 0 0 0 1px rgba(0,0,0,0.15);
+
+Example 1:
+.shadow {
+-moz-box-shadow:    3px 3px 5px 6px #ccc;
+-webkit-box-shadow: 3px 3px 5px 6px #ccc;
+box-shadow:         3px 3px 5px 6px #ccc;
+}
+
+Example ex 2:
+.shadow1 {
+	margin: 40px;
+	background-color: rgb(68,68,68); /* Needed for IEs */
+
+	-moz-box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
+	-webkit-box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
+	box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
+
+	filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=3,MakeShadow=true,ShadowOpacity=0.30);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Blur(PixelRadius=3,MakeShadow=true,ShadowOpacity=0.30)";
+	zoom: 1;
+}
+.shadow1 .content {
+	position: relative; /* This protects the inner element from being blurred */
+	padding: 100px;
+	background-color: #DDD;
+}
+
+Example 3 : one side
+.one-edge-shadow {
+	-webkit-box-shadow: 0 8px 6px -6px black;
+	   -moz-box-shadow: 0 8px 6px -6px black;
+	        box-shadow: 0 8px 6px -6px black;
+}
 [ ---  end  ---- ]
 
 === [ topic ][ links ] ===
@@ -419,6 +663,11 @@ p.hidden {border-style:hidden;}
 <p class="hidden">A hidden border.</p>
 [ ---  end  ---- ]
 
+=== [ topic ][ box model ][ box-border ] ===
+[ --- start ---- ]
+
+[ ---  end  ---- ]
+
 === [ topic ][ box model ][ outline ] ===
 [ --- start ---- ]
 - An outline is a line that is drawn around elements (outside the borders)
@@ -517,6 +766,150 @@ function resetElement() {
 
 - inline elements only takes up as much width, no line break
 - Example: <span>, <a>
+- display: { inline | block | inline-block | table };
+[ ---  end  ---- ]
+
+=== [ topic ][ display ][ list-item ] ===
+[ --- start ---- ]
+- behave like unorderd list
+h2 {
+    display: list-item;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ display ][ middle ] ===
+[ --- start ---- ]
+Problem: to place an element in the middle of an div vertically
+use 
+{
+    display: table;      /* or table-cell?, for ie11 and above */
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/// ie7
+<div>
+<span style="height:100%; vertical-align: middle; display: inline-block;"}
+</span>
+<img src=xxx.jpg>
+</div>
+[ ---  end  ---- ]
+
+=== [ topic ][ inline vs block ][ block ][ inline ] ===
+[ --- start ---- ]
+- Block element
+Examples: 
+<address> Contact information.
+<article> Article content.
+<aside> Aside content.
+<audio> Audio player.
+<blockquote> Long ("block") quotation.
+<canvas> Drawing canvas.
+<dd> Definition description.
+<div> Document division.
+<dl> Definition list.
+<fieldset> Field set label.
+<figcaption> Figure caption.
+<figure> Groups media content with a caption (see <figcaption>).
+<footer> Section or page footer.
+<form> Input form.
+<h1>, <h2>, <h3>, <h4>, <h5>, <h6> Heading levels 1-6.
+<header> Section or page header.
+<hgroup> Groups header information.
+<hr> Horizontal rule (dividing line).
+<noscript> Content to use if scripting is not supported or turned off.
+<ol> Ordered list.
+<output> Form output.
+<p> Paragraph.
+<pre> Preformatted text.
+<section> Section of a web page.
+<table> Table.
+<tfoot> Table footer.
+<ul> Unordered list.
+<video> Video player.
+
+
+- inline elements
+- They take up the width of their contents.
+- will not accept width and height
+Examples: <b>, <i>, <td>, <a>, <img>, <span>
+big, small, tt
+abbr, acronym, cite, code, dfn, em, kbd, strong, samp, var
+bdo, br, map, object, q, script, sub, sup
+button, input, label, select, textarea
+
+inline-block elements:
+- similar to inline but allow width and height to be set
+[ ---  end  ---- ]
+
+=== [ topic ][ display ][ inline vs block vs inline-block ] ===
+[ --- start ---- ]
+Inline elements:
+    respect left & right margins and padding, but not top & bottom; cannot have a 
+    width and height set; allow other elements to sit to their left and right.
+
+Block elements:
+    respect all of those; force a line break after the block element.
+    width will take parent's width
+
+Inline-block elements:
+    allow other elements to sit to their left and right; respect top & bottom 
+    margins and padding; respect height and width.
+
+<div>
+- A "block-level element"
+- by default, tries to be as wide as possible (take up as much horizontal space as they can)
+- can contain all other elements!
+- can only be inside other block-level elements
+- defines a rectangular region on the page
+- begins on a "new line", and has an "carriage return" at the end, like a <p>
+- zero in heigth if there is no content in it. 
+
+<span>
+- An "inline element"
+- cannot contain block-level elements!!
+- can be inside any other element
+- defines a "snake" on the page
+- tries to be as small as possible
+- doesn't create any new lines.
+
+/// can't put block element into inline element even declared it as block display
+<div><p>correct</p></div>
+<span style="display: block;"><p>wrong</p></span>
+[ ---  end  ---- ]
+
+=== [ topic ][ list-style ] ===
+[ --- start ---- ]
+ul { list-style: <list-style-type> || <list-style-position> || <list-style-image>; }
+
+Example:
+ul { list-style: square outside none; }
+== (equal to longhand)
+ul {
+    list-style-type: square;
+    list-style-position: outside;
+    list-style-image: none;
+}
+
+- list-style-type: value;
+disc
+circle
+square
+decimal
+decimal-leading-zero
+lower-roman
+upper-roman
+lower-greek
+lower-latin
+upper-latin
+armenian
+georgian
+lower-alpha
+upper-alpha
+none
+
+- list-style-position: { inside | outside };
+- ul { list-style-image: url(images/bullet.png); }
 [ ---  end  ---- ]
 
 === [ topic ][ css advanced ][ opacity ] ===
@@ -642,6 +1035,15 @@ img {
 <p>Because the image has a z-index of -1, it will be placed behind the text.</p>
 [ ---  end  ---- ]
 
+=== [ topic ][ positioning ][ z-index ] ===
+[ --- start ---- ]
+- The z-index property specifies the stack order of an element.
+- An element with greater stack order is always in front of an element with a 
+  lower stack order.
+Note: z-index only works on positioned elements (position:absolute, 
+position:relative, or position:fixed).
+[ ---  end  ---- ]
+
 === [ topic ][ css advanced ][ align ] ===
 [ --- start ---- ]
 - block element can be center-aligned by setting the left and right margin to auto
@@ -724,6 +1126,11 @@ Example: select every child of #container div
 }
 [ ---  end  ---- ]
 
+=== [ topic ][ selector ][ X.ClassY ] ===
+[ --- start ---- ]
+
+[ ---  end  ---- ]
+
 === [ topic ][ selector ][ X Y ] ===
 [ --- start ---- ]
 - descendant
@@ -738,11 +1145,13 @@ ul a{
 === [ topic ][ selector ][ X > Y ] ===
 [ --- start ---- ]
 - select direct children
+- won't select nested children in another element (those are called descendant 
+  and will be selected by using: X Y {} rather than X > Y {})
 [ ---  end  ---- ]
 
 === [ topic ][ selector ][ X + Y ] ===
 [ --- start ---- ]
-- adjacent selector
+- select the next immediate adjacent selector
 
 Example: select first <p> that is immediately preceded by <ul>
 ul + p { color: red; }
@@ -755,12 +1164,67 @@ Example: select any <p> as long as they follow a ul
 ul ~ p { color: red; }
 [ ---  end  ---- ]
 
+=== [ topic ][ selector ][ parent ] ===
+[ --- start ---- ]
+- not supported in CSS yet, but with jqeury
+
+Example 1:
+$("p:has(img)")
+
+Example 2:
+jQuery.parse.push(/^\s*(<)(\s*)(.*)$/);
+jQuery.expr["<"] = jQuery.expr[":"].has;
+then can put inside css:
+p < img { width: 150%; }
+[ ---  end  ---- ]
+
 === [ topic ][ selector ][ attribute ][ X[title] ] ===
 [ --- start ---- ]
 - attributes selector, select those with the attribute specified
 
 Example: select those anchor that has a title attribute
-a[tite] { color: red; }
+a[title] { color: red; }
+
+Example 2: /// select all element with title=w3chools
+[title=W3Schools]
+{ border:5px solid green; }
+
+Example 3:
+/// select all elemtn with title=hello (space is allowed)
+/// e.g. a[title="hello world"]
+[title~=hello] { color:blue; }
+<h1 title="hello world">Hello world</h1>
+
+Example 4:
+[lang|=en] {
+color:blue; }
+
+/// apply to
+<p lang="en">Hello!</p>
+<p lang="en-us">Hi!</p>
+<p lang="en-gb">Ello!</p>
+/// will not apply to
+<p lang="us">Hi!</p>
+<p lang="no">Hei!</p>
+
+Example 5:
+input[type="text"] {
+width:150px;
+display:block;
+margin-bottom:10px;
+background-color:yellow;
+}
+
+input[type="button"] {
+width:120px;
+margin-left:35px;
+display:block;
+}
+
+<form name="input" action="" method="get">
+Firstname:<input type="text" name="Name" value="Peter" size="20">
+Lastname:<input type="text" name="Name" value="Griffin" size="20">
+<input type="button" value="Example Button">
 [ ---  end  ---- ]
 
 === [ topic ][ selector ][ attribute ][ X[href="foo"] ] ===
@@ -837,6 +1301,12 @@ a:hover {color:#FF00FF;}  /* mouse over link */
 a:active {color:#0000FF;}  /* selected link */
 a.red:visited {color:#FF0000;}
 <a class="red" href="css_syntax.asp">CSS Syntax</a>
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ pseudo ][ ie support ] ===
+[ --- start ---- ]
+#box::after
+For IE8 support you must replace :: with :.
 [ ---  end  ---- ]
 
 === [ topic ][ pseudo-class ][ lang ] ===
@@ -935,11 +1405,64 @@ body {
 }
 [ ---  end  ---- ]
 
+=== [ topic ][ media type ] ===
+[ --- start ---- ]
+- A document usually needs a larger font-size on a screen than on paper, and 
+  sans-serif fonts are easier to read on the screen, while serif fonts are 
+  easier to read on paper.
+@media screen   {
+  p.test {font-family:verdana,sans-serif;font-size:14px;}
+ }
+@media print   {
+  p.test {font-family:times,serif;font-size:10px;}
+ }
+@media screen,print   {
+  p.test {font-weight:bold;}
+ }
+[ ---  end  ---- ]
+
+=== [ topic ][ border-image ] ===
+[ --- start ---- ]
+Example 1:
+#round
+{
+-webkit-border-image:url(border.png) 30 30 round; /* Safari 5 and older */
+-o-border-image:url(border.png) 30 30 round; /* Opera */
+border-image:url(border.png) 30 30 round;
+}
+
+#stretch
+{
+-webkit-border-image:url(border.png) 30 30 stretch; /* Safari 5 and older */
+-o-border-image:url(border.png) 30 30 stretch; /* Opera */
+border-image:url(border.png) 30 30 stretch;
+}
+
+<p><b>Note:</b> Internet Explorer 10, and earlier versions, do not support the border-image property.</p>
+<p>The border-image property specifies an image to be used as a border.</p>
+
+<div id="round">Here, the image is tiled (repeated) to fill the area.</div>
+<br>
+<div id="stretch">Here, the image is stretched to fill the area.</div>
+[ ---  end  ---- ]
+
+=== [ topic ][ css Code Rule ] ===
+[ --- start ---- ]
+- clean format
+- consistency
+    = one space after selectors and sometimes there is none?
+    = Some blocks of code are indented and others aren't?
+    = Single line CSS is mixed with multi-line CSS with no rhyme or reason?
+- size of css
+    = 100k is big. small is good.
+[ ---  end  ---- ]
+
 === [ topic ][ reference ] ===
 [ --- start ---- ]
 shorthand : color, style, width
 width: { thin medium thick}
 style: { none dotted dashed solid double groove ridge inset outset inherit}
+- for shorthand value (color, style, width), they can be placed in any sequence
 
 More Complete:
 .reset-this {
@@ -1096,8 +1619,12 @@ More Complete:
 
 === [ topic ][ tips ] ===
 [ --- start ---- ]
-- kn: css is case sensitive!
+- kn: css selector is case sensitive!
   div.title is different than div.Title
+  suggestion is to use lowercase.
+- however, css properties and value are case insensitive;
+- can put any char in front css element to temporarily disable it during debug
+  e.g. 1background { color: red; }
 <!--
 	View source is a feature, not a bug. Thanks for your curiosity and
 	interest in participating!
@@ -1146,9 +1673,10 @@ $(document).ready(function()
 -overflow
 - cursor
 - text-align: left !important;
+- text-indent: -9999px;
 [ ---  end  ---- ]
 
-=== [ topic ][ problem ] ===
+=== [ topic ][ problem ][ text-align ] ===
 [ --- start ---- ]
 [ Problem ] 
 Description: text-align: right is not working
@@ -1166,4 +1694,26 @@ div.desc {
     font-size: 15px;
     color: rgb(83, 83, 83);
 }
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ div height zero ] ===
+[ --- start ---- ]
+.video_image {
+    position: relative;
+    background: url('../image/night-yosemite.jpg');
+}
+
+.big_button {
+
+}
+<div class="video_image">
+Solution: put height to .video_image
+Reason: div doesn't have a height set, and no elements inside it which would 
+give it a height.
+    
+[ ---  end  ---- ]
+
+=== [ topic ][ compatibilitt ][ support ][ earlier browser ] ===
+[ --- start ---- ]
+http://code.google.com/p/ie7-js/
 [ ---  end  ---- ]

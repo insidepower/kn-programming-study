@@ -54,3 +54,9 @@ mysqldump -uWORDPRESS_MYSQL_USERNAME -pWORDPRESS_MYSQL_PASSWORD -hWORDPRESS_MYSQ
 Example usage:
 mysqldump -ucodex -pmypassword -hlocalhost wordpress >/home/codex-m/wordpress.sql
 [ ---  end  ---- ]
+
+=== [ topic ][ plugin ] ===
+[ --- start ---- ]
+- SEO optimization
+Yoast WordPress SEO plugin v1.4.23 - http://yoast.com/wordpress/seo/
+[ ---  end  ---- ]
