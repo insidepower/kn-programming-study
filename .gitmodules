@@ -1,3 +1,9 @@
 [submodule "cpptest"]
 	path = cpptest
 	url = git@github.com:insidepower/cpptest.git
+[submodule "webdesign/web_reference/html5_boilerplate"]
+	path = webdesign/web_reference/html5_boilerplate
+	url = https://github.com/h5bp/html5-boilerplate
+[submodule "github/js-beautify"]
+	path = github/js-beautify
+	url = git@github.com:kenng/js-beautify.git
