@@ -4,8 +4,712 @@
 - install local web server with php and sql
 [ ---  end  ---- ]
 
+=== [ topic ][ php file ] ===
+[ --- start ---- ]
+PHP files can contain text, HTML, CSS, JavaScript, and PHP code
+PHP code are executed on the server, and the result is returned to the browser as plain HTML
+PHP files have extension ".php"
+
+PHP can generate dynamic page content
+PHP can create, open, read, write, and close files on the server
+PHP can collect form data
+PHP can send and receive cookies
+PHP can add, delete, modify data in your database
+PHP can restrict users to access some pages on your website
+PHP can encrypt data
+
+PHP runs on various platforms (Windows, Linux, Unix, Mac OS X, etc.)
+PHP is compatible with almost all servers used today (Apache, IIS, etc.)
+PHP supports a wide range of databases
+PHP is free. Download it from the official PHP resource: www.php.net
+PHP is easy to learn and runs efficiently on the server side
+[ ---  end  ---- ]
+
+=== [ topic ][ basic ] ===
+[ --- start ---- ]
+- php statement must end with ;
+[ ---  end  ---- ]
+
+=== [ topic ][ test ] ===
+[ --- start ---- ]
+http://localhost/testphp.php
+usually the server root is in /var/www
+
+@ content of testphp.php
+<?php phpinfo(); ?>
+[ ---  end  ---- ]
+
+=== [ topic ][ comment ] ===
+[ --- start ---- ]
+// This is a single line comment
+# This is also a single line comment
+/*
+This is a multiple lines comment block
+that spans over more than on */
+[ ---  end  ---- ]
+
+=== [ topic ][ case sensitive ] ===
+[ --- start ---- ]
+- all user-defined functions, classes, and keywords (e.g. if, else, while, echo, 
+etc.) are NOT case-sensitive.
+- but all variables are case-sensitive
+
+Example 1: all are correct
+<?php
+ECHO "Hello World!<br>";
+echo "Hello World!<br>";
+EcHo "Hello World!<br>";
+?>
+
+Example 2: only first one print
+$color="red";
+echo "My car is " . $color . "<br>";
+echo "My house is " . $COLOR . "<br>";
+echo "My boat is " . $coLOR . "<br>";
+[ ---  end  ---- ]
+
+=== [ topic ][ echo ] ===
+[ --- start ---- ]
+<?php echo '<b>Hello World</b>' ?> 
+echo 'This will not expand: \n a newline';
+echo 'You can also have embedded newlines in 
+        strings this way as it is
+        okay to do';
+echo <<<EOT
+    My name is "$name". I am printing some $foo->foo.
+    Now, I am printing some {$foo->bar[1]}.
+    This should print a capital 'A': \x41
+EOT;
+[ ---  end  ---- ]
+
+=== [ topic ][ heredoc ] ===
+[ --- start ---- ]
+- Heredocs can not be used for initializing class properties
+- syntax 
+
+echo <<< VAR
+... string ...
+VAR
+[ ---  end  ---- ]
+
+=== [ topic ][ nowdoc ] ===
+[ --- start ---- ]
+- Nowdocs are to single-quoted strings
+- heredocs are to double-quoted strings. 
+- no parsing is done inside a nowdoc. 
+- ideal for embedding code of text without the need for escaping.
+
+echo <<<'EOT'
+My name is "$name". I am printing some $foo->foo.
+Now, I am printing some {$foo->bar[1]}.
+This should not print a capital 'A': \x41
+EOT;
+
+/// output is exactly the same inside the 'EOT'
+[ ---  end  ---- ]
+
+=== [ topic ][ print ] ===
+[ --- start ---- ]
+- with or without parentheses: print or print().
+print "My car is a {$cars[0]}";
+[ ---  end  ---- ]
+
+=== [ topic ][ echo vs print ] ===
+[ --- start ---- ]
+echo 
+- faster than print
+- doesn't set a return value
+- echo expression [, expression[, expression] ... ]
+- echo ( expression, expression ) is not valid
+- echo ("howdy"),("partner");
+- echo "howdy","partner";
+- echo  "and a ", 1, 2, 3;
+- echo ("and a 123");
+
+print
+- behave like a function, return value
+- can only take one parameter
+$b ? print "true" : print "false";
+$ret = print "Hello World"  ==> $ret = 1
+- print ("and a 123");
+  print  "and a 123";
+
+echo 'foo'.'bar' ; //concatenates the 2 strings
+print('foo', 'bar'); //Fatal error
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ] ===
+[ --- start ---- ]
+var_dump() function returns the data type and value of variables
+$x = 5985;
+var_dump($x); // int(5985)
+$x = -345; // negative number 
+var_dump($x); // int(-345)
+$x = 0x8C; // hexadecimal number
+var_dump($x); // int(140)
+$x = 047; // octal number
+var_dump($x); // int(39)
+$x = "test"; var_dump($x); // string(4) "test"
+$x = 1.314; var_dump($x);  // float(1.314)
+$x = array("ibm", "apple"); var_dump($x); // array(2) { [0]=> string(3) "ibm" [1]=> string(5) "apple" }
+$x = null; var_dump($x); // NULL
+ 
+[ ---  end  ---- ]
+
+=== [ topic ][ variable scope ] ===
+[ --- start ---- ]
+static $x=0; /// will not destroy after function is completed
+[ ---  end  ---- ]
+
+=== [ topic ][ var ] ===
+[ --- start ---- ]
+Example: <vars.php>
+<?php $weather='sunny'; $location='Johor'>
+
+/// usage
+<?php include 'vars.php'; echo "weather of $location today is $weather">
+[ ---  end  ---- ]
+
+=== [ topic ][ var ][ boolean ] ===
+[ --- start ---- ]
+$x=true;
+$y=false;
+[ ---  end  ---- ]
+
+=== [ topic ][ var ][ superglobal ] ===
+[ --- start ---- ]
+- "superglobals", are always accessible, regardless of scope
+$GLOBALS
+$_SERVER
+$_REQUEST
+$_POST
+$_GET
+$_FILES
+$_ENV
+$_COOKIE
+$_SESSION
+
+$GLOBALS: 
+- PHP stores all global variables in an array called $GLOBALS[index]. 
+  The index holds the name of the variable.
+Example 1:
+$x = 75; 
+$y = 25;
+function addition() { $GLOBALS['z'] = $GLOBALS['x'] + $GLOBALS['y']; }
+addition(); echo $z;
+
+$_SERVER:
+- stores information about headers, paths, and script locations.
+Example 2:
+echo $_SERVER['PHP_SELF'];             // /php/demo_global_server.php
+echo $_SERVER['SERVER_NAME'];          // www.w3schools.com
+echo $_SERVER['HTTP_HOST'];            // www.w3schools.com
+echo $_SERVER['HTTP_REFERER'];         // http://www.w3schools.com/php/showphp.asp?filename=demo_global_server
+echo $_SERVER['HTTP_USER_AGENT'];      // Mozilla/5.0 (X11; Linux i686) ...
+echo $_SERVER['SCRIPT_NAME'];          // /php/demo_global_server.php                                                                                                                    
+/// current url: http://www.w3schools.com/php/showphp.asp?filename=demo_global_server
+[ ---  end  ---- ]
+
+=== [ topic ][ var ][ superglobal ][ $_REQUEST ] ===
+[ --- start ---- ]
+- $_REQUEST is used to collect data after submitting an HTML form.
+- $_REQUEST, by default, contains the contents of $_GET, $_POST and $_COOKIE
+
+Example 1: 
+/// this file point back to itself in the action=.... 
+/// usually is pointing to a specific php file 
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+Name: <input type="text" name="fname">
+<input type="submit">
+</form>
+
+<?php 
+$name = $_REQUEST['fname']; 
+echo $name; 
+?>
+[ ---  end  ---- ]
+
+=== [ topic ][ var ][ superglobal ][ $_POST ][ form ] ===
+[ --- start ---- ]
+- info is invisible to others (names/values pair embedded within the body of the HTTP request)
+- no limits on the amount of info to send
+- supports advanced functionality such as support for multi-part binary input while uploading files to server.
+
+Example 1:
+<form method="POST" action="php_form_001.php">
+    <label for=name>Name: </label>
+    <input type="text" name="fname" id="name" /><br>
+    <label for=country>Country: </label>
+    <input type="text" name="fcountry" id=country /><br>
+    <input type="submit">
+</form>
+$name = $_POST['fname'] ;
+$country = $_POST['fcountry'];
+echo "<h3 class=content> Welcome ". $name. " who is from ". $country. "!</h1>";
+
+
+[ ---  end  ---- ]
+
+=== [ topic ][ var ][ superglobal ][ $_GET ][ form ] ===
+[ --- start ---- ]
+$_GET when someone is requesting data from your application.
+- information sent is visible (variable name-value are displayed in URL)
+- since information is visible, possible to bookmark the page
+- limitation of about 2000 characters
+- never use it to send sensitive data like password
+[ ---  end  ---- ]
+
+=== [ topic ][ form ] ===
+[ --- start ---- ]
+- htmlspecialchars() function converts special characters to HTML entities.
+  e.g. user input <book> in the textarea.
+  after php processed, it need to convert it to &lt;book&gt;
+[ ---  end  ---- ]
+
+=== [ topic ][ form ][ $_SERVER["PHP_SELF"] Exploits ] ===
+[ --- start ---- ]
+- not safe
+<form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
+user enter url: http://www.example.com/test_form.php/%22%3E%3Cscript%3Ealert('hacked')%3C/script%3E
+translated into
+<form method="post" action="test_form.php"/><script>alert('hacked')</script>
+
+- more safe
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+user enter url: http://www.example.com/test_form.php/%22%3E%3Cscript%3Ealert('hacked')%3C/script%3E
+translated into
+<form method="post" action="test_form.php/&quot;&gt;&lt;script&gt;alert('hacked')&lt;/script&gt;">
+
+- another scenario
+user enter following to text area:
+<script>location.href('http://www.hacked.com')</script>
+When we use the htmlspecialchars() function, it translated into
+&lt;script&gt;location.href('http://www.hacked.com')&lt;/script&gt;
+
+Example 1:
+$name = $email = $gender = $comment = $website = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+  $name = test_input($_POST["name"]);
+  $email = test_input($_POST["email"]);
+  $website = test_input($_POST["website"]);
+  $comment = test_input($_POST["comment"]);
+  $gender = test_input($_POST["gender"]);
+}
+
+function test_input($data)
+{
+  // Strip unnecessary characters (extra space, tab, newline)
+  $data = trim($data);
+  // Remove backslashes (\) from the user input data
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ form ][ check ] ===
+[ --- start ---- ]
+Example 1:
+if (empty($_POST["name"])) {
+    $nameErr = "Name is required";
+}else{      
+    $name = test_input($_POST["name"]);
+    if (!preg_match("/^[a-zA-Z ]*$/",$name)){
+        $nameErr = "Only letters and white space allowed"; 
+    }
+}
+
+Example 2: checking valid email
+if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email))
+
+Example 3: checking valid url
+if (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$website))
+
+Example 4:
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+Name: <input type="text" name="name" value="<?php echo $name;?>">
+   <span class="error">* <?php echo $nameErr;?> </span>
+
+<input type="radio" name="gender" <?php if (isset($gender) && $gender=="female") echo "checked";?>  value="female">Female
+   <input type="radio" name="gender" <?php if (isset($gender) && $gender=="male") echo "checked";?>  value="male">Male
+   <span class="error">* <?php echo $genderErr;?></span>
+[ ---  end  ---- ]
+
+=== [ topic ][ number ] ===
+[ --- start ---- ]
+\[0-7]{1,3}        - octal, \041
+\x[0-9A-Fa-f]{1,2} - hexa, \x15
+[ ---  end  ---- ]
+
+=== [ topic ][ string ] ===
+[ --- start ---- ]
+echo strlen("Hello world!");
+echo strpos("Hello world!","world");  /// output: 6
+
+$pizza  = "piece1 piece2 piece3 piece4 piece5 piece6";
+/// explode will split the string and returning an array
+/// syntax: array explode ( string $delimiter , string $string [, int $limit ] )
+$pieces = explode(" ", $pizza);
+echo $pieces[0]; // piece1
+echo $pieces[1]; // piece2
+[ ---  end  ---- ]
+
+=== [ topic ][ path ] ===
+[ --- start ---- ]
+[ basename ]
+- string basename ( string $path [, string $suffix ] )
+echo "1) ".basename("/etc/sudoers.d", ".d").PHP_EOL;  // sudoers
+echo "2) ".basename("/etc/passwd").PHP_EOL;           // passwd
+echo "3) ".basename("/etc/").PHP_EOL;                 // etc    
+echo "4) ".basename(".").PHP_EOL;                     // .
+
+[ dirname ]
+- dirname — Returns parent directory's path
+string dirname ( string $path )
+echo "1) " . dirname("/etc/passwd") . PHP_EOL;  // /etc
+echo "2) " . dirname("/etc/") . PHP_EOL;        // / (or \ on Windows)
+echo "3) " . dirname(".");                      // .
+
+[ pathinfo ]
+$path_parts = pathinfo('/www/htdocs/inc/lib.inc.php');
+echo $path_parts['dirname'], "\n";                        // /www/htdocs/inc
+echo $path_parts['basename'], "\n";                       // lib.inc.php
+echo $path_parts['extension'], "\n";                      // php
+echo $path_parts['filename'], "\n"; // since PHP 5.2.0    // lib.inc        
+
+// empty extension (notice the dot at the end)
+$path_parts = pathinfo('/path/emptyextension.');
+var_dump($path_parts['extension']);           // string(0) ""
+
+// no extension (no dot at the end)
+$path_parts = pathinfo('/path/noextension');
+var_dump($path_parts['extension']);           // Notice: Undefined index: extension in test.php on line 6 NULL
+[ ---  end  ---- ]
+
+=== [ topic ][ path ][ file ][ finfo_file ] ===
+[ --- start ---- ]
+finfo_open -- finfo::__construct — Create a new fileinfo resource
+resource finfo_open ([ int $options = FILEINFO_NONE [, string $magic_file = NULL ]] )
+
+finfo_file -- finfo::file — Return information about a file
+
+option:
+FILEINFO_NONE (integer) - No special handling.
+FILEINFO_SYMLINK (integer)- Follow symlinks.
+FILEINFO_MIME_TYPE (integer) - Return the mime type. Available since PHP 5.3.0.
+FILEINFO_MIME_ENCODING (integer) - Return the mime encoding of the file. Available since PHP 5.3.0.
+FILEINFO_MIME (integer) - Return the mime type and mime encoding as defined by RFC 2045.
+FILEINFO_COMPRESS (integer) - Decompress compressed files. Disabled since PHP 5.3.0 due to thread safety issues.
+FILEINFO_DEVICES (integer) - Look at the contents of blocks or character special devices.
+FILEINFO_CONTINUE (integer) - Return all matches, not just the first.
+FILEINFO_PRESERVE_ATIME (integer) - If possible preserve the original access time.
+FILEINFO_RAW (integer) - Don't translate unprintable characters to a \ooo octal representation.
+
+Example 1:
+$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+foreach (glob("*") as $filename) {
+    echo finfo_file($finfo, $filename) . "\n";   // output: text/html etc
+}
+finfo_close($finfo);
+
+[ ---  end  ---- ]
+
+=== [ topic ][ path ][ glob ][ file ] ===
+[ --- start ---- ]
+glob — Find pathnames matching a Pattern
+array glob ( string $pattern [, int $flags = 0 ] )
+
+pattern
+The pattern. No tilde expansion or parameter substitution is done.
+flags
+Valid flags:
+GLOB_MARK - Adds a slash to each directory returned
+GLOB_NOSORT - Return files as they appear in the directory (no sorting)
+GLOB_NOCHECK - Return the search pattern if no files matching it were found
+GLOB_NOESCAPE - Backslashes do not quote metacharacters
+GLOB_BRACE - Expands {a,b,c} to match 'a', 'b', or 'c'
+GLOB_ONLYDIR - Return only directory entries which match the pattern
+GLOB_ERR - Stop on read errors (like unreadable directories), by default errors are ignored.
+
+Example 1:
+foreach (glob("*.txt") as $filename) {
+    echo "$filename size " . filesize($filename) . "\n";
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ constant ] ===
+[ --- start ---- ]
+- constants are automatically global across the entire script
+- syntax: define("CONST_VAR", "string", bool_isVarCaseIgnore)
+
+Example 1:
+define("GREETING", "Welcome to W3Schools.com!");
+echo GREETING;
+
+Example 2:
+define("GREETING", "Welcome to W3Schools.com!", true);
+echo greeting;
+[ ---  end  ---- ]
+
+=== [ topic ][ array ] ===
+[ --- start ---- ]
+$cars=array("Volvo","BMW","Toyota");
+echo "My car is a {$cars[0]}";
+echo count($cars);  /// 3
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ list ] ===
+[ --- start ---- ]
+Example 1:
+$data = "foo:*:1023:1000::/home/foo:/bin/sh";
+list($user, $pass, $uid, $gid, $gecos, $home, $shell) = explode(":", $data);
+echo $user; // foo
+echo $pass; // *
+
+Example 2:
+$info = array('coffee', 'brown', 'caffeine');
+list($drink, $color, $power) = $info;
+echo "$drink is $color and $power makes it special.\n";
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ in_array ] ===
+[ --- start ---- ]
+in_array("jpg", array("gif", "jpeg", "jpg", "png"));
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ end ] ===
+[ --- start ---- ]
+$extension = end($temp);
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ associative array ] ===
+[ --- start ---- ]
+$age=array("Peter"=>"35","Ben"=>"37","Joe"=>"43");
+or:
+$age['Peter']="35";
+$age['Ben']="37";
+$age['Joe']="43";
+foreach($age as $x=>$x_value)   {   echo "Key=" . $x . ", Value=" . $x_value; }
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ sorting ] ===
+[ --- start ---- ]
+sort() - sort arrays in ascending order
+rsort() - sort arrays in descending order
+asort() - sort associative arrays in ascending order, according to the value
+ksort() - sort associative arrays in ascending order, according to the key
+arsort() - sort associative arrays in descending order, according to the value
+krsort() - sort associative arrays in descending order, according to the key
+
+Example 1: 
+$age=array("Peter"=>"35","Ben"=>"37","Joe"=>"43");
+asort($age); // according to value
+// output:
+Key=Peter, Value=35
+Key=Ben, Value=37
+Key=Joe, Value=43
+
+ksort($age); // according to key
+// output:
+Key=Ben, Value=37
+Key=Joe, Value=43
+Key=Peter, Value=35
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ operator ] ===
+[ --- start ---- ]
+Operator	Name	Example	Result
++	Union	$x + $y	Union of $x and $y (but duplicate keys are not overwritten)
+==	Equality	$x == $y	True if $x and $y have the same key/value pairs
+===	Identity	$x === $y	True if $x and $y have the same key/value pairs in the same order and of the same types
+!=	Inequality	$x != $y	True if $x is not equal to $y
+<>	Inequality	$x <> $y	True if $x is not equal to $y
+!==	Non-identity	$x !== $y	True if $x is not identical to $y
+
+Example 1:
+$x = array("a" => "red", "b" => "green"); 
+$y = array("c" => "blue", "d" => "yellow"); 
+$z = $x + $y; // union of $x and $y
+var_dump($z);
+var_dump($x == $y);         bool(false)
+var_dump($x === $y);        bool(false)
+var_dump($x != $y);         bool(true) 
+var_dump($x <> $y);         bool(true) 
+var_dump($x !== $y);        bool(true)
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ multidimensional ] ===
+[ --- start ---- ]
+Example 1:
+$cars = array
+   (
+   array("Volvo",100,96),
+   array("BMW",60,59),
+   array("Toyota",110,100)
+   );
+  
+echo $cars[0][0].": Ordered: ".$cars[0][1].". Sold: ".$cars[0][2]."<br>";
+echo $cars[1][0].": Ordered: ".$cars[1][1].". Sold: ".$cars[1][2]."<br>";
+echo $cars[2][0].": Ordered: ".$cars[2][1].". Sold: ".$cars[2][2]."<br>";
+
+output:
+Volvo: Ordered: 100. Sold: 96
+BMW: Ordered: 60. Sold: 59
+Toyota: Ordered: 110. Sold: 100
+
+Example 2:
+$families = array
+(
+  "Griffin"=>array
+  (   "Peter",   "Lois",   "Megan"   ),
+
+  "Quagmire"=>array
+  (   "Glenn"   ),
+
+  "Brown"=>array
+  (   "Cleveland",   "Loretta",   "Junior"   )
+);
+
+$families['Griffin'][2] ===> output: Megan
+[ ---  end  ---- ]
+
+=== [ topic ][ operator ] ===
+[ --- start ---- ]
+$x=10; 
+$y=6;
+echo ($x + $y); // outputs 16
+echo ($x - $y); // outputs 4
+echo ($x * $y); // outputs 60
+echo ($x / $y); // outputs 1.6666666666667 
+echo ($x % $y); // outputs 4
+
+$x=10; echo $x; // outputs 10
+$y=20; $y += 100; echo $y; // outputs 120
+$z=50; $z -= 25; echo $z; // outputs 25
+$i=5; $i *= 6; echo $i; // outputs 30
+$j=10; $j /= 5; echo $j; // outputs 2
+$k=15; $k %= 4; echo $k; // outputs 3
+
+$x=10; echo ++$x; // outputs 11
+$y=10; echo $y++; // outputs 10
+$z=5; echo --$z; // outputs 4
+$i=5; echo $i--; // outputs 5
+
+Operator	Name	                    Example	    Result	
+==          Equal                       $x == $y    True if $x is equal to $y   
+===         Identical                   $x === $y   True if $x is equal to $y, and they are of the same type    
+!=          Not equal                   $x != $y    True if $x is not equal to $y   
+<>          Not equal                   $x <> $y    True if $x is not equal to $y   
+!==         Not identical               $x !== $y   True if $x is not equal to $y, or they are not of the same type 
+>           Greater than                $x > $y     True if $x is greater than $y   
+<           Less than                   $x < $y     True if $x is less than $y  
+>=          Greater than or equal to    $x >= $y    True if $x is greater than or equal to $y   
+<=          Less than or equal to       $x <= $y    True if $x is less than or equal to $y  
+
+$x=100; $y="100";
+var_dump($x == $y); // returns true because values are equal
+var_dump($x === $y); // returns false because types are not equal
+var_dump($x != $y); // returns false because values are equal
+var_dump($x !== $y); // returns true because types are not equal
+[ ---  end  ---- ]
+
+=== [ topic ][ logical operator ] ===
+[ --- start ---- ]
+Operator	Name	Example	Result
+and	And	$x and $y	 True if both $x and $y are true
+or	Or	$x or $y	 True if either $x or $y is true
+xor	Xor	$x xor $y	 True if either $x or $y is true, but not both
+&&	And	$x && $y	 True if both $x and $y are true
+||	Or	$x || $y	 True if either $x or $y is true
+!	Not	!$x	 True if $x is not true
+[ ---  end  ---- ]
+
+=== [ topic ][ concatenation ] ===
+[ --- start ---- ]
+/// below will produce "Hello world!"
+$txt1 = "Hello"
+$txt2 = $txt1 . " world!"
+
+$txt1 = "Hello"
+$txt1 .= " world!"
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ do...while ] ===
+[ --- start ---- ]
+do { ...  }
+while ($x<=5)
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ foreach ] ===
+[ --- start ---- ]
+Example 1:
+foreach ($array as $value)   { ...    }
+$colors = array("red","green","blue","yellow"); 
+foreach ($colors as $value)    {    echo "$value <br>";    }
+/// red green blue yellow
+
+Example 2:
+foreach (get_object_vars($obj) as $myProp => $myVal){
+        echo "$myProp = $myVal<br>";
+    }
+
+[ ---  end  ---- ]
+
+=== [ topic ][ class ] ===
+[ --- start ---- ]
+<?php
+
+class myPlant{
+    var $flower_color;
+    var $leaf_color;
+
+    function myPlant($color="green"){
+        $this->flower_color = $color;
+        $leaf_color = "yellow";
+    }
+
+    function getLeafColor(){
+        return $this->flower_color;
+    }
+}
+
+function printProperty($obj){
+    foreach (get_object_vars($obj) as $myProp => $myVal){
+        echo "$myProp = $myVal<br>";
+    }
+}
+
+
+$orkid = new myPlant("red");
+printProperty($orkid);
+
+// output: flower_color = red
+//         leaf_color =
+
+echo "<hr /> unknow flower: <br>";
+$unknown_flower = new myPlant();
+printProperty($unknown_flower);
+?>
+
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ default argument value ] ===
+[ --- start ---- ]
+function setHeight($minheight=50) { ... }
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ return ] ===
+[ --- start ---- ]
+function sum($x,$y) { $z=$x+$y; return $z; }
+echo "5 + 10 = " . sum(5,10) . "<br>";
+[ ---  end  ---- ]
+
 === [ topic ][ insert ][ include ][ require ] ===
 [ --- start ---- ]
+- insert the content of one PHP file into another PHP file before the 
+  server executes it.
 - include/require are identical except upon failure
   include: produce warning (E_WARNING) and continue script
   require: produce fatal error (E_COMPILE_ERROR) and stop script
@@ -26,13 +730,28 @@ echo '<a href="/default.php">Home</a>
 </body>
 [ ---  end  ---- ]
 
-=== [ topic ][ var ] ===
+=== [ topic ][ date ] ===
 [ --- start ---- ]
-Example: <vars.php>
-<?php $weather='sunny'; $location='Johor'>
+syntax: date(format{required},timestamp{optional})
 
-/// usage
-<?php include 'vars.php'; echo "weather of $location today is $weather">
+- if no timestamp argument is given, the current date and time will be used.
+d - Represents the day of the month (01 to 31)
+m - Represents a month (01 to 12)
+Y - Represents a year (in four digits)
+
+- mktime() returns the unix timestamp for date()
+
+mktime(hour,minute,second,month,day,year,is_dst)
+
+Example 1:
+echo date("Y/m/d") . "<br>";        // 2009/05/11
+echo date("Y.m.d") . "<br>";        // 2009.05.11
+echo date("Y-m-d");                 // 2009-05-11
+
+Example 2:
+$tomorrow = mktime(0,0,0,date("m"),date("d")+1,date("Y"));
+echo "Tomorrow is ".date("Y/m/d", $tomorrow);
+output: Tomorrow is 2009/05/12
 [ ---  end  ---- ]
 
 === [ topic ][ password ] ===
@@ -60,6 +779,26 @@ echo preg_replace($pattern, $replacement, $string);
 < output >: April1,2003
 [ ---  end  ---- ]
 
+=== [ topic ][ file ] ===
+[ --- start ---- ]
+<?php
+$file=fopen("welcome.txt","r") or exit("Unable to open file!");
+fclose($file);
+?>
+
+/// reading content
+while(!feof($file)){   
+    echo fgets($file). "<br>";   /// read line by line
+}
+fclose($file);
+
+/// read character by character
+while (!feof($file)){
+  echo fgetc($file);
+}
+fclose($file);
+[ ---  end  ---- ]
+
 === [ topic ][ list files ] ===
 [ --- start ---- ]
 function directoryToArray($directory, $recursive) {
@@ -83,4 +822,139 @@ function directoryToArray($directory, $recursive) {
     }
     return $array_items;
 }
+[ ---  end  ---- ]
+
+=== [ topic ][ exit ][ die ] ===
+[ --- start ---- ]
+exit — Output a message and terminate the current script
+die == exit
+- void exit ( int $status )
+- void exit ([ string $status ] )
+
+Example 1:
+$filename = '/path/to/data-file';
+$file = fopen($filename, 'r') or exit("unable to open file ($filename)");
+[ ---  end  ---- ]
+
+=== [ topic ][ localize ][ setlocale ][ currency ] ===
+[ --- start ---- ]
+setlocale — Set locale information
+
+/* Set locale to Dutch */
+setlocale(LC_ALL, 'nl_NL');
+[ ---  end  ---- ]
+
+=== [ topic ][ image ] ===
+[ --- start ---- ]
+[ getimagesize ]
+getimagesize — Get the size of an image
+array getimagesize ( string $filename [, array &$imageinfo ] )
+return: 
+Index 0 width of the image.
+Index 1 height of the image 
+Index 2 is one of the IMAGETYPE_XXX constants indicating the type of the image.
+Index 3 is a text string with the correct height="yyy" width="xxx" string that can be used directly in an IMG tag.
+mime is the correspondant MIME type of the image.
+channels will be 3 for RGB pictures and 4 for CMYK pictures.
+bits is the number of bits for each color
+
+Example 1: deliver images with the correct HTTP Content-type header
+$size = getimagesize($filename);
+$fp = fopen($filename, "rb");
+if ($size && $fp) {
+    header("Content-type: {$size['mime']}");
+    fpassthru($fp);
+    exit;
+} else {
+    // error
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ using linux command ][ system ] ===
+[ --- start ---- ]
+system — Execute an external program and display the output
+string system ( string $command [, int &$return_var ] )
+
+When allowing user-supplied data to be passed to this function, use 
+escapeshellarg() or escapeshellcmd() to ensure that users cannot trick the 
+system into executing arbitrary commands.
+
+If a program is started with this function, in order for it to continue running 
+in the background, the output of the program must be redirected to a file or 
+another output stream. Failing to do so will cause PHP to hang until the 
+execution of the program ends.
+
+/// check file type
+system("file -bi -- ".escapeshellarg($uploadedfile))
+
+/// get the ls content
+$last_line = system('ls', $retval);
+system('ls '.escapeshellarg($dir));
+[ ---  end  ---- ]
+
+=== [ topic ][ run external command ][ exec ] ===
+[ --- start ---- ]
+exec — Execute an external program
+string exec ( string $command [, array &$output [, int &$return_var ]] )
+
+Example 1:
+echo exec('whoami');
+[ ---  end  ---- ]
+
+=== [ topic ][ security ][ escape user input ] ===
+[ --- start ---- ]
+system('ls '.escapeshellarg($dir));
+
+Example 2:
+$command = './configure '.$_POST['configure_options'];
+$escaped_command = escapeshellcmd($command);
+system($escaped_command);
+[ ---  end  ---- ]
+
+=== [ topic ][ to know ] ===
+[ --- start ---- ]
+short_open_tag true - in order to use <? ...php.. ?> inside html code
+
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ] ===
+[ --- start ---- ]
+To display error messages caused by your PHP script you can include these lines of code:
+
+ini_set('display_errors',1); 
+ error_reporting(E_ALL);
+
+edit php.ini (@ /etc/php5/apache2/php.ini ) file and include this option:
+
+error_reporting = E_ALL
+To turn error reporting off for a single document, include this line:
+
+error_reporting(0);
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ] ===
+[ --- start ---- ]
+problem: php code is being commented in HTML
+solution: php code can't run inside .html extension, only run in .php
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ php code not running ] ===
+[ --- start ---- ]
+problem: missing semicolon
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ topic ] ===
+[ --- start ---- ]
+Problem:
+syntax error, unexpected (T_CONSTANT_ENCAPSED_STRING)
+syntax error, unexpected '$pass' (T_VARIABLE), expecting :: (T_PAAMAYIM_NEKUDOTAYIM)
+Solution: 
+remove all the space between the equation and between the variable. e.g. change
+    $data = 'foo:*:1023:1000::/home/foo:/bin/sh';
+to
+    $data='foo:*:1023:1000::/home/foo:/bin/sh';
+Reason:
+this is due to the strict reporting enabled in php.ini
+error_reporting = E_ALL
+So can also disable it to relax the rules.
 [ ---  end  ---- ]

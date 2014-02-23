@@ -1,0 +1,19 @@
+=== [ topic ][ setup ] ===
+[ --- start ---- ]
+sudo apt-get install software-properties-common
+sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+sudo add-apt-repository 'deb http://mariadb.biz.net.id//repo/10.0/ubuntu raring main'
+sudo apt-get update
+sudo apt-get install mariadb-server
+
+Configuration file `/etc/mysql/my.cnf' has changed. 
+(keep maintainer version - Y)
+[ ---  end  ---- ]
+
+=== [ topic ][ uninstall mysql ] ===
+[ --- start ---- ]
+sudo apt-get remove mysql-server mysql-client mysql-common
+sudo apt-get remove --purge mysql-server mysql-client mysql-common
+sudo apt-get autoremove
+sudo apt-get autoclean
+[ ---  end  ---- ]

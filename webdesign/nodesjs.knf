@@ -1,0 +1,25 @@
+=== [ topic ][ testrun ][ topic ] ===
+[ --- start ---- ]
+install nodejs from nodejs.org
+$ node --version
+v0.10.13
+$ mkdir app-sprint
+$ cd app-sprint
+$ npm install express@3.3.4
+node_modules/express/bin/express
+npm install
+npm start
+http://localhost:3000
+[ ---  end  ---- ]
+
+=== [ topic ][ usage ] ===
+[ --- start ---- ]
+Socket.IO, a node module, is the crown jewel of real-time 
+communication, then Node is still the best solution for real-time 
+client<->server messaging.
+
+Node.js is best suited for real-time applications: online games, collaboration 
+tools, chat rooms, or anything where what one user (or robot? or sensor?) does 
+with the application needs to be seen by other users immediately, without a 
+page refresh.
+[ ---  end  ---- ]

@@ -162,3 +162,14 @@ The following HTML 4.01 elements has been removed from HTML5:
 === [ topic ][ unsorted ] ===
 [ --- start ---- ]
 [ ---  end  ---- ]
+
+=== [ topic ][ section ] ===
+[ --- start ---- ]
+- defines sections in a document, such as chapters, headers, footers, or any 
+other sections of the document.
+[ ---  end  ---- ]
+
+=== [ topic ][ IndexedDB ] ===
+[ --- start ---- ]
+- not yet supported on safari
+[ ---  end  ---- ]

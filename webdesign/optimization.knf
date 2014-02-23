@@ -1,0 +1,19 @@
+=== [ topic ][ tips ][ topic ] ===
+[ --- start ---- ]
+Concept: low effort, bit impact
+1. good to awesome on performance
+web loads 0.5s faster, not 0.05s faster
+2. single person can do them w/o coordinating with 
+3. not require complex effort
+4. no baby sitting
+5. focus on front-end than back end (80/20 rules)
+
+1. turn on gzip or deflate (check with gzipwtf.com)
+2. cache stuff (server and client)
+- copy paste from html boilerplate .htaccess expires header part
+3. losslessly optimize images (use sprite if can)
+imageoptim.com
+pnggauntle.com
+4. combine jss and css together in one file
+codekit can combine small js file into one big file automatically
+[ ---  end  ---- ]

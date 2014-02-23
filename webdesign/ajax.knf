@@ -1,0 +1,24 @@
+=== [ topic ][ ajax vs jqeury ] ===
+[ --- start ---- ]
+AJAX is a technique to do an XMLHttpRequest (out of band Http request) from a 
+web page to the server and send/retrieve data to be used on the web page. AJAX 
+stands for Asynchronous Javascript And XML. It uses javascript to construct an 
+XMLHttpRequest, typically using different techniques on various browsers.
+
+jQuery (website) is a javascript framework that makes working with the DOM 
+easier by building lots of high level functionality that can be used to search 
+and interact with the DOM. Part of the functionality of jQuery implements a 
+high-level interface to do AJAX requests. jQuery implements this interface 
+abstractly, shielding the developer from the complexity of multi-browser 
+support in making the request.
+
+Example 2:
+On StackOverflow, pressing the up-vote button is AJAX whereas typing in your 
+question or answer and seeing it appear in the real-time preview window below 
+it is JavaScript (JQuery).
+
+This means that the difference between AJAX and Javascript is that AJAX allows 
+you to communicate with the server without doing a page refresh (i.e. going to 
+a new page) whereas JavaScript (JQuery) allows you to embed logic and behaviour 
+on your page. Of course, with this logic you create AJAX as well.
+[ ---  end  ---- ]

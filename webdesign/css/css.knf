@@ -75,6 +75,35 @@ Example:
 .my-class { color: blue; font-size:10px; }
 [ ---  end  ---- ]
 
+=== [ topic ][ class and id ][ double quote ] ===
+[ --- start ---- ]
+Question: Are quotes required around HTML 5 attributes?
+Answer:
+When writing HTML 5 attributes, you do not need to use quotation marks to
+define the value. When you don't use quotation marks you cannot use the
+following characters in your attribute values:
+
+double and single quote marks (" and ')
+spaces ( )
+equal sign (=)
+greater-than sign (>)
+
+Incorrect HTML 5 attributes:
+<p class=blah blah>
+<p class=blah=blah>
+<p class=blah>blah>
+<p class=blah'blah>
+<p class=blah"blah>
+
+Correct HTML 5 attributes:
+<p class=blahblah>
+<p class="blah blah">
+<p class=blah&#61;blah>
+<p class=blah&gt;blah>
+<p class="blah'blah">
+<p class='blah"blah'>
+[ ---  end  ---- ]
+
 === [ topic ][ multiple ][ classes and ids ] ===
 [ --- start ---- ]
 - http://css-tricks.com/multiple-class-id-selectors/
@@ -94,6 +123,17 @@ Example 3: specificity (used in overriding, instead of using !important)
 p < class="classA classB" > this para in gold </p>
 rather than using
 .classA { color: gold !important; }
+
+Example 4:
+.ul_anime .li_no_float { color: gold; }   /// in effective
+<ul class=ul_anime><li class=li_no_float></li></ul>
+is more specific and will be used, compared to
+.ul_anime li { color: pink; }
+
+Example 5:
+.ul_anime li { color: pink; }     /// in effective
+is more specific than 
+.li_no_float { color: yellow; }   /// not in used
 
 [ ---  end  ---- ]
 
@@ -167,6 +207,11 @@ color:red; text-align:right; font-size:20pt;
       font-size:10px;    /* correct */
 [ ---  end  ---- ]
 
+=== [ topic ][ tips ][ study-web ] ===
+[ --- start ---- ]
+- container min-width is specified.
+[ ---  end  ---- ]
+
 === [ topic ][ background ] ===
 [ --- start ---- ]
 - by default, background-image property repeats an image both horizontally and
@@ -194,6 +239,20 @@ margin-right:200px;
 /* shorthand property */
 /* background-color background-image background-repeat background-attachment background-position */
 background:#ffffff url('img_tree.png') no-repeat right top;
+
+Example 1: multiple background (first image on the bottom stack)
+body
+{
+background:url(img_tree.gif),url(img_flwr.gif);
+background-size:100% 100%;
+background-repeat:no-repeat;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ background-origin ] ===
+[ --- start ---- ]
+- background-origin property specifies the positioning area of the background images.
+- background image can be placed within the content-box, padding-box, or border-box area.
 [ ---  end  ---- ]
 
 === [ topic ][ background vs img ] ===
@@ -290,6 +349,7 @@ an RGB value - like with opacity: rgba(255, 0, 0, 0.5);
 a color name - like "red"
 operating system color - color: WindowInfoBackground;
 gold, wheat, tomato, orange, firebrick;
+- #fff = #ffffff
 [ ---  end  ---- ]
 
 === [ topic ][ color ][ text selection color ] ===
@@ -308,7 +368,16 @@ Select all elements that are in the progress of an animation at the time the sel
 
 === [ topic ][ gradient ] ===
 [ --- start ---- ]
+- can use fallback image, which will not loaded if CSS3 gradient is valid
+- use firebug, net tab to check if the fallback image is loaded
 - background: linear-gradient(direction, color-stop1, color-stop2, ...);
+- direction: {to left, to right, to bottom right, etc...}
+- can specify the percentage of color used after each color
+background: -webkit-radial-gradient(60% 70%, circle closest-side, red, yellow, black);
+/* A gradient going from the bottom to top, starting blue, being green after 40% 
+   and finishing red */ 
+linear-gradient( 0deg, blue, green 40%, red ); 
+
 div.example {
 	width:auto;color:#000000;
 	background-color: #000000;margin:0px;padding:5px;border:1px solid #d4d4d4;
@@ -318,6 +387,18 @@ div.example {
 div.example_code {
 	width:auto;background-color:#ffffff;padding:5px;border:1px solid #d4d4d4;font-size:14px;font-family:"courier new";
 }
+
+Example 1: fallback image
+/* fallback/image non-cover color */
+background-color: #1a82f7; 
+
+/* fallback image */
+background-image: url(images/fallback-gradient.png);
+background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2F2727), to(#1a82f7));
+background-image: -webkit-linear-gradient(top, #2F2727, #1a82f7); 
+background-image:    -moz-linear-gradient(top, #2F2727, #1a82f7);
+background-image:     -ms-linear-gradient(top, #2F2727, #1a82f7);
+background-image:      -o-linear-gradient(top, #2F2727, #1a82f7);
 [ ---  end  ---- ]
 
 === [ topic ][ opacity ][ transparent ] ===
@@ -396,6 +477,50 @@ $ gem install compass
 $ compass create <myproject>
 [ ---  end  ---- ]
 
+=== [ topic ][ data URI ][ embed img entirely ] ===
+[ --- start ---- ]
+benefit:
+- reduce HTTP Request count
+
+Example 1:
+<img width="32" height="32" title="" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpFMTZCRDY3REIzRjAxMUUyQUQzREIxQzRENUFFNUM5NiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFMTZCRDY3RUIzRjAxMUUyQUQzREIxQzRENUFFNUM5NiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkUxNkJENjdCQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkUxNkJENjdDQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+SM9MCAAAA+5JREFUeNrEV11Ik1EY3s4+ddOp29Q5b0opCgKFsoKoi5Kg6CIhuwi6zLJLoYLopq4qsKKgi4i6CYIoU/q5iDAKs6syoS76IRWtyJ+p7cdt7sf1PGOD+e0c3dygAx/67ZzzPM95/877GYdHRg3ZjMXFxepQKNS6sLCwJxqNNuFpiMfjVs4ZjUa/pmmjeD6VlJS8NpvNT4QQ7mxwjSsJiEQim/1+/9lgMHgIr5ohuxG1WCw9Vqv1clFR0dCqBODElV6v90ogEDjGdYbVjXhpaendioqK07CIR7ZAqE49PT09BPL2PMgTByQGsYiZlQD4uMXtdr+JxWINhgINYhGT2MsKgMrm2dnZXgRXhaHAg5jEJodUAHxux4LudHJE9RdEdA+i3Juz7bGHe4mhE9FNrgwBCLirMFV9Okh5eflFh8PR5nK5nDabrR2BNJlKO0T35+Li4n4+/J+/JQCxhmu5h3uJoXNHPbmWZAHMshWB8l5/ipqammaAf0zPDDx1ONV3vurdidqwAQL+pEc8sLcAe1CCvQ3YHxIW8Pl85xSWNC1hADDIv0rIE/o4J0k3kww4xSlwIhcq3EFFOm7KN/hUGOQkt0CFa5WpNJlMvxBEz/IVQAxg/ZRZl9wiHA63yDYieM7DnLP5CiAGsC7I5sgtYKJGWe2A8seFqgFJrJjEPY1Cn3pJ8/9W1e5VWsFDTEmFrBcoDhZJEQkXuhICMyKpjhahqN21hRYATKfUOlDmkygrR4o4C0VOLGJKrOITKB4jijzdXygBKixyC5TDQdnk/Pz8qRw6oOWGlsTKGOQW6OH6FBWsyePxdOXLTgxiyebILZCjz+GLgMIKnXNzc49YMlcRdHXcSwxFVgTInQhC9G33UhNoJLuqq6t345p9y3eUy8OTk5PjAHuI9uo4b07FBaOhsu0A4Unc+T1TU1Nj3KsSSE5yJ65jqF2DDd8QqWYmAZrIM2VlZTdnZmb6AbpdV9V6ec9znf5Q7HjYumdRE0JOp3MjitO4SFa+cZz8Umqe3TCbSLvdfkR/kWDdNQl5InuTcysOcpFT35ZrbBxx4p3JAHlZVVW1D/634VRt+FvLBgK/v5LV9WS+10xMTEwtRw7XvqOL+e2Q8V3AYIOIAXQ26/heWVnZCVfcyKHg2CBgTpmPmjYM8l24GyaUHyaIh7XwfR9ErE8qHoDfn2LTNAVC0HX6MFcBIP8Bi+6F6cdW/DICkANRfx99fEYFQ7Nph5i/uQiA214gno7K+guhaiKg9gC62+M8eR7XsBsYJ4ilam60Fb7r7uAj8wFyuwM1oIOWgfmDy6RXEEQzJMPe23DXrVS7rtyD3Df8z/FPgAEAzWU5Ku59ZAUAAAAASUVORK5CYII=">
+
+[ ---  end  ---- ]
+
+=== [ topic ][ gzip ] ===
+[ --- start ---- ]
+- check if whether a website is gzip with gzipwtf.com
+- copy paste from html boilerplate
+- the best way is to look up how your host recommend
+ref: 
+http://www.parorrey.com/blog/webmaster-tasks/enabling-gzip-compression-on-your-website-on-apache-via-htaccess/
+
+Compression reduces response times by reducing the size of the HTTP response. 
+Gzip is the most popular and effective compression method currently available 
+and generally reduces the response size by about 70%. Approximately 90% of 
+today's Internet traffic travels through browsers that claim to support gzip.
+
+Example 1: added this to the .htaccess file in  public_html root 
+# BEGIN GZIP
+<ifmodule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript
+</ifmodule>
+# END GZIP
+
+Explaining Example 1:
+- The example above will compress the follwing file types:
+- text
+- html
+- xml
+- css
+- js
+Important is not the file extension, but how the server handles the files. 
+Images – no matter what format – will not be compressed with this setting. This 
+wouldn’t make sense, because all image types already use compression in one way 
+or the other. And these compression methods are much more effective in handling 
+bitmaps (image data).
+[ ---  end  ---- ]
+
 === [ topic ][ text ] ===
 [ --- start ---- ]
 text-align:center;
@@ -408,7 +533,15 @@ text-decoration:overline;
 text-decoration:line-through;
 text-decoration:underline;
 text-transfrorm:uppercase|lowercase|capitalize;
+/* text-indent to indent the first line of text */
 text-indentation: 20px;
+[ ---  end  ---- ]
+
+=== [ topic ][ anchor ][ underline ] ===
+[ --- start ---- ]
+- change anchor link underline style:
+a { text-decoration: none; border-bottom: 1px dotted blue; }
+
 [ ---  end  ---- ]
 
 === [ topic ][ font ] ===
@@ -444,10 +577,25 @@ font-weight: normal, bold
 
 === [ topic ][ font ][ size ] ===
 [ --- start ---- ]
-em: 1em == size of current font
+em: 1em == size of current font (can use 0.2em etc)
 ex: height of letter 'x'
 pt: point = 1/72 inch (for printing)
 pc: pica = 12 points, 1/16 inch
+[ ---  end  ---- ]
+
+=== [ topic ][ line-height ] ===
+[ --- start ---- ]
+- can use %, em or number without unit
+- when use number without unit: it specify a mltiplying factor rather than a pixel height
+
+Example 1:
+dd {
+    font-size: 12px;
+    line-height: 120%;  /* 12/100*120 = 14.4px ~ 14px */
+}
+problem is even font-size is 16px, the line-height still 14px
+if we use multiplying factor, than the line-height in children for example, if 
+the font-size is 16px, will be 16.8px
 [ ---  end  ---- ]
 
 === [ topic ][ text-shadow ] ===
@@ -466,6 +614,12 @@ p { text-shadow: 1px 1px 1px #000, 3px 3px 5px blue; }
 
 Example: transparent color
 p { text-shadow: 0px 2px 2px rgba(255, 255, 255, 0.4); }
+
+Example 4: outline font
+{ 
+text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
 [ ---  end  ---- ]
 
 === [ topic ][ box shadow ] ===
@@ -508,6 +662,24 @@ Example 3 : one side
 	-webkit-box-shadow: 0 8px 6px -6px black;
 	   -moz-box-shadow: 0 8px 6px -6px black;
 	        box-shadow: 0 8px 6px -6px black;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ shadow ][ top ] ===
+[ --- start ---- ]
+body:before {
+          content: "";
+          position: fixed;
+          top: -10px;
+          left: 0;
+          width: 100%;
+          height: 10px;
+
+          -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
+              -moz-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
+                         box-shadow: 0px 0px 10px rgba(0,0,0,.8);
+
+          z-index: 100;
 }
 [ ---  end  ---- ]
 
@@ -674,6 +846,22 @@ p.hidden {border-style:hidden;}
 Reference:
 +------------------------------------------------------
 |<--margin-->|<-- Outline -->|<--Border-->|<--Padding-->|<--Content-->
+
+Example 1:
+.div_with_outline {
+    /*  outline can be drawn beyond margin  */
+    outline: 2px solid black;
+    /*  outline offset starts from border  */
+    outline-offset: 18px;
+    /*  if outline + outline-offset == margin, outline fills out the 
+        space in margin */
+    margin: 20px;
+    width: 150px;
+    height: 150px;
+    border: 1px solid brown;
+    background: wheat;
+    text-style: bold;
+}
 [ ---  end  ---- ]
 
 === [ topic ][ box model ][ margin ] ===
@@ -757,6 +945,29 @@ function resetElement() {
 <input class="box" type="button" onclick="resetElement()" value="Reset All">
 </div>
 </div>
+[ ---  end  ---- ]
+
+=== [ topic ][ display ][ relative ] ===
+[ --- start ---- ]
+- when display: relative is set, it will be relative to the parent, thus left 
+  property can be used
+- if direct parent dimension is not set, and display: relative of parent is not 
+  set as well, then the child with {display: absolute} will be based on 
+  grandparent's position, whoever has set it. 
+
+Example 1:
+.parent {
+    display: relative;
+}
+
+.parent.child {
+    display: absolute;
+    left: 5px;              /// 5px to the left of .parent
+}
+
+- if none of the grandparent dimension is set, root dimension will be used by 
+  element with display: absoulte
+- when display: static, left has no effect
 [ ---  end  ---- ]
 
 === [ topic ][ css advanced ][ display ] ===
@@ -963,6 +1174,7 @@ div.transparentbox p {
 === [ topic ][ css advanced ][ positioning ][ fixed ] ===
 [ --- start ---- ]
 - An element with fixed position is positioned relative to the browser window.
+- elements remains exactly where it is even when the page is scrolled
 p.pos_fixed {
     position:fixed;
     top: 30px;
@@ -1002,6 +1214,7 @@ flow.</p>
   and other elements behave like the absolutely positioned element does not 
   exist.
 - Absolutely positioned elements can overlap other elements.
+- can set left property
 
 Example 1:
 h2 {
@@ -1019,7 +1232,7 @@ of the page.</p>
 === [ topic ][ css advanced ][ positioning ][ overlap ] ===
 [ --- start ---- ]
 - When elements are positioned outside the normal flow, they can overlap other 
-  elements.
+  elements. (by using absolute etc)
 - The z-index property specifies the stack order of an element (which element 
   should be placed in front of, or behind, the others).
 Example 1:
@@ -1446,6 +1659,55 @@ border-image:url(border.png) 30 30 stretch;
 <div id="stretch">Here, the image is stretched to fill the area.</div>
 [ ---  end  ---- ]
 
+=== [ topic ][ transform ][ skew ] ===
+[ --- start ---- ]
+- skew (degreeX, degreeY);
+- unit (deg, grad or rad).
+The default value of angleY is zero (no vertical skew).
+- skewX: value; +ve positive value, bottom moving to the right
+- skewY: value; +ve positive value, left moving to up
+
+Example 1:
+.skew111 {
+    transform: skewX(70deg);
+    -webkit-transform: skewX(70deg);  /* chrome */
+}
+
+[ ---  end  ---- ]
+
+=== [ topic ][ resize ] ===
+[ --- start ---- ]
+- let user ability to resize the box
+- resize: {vertical, Horizontal, both}
+- resize has relationship with overflow property:
+    - when overflow: auto (scrollbar will be used when overflow happens)
+    - when overflow: hidden (no scrollbar shown, but user can resize the box)
+
+Example 1:
+.resize_box_both {
+    resize: both;
+    overflow: auto;
+    width: 50px;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+[ ---  end  ---- ]
+
+=== [ topic ][ unit ] ===
+[ --- start ---- ]
+%	percentage
+in	inch
+cm	centimeter
+mm	millimeter
+em	1em is equal to the current font size. 2em means 2 times the size of the current font. E.g., if an element is displayed with a font of 12 pt, then '2em' is 24 pt. The 'em' is a very useful unit in CSS, since it can adapt automatically to the font that the reader uses
+ex	one ex is the x-height of a font (x-height is usually about half the font-size)
+pt	point (1 pt is the same as 1/72 inch)
+pc	pica (1 pc is the same as 12 points)
+px	pixels (a dot on the computer screen)
+[ ---  end  ---- ]
+
 === [ topic ][ css Code Rule ] ===
 [ --- start ---- ]
 - clean format
@@ -1713,7 +1975,19 @@ give it a height.
     
 [ ---  end  ---- ]
 
-=== [ topic ][ compatibilitt ][ support ][ earlier browser ] ===
+=== [ topic ][ problem ][ specificity ] ===
+[ --- start ---- ]
+problem:
+.overflow { overflow: auto; }
+.local { background-attachment: local; }
+<pre class="overflow local">xxx</pre>
+/// it is found that background-attachment is always set to scroll, regardless of .local define it as local or fixed
+solution: make .local more specific
+pre.local { background-attachment: local; }
+[ ---  end  ---- ]
+
+=== [ topic ][ compatibility ][ support ][ earlier browser ] ===
 [ --- start ---- ]
 http://code.google.com/p/ie7-js/
 [ ---  end  ---- ]
+

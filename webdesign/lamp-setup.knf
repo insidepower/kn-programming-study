@@ -19,6 +19,8 @@ or
 $ sudo /etc/init.d/apache2 restart
 or 
 $ sudo service apache2 restart
+or consider to gracefully reload the configuration instead of restart
+sudo apache2ctl graceful
 [ ---  end  ---- ]
 
 === [ topic ][ apache ][ local dev-only ] ===
@@ -54,6 +56,35 @@ add a new line
 ServerName localhost
 [ ---  end  ---- ]
 
+=== [ topic ][ apahce ][ log ] ===
+[ --- start ---- ]
+check the location of log @ /etc/apache2/apache2.conf
+e.g. 
+ErrorLog ${APACHE_LOG_DIR}/error.log
+to know the definition for APACHE_LOG_DIR, 
+check envvars
+default is location @ /var/log/apache2/
+[ ---  end  ---- ]
+
+=== [ topic ][ permission ][ uid and gid ] ===
+[ --- start ---- ]
+- to decide the apache user
+ps -aux | grep apache
+output: apache belong to www-data user
+- find out www-data groupname
+sudo groups www-data
+output: www-data : www-data
+- set the right permission to the apache folder
+sudo chown -R www-data:www-data /var/www/
+- set the right privileges for apache root dir
+sudo chmod -R 775 /var/www/
+- add yourself to apache group, so have access to it
+sudo usermod -a -G www-data {YOUR_USER_NAME}
+- set the umask command for apache environment
+sudo echo umask 002 >> /etc/apache2/envvars
+- restart apache2
+$ sudo apache2ctl restart
+[ ---  end  ---- ]
 
 === [ topic ][ php ] ===
 [ --- start ---- ]

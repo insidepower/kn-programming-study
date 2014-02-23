@@ -2,6 +2,223 @@
 [ --- start ---- ]
 [ ---  end  ---- ]
 
+=== [ topic ][ window ] ===
+[ --- start ---- ]
+- line break:
+alert("Hello\nHow are you?");
+- alert("xxx") == window.alert("xxx")
+- window.scrollX
+- window.scrollY;
+- window.stop; /// stop loading the page
+- answer = window.prompt("What is the date today?");
+- window.alert(answer)
+- window.confirm("question...yes or no?")
+var r=confirm("Press a button");
+if (r==true)... else...
+- window.prompt("xxx");
+window.prompt("sometext","defaultText");
+var person=prompt("Please enter your name","Harry Potter");
+- window.getComputedStyle(thePara, null)
+/* when page finish loading */
+- window.onload=FunctionToBeInvoked;
+[ ---  end  ---- ]
+
+=== [ topic ][ window ][ BOM ] ===
+[ --- start ---- ]
+- Browser Object Model (BOM)
+- All global JavaScript objects, functions, and variables automatically become members of the window object.
+- Global variables are properties of the window object.
+- Global functions are methods of the window object.
+Even the document object (of the HTML DOM) is a property of the window object:
+window.document.getElementById("header");
+/// is same as
+document.getElementById("header");
+
+    window.open() - open a new window
+    window.close() - close the current window
+    window.moveTo() -move the current window
+    window.resizeTo() -resize the current window
+
+Example 1: the || is valid javascript
+var w=window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var h=window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+x=document.getElementById("demo");
+x.innerHTML="Browser inner window width: " + w + ", height: " + h + "."
+[ ---  end  ---- ]
+
+=== [ topic ][ window screen ] ===
+[ --- start ---- ]
+    screen.availWidth - available screen width
+    screen.availHeight - available screen height
+[ ---  end  ---- ]
+
+=== [ topic ][ window location ] ===
+[ --- start ---- ]
+The window.location object can be used to get the current page address (URL) 
+and to redirect the browser to a new page.
+    location.hostname returns the domain name of the web host
+    location.pathname returns the path and filename of the current page
+        e.g. /js/js_window_location.asp
+    location.port returns the port of the web host (80 or 443)
+    location.protocol returns the web protocol used (http:// or https://)
+    location.href == returns entire URL of current page
+        e.g. http://www.w3schools.com/js/js_window_location.asp
+
+Example 1: loads new url
+function newDoc() { window.location.assign("http://www.w3schools.com") }
+<input type="button" value="Load new document" onclick="newDoc()">
+[ ---  end  ---- ]
+
+=== [ topic ][ window history ] ===
+[ --- start ---- ]
+    history.back() - same as clicking back in the browser
+    history.forward() - same as clicking forward in the browser
+[ ---  end  ---- ]
+
+=== [ topic ][ window navigator ] ===
+[ --- start ---- ]
+txt = "<p>Browser CodeName: " + navigator.appCodeName + "</p>";
+txt+= "<p>Browser Name: " + navigator.appName + "</p>";
+txt+= "<p>Browser Version: " + navigator.appVersion + "</p>";
+txt+= "<p>Cookies Enabled: " + navigator.cookieEnabled + "</p>";
+txt+= "<p>Browser Language: " + navigator.language + "</p>";
+txt+= "<p>Browser Online: " + navigator.onLine + "</p>";
+txt+= "<p>Platform: " + navigator.platform + "</p>";
+txt+= "<p>User-agent header: " + navigator.userAgent + "</p>";
+txt+= "<p>User-agent language: " + navigator.systemLanguage + "</p>";
+
+document.getElementById("example").innerHTML=txt;
+
+note:
+The information from the navigator object can often be misleading, and should 
+not be used to detect browser versions because:
+
+    The navigator data can be changed by the browser owner
+    Some browsers misidentify themselves to bypass site tests
+    Browsers cannot report new operating systems, released later than the browser
+
+Since different browsers support different objects, you can use objects to 
+detect browsers. For example, since only Opera supports the property 
+"window.opera", you can use that to identify Opera.{
+    }
+
+Example: if (window.opera) {...some action...}
+
+[ ---  end  ---- ]
+
+=== [ topic ][ document ] ===
+[ --- start ---- ]
+- give access to the contents of the HTML document
+- can get title, URL...
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ getElementByXXX ][ finding element ] ===
+[ --- start ---- ]
+- getElementById
+- document.getElementByTag("input"); /// return a list of input element, use for loop to iterate
+document.getElementsByClassName()
+
+The following HTML object collections are accesible:
+document.anchors
+document.forms
+document.images
+document.links
+
+Example 1:
+var x=document.getElementById("main");
+var y=x.getElementsByTagName("p");
+
+Example 2:
+<form id="frm1" action="form_action.asp">
+  First name: <input type="text" name="fname" value="Donald"><br>
+  Last name: <input type="text" name="lname" value="Duck"><br>
+  <input type="submit" value="Submit">
+</form>
+function myFunction() {
+var x = document.getElementById("frm1");
+var txt = "";
+for (var i=0;i<x.length;i++) { txt = txt + x.elements[i].value + "<br>"; }
+document.getElementById("demo").innerHTML=txt;
+}
+<button onclick="myFunction()">Try it</button>
+@@@ result returned: Donald Duck Submit
+
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ changing html element ] ===
+[ --- start ---- ]
+document.write(text)
+document.getElementById(id).innerHTML=
+document.getElementById(id).attribute=
+document.getElementById(id).style.attribute=
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ changing ][ attribute ] ===
+[ --- start ---- ]
+document.getElementById("image").src="landscape.jpg";
+
+Example 2:
+var p = document.getElementById("kenParaId");
+p.setAttribute("class", "KenClass");
+
+Example 3:
+var btn = document.getElementById("mybtn");
+btn.removeAttribute("disabled");
+btn.setAttribute("value", "new content");
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ changing ][ style ] ===
+[ --- start ---- ]
+document.getElementById(id).style.property=new style
+
+Example 1:
+document.getElementById("kenPara").style.background="yellow";
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ adding or deleting element ] ===
+[ --- start ---- ]
+document.createElement()
+document.removeChild()
+document.appendChild()
+document.replaceChild()
+[ ---  end  ---- ]
+
+=== [ topic ][ adding event handler ] ===
+[ --- start ---- ]
+document.getElementById(id-xx).onclick=function(){...code...}
+[ ---  end  ---- ]
+
+=== [ topic ][ event ] ===
+[ --- start ---- ]
+- <a onclick="runthisfunction()"></a>
+- document.getElementById("myLink").addEventListener("click", "runWhenClick", true)
+- addEventListener(event, callback-function, event-flow-model)
+- if event-flow-model == true, then capture model is used
+- two type of event flow model: 
+    = event capturing: handled initially by parent then by the child element
+    = event bubbling: descendants receive event first before parent and further ancestor
+[ ---  end  ---- ]
+
+=== [ topic ][ event ][ timing ] ===
+[ --- start ---- ]
+- var myInterval = window.setInterval("javascript function", miliseconds); /// forever loop
+- window.clearInterval(intervalVariable)
+    e.g. clearInterval(myInterval)
+- setTimeout("javascript function", miliseconds); /// execute once only
+- window.clearTimeout(timeoutVariable)
+
+Example 0:
+/// the alert box will repeat every 3s, forever.
+ setInterval(function(){alert("Hello")},3000);
+
+Example 1:
+function clock(){
+    ...
+    setTimeout('clock()',50); /// repeat this function
+}
+<body onload="clock()">
+[ ---  end  ---- ]
+
 === [ topic ][ insert ] ===
 [ --- start ---- ]
 - <script src="xxx.js"></script> can be placed in <head> or <body>
@@ -11,6 +228,13 @@ Example:
 <body>
 <script src="myScript.js"></script>
 </body>
+[ ---  end  ---- ]
+
+=== [ topic ][ script tag ] ===
+[ --- start ---- ]
+<script type="text/javascript" src="xxx.js">
+... script ...
+</script>
 [ ---  end  ---- ]
 
 === [ topic ][ write html ] ===
@@ -62,10 +286,15 @@ src="pic_bulboff.gif" width="100" height="180">
 [ --- start ---- ]
 x=document.getElementById("demo") // Find the element
 x.style.color="#ff0000";          // Change the style
+
+xxx.style.backgroundColor="green"
 [ ---  end  ---- ]
 
 === [ topic ][ value ] ===
 [ --- start ---- ]
+to retrieve content from a HTML tag:
+- use value for input tag like <input>
+- use innerHTML for element tag <span>
 function myFunction() {
     var x=document.getElementById("demo").value;
     if(x==""||isNaN(x))
@@ -86,6 +315,29 @@ alert("Welcome " + name + ", the " + job); }
 </script>
 [ ---  end  ---- ]
 
+=== [ topic ][ function ][ optional parameter ] ===
+[ --- start ---- ]
+function myFunction(param){
+    if (typeof(param) == "undefined") {
+        /// no parameter passed in
+    }
+
+    if ( var i=0; i< arguments.length; i++ ){
+        /// extra option param from arguments[i] ... 
+    }
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ array parameter ] ===
+[ --- start ---- ]
+function myFunction(param){
+    while(param.length > 0 ){ 
+        var arg = param.shift();
+        ...
+    }
+}
+[ ---  end  ---- ]
+
 === [ topic ][ function ][ return ] ===
 [ --- start ---- ]
 Example 1:
@@ -100,6 +352,45 @@ document.getElementById("demo").innerHTML=myFunction(4,3);
 [ --- start ---- ]
 - local variable, declared using var
    var local_var = 5;
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ private method ] ===
+[ --- start ---- ]
+function Restaurant(param)
+{
+    var myPrivateVar;
+
+    var private_stuff = function()   // Only visible inside Restaurant()
+    {
+        myPrivateVar = "I can set this here!";
+    }
+
+    this.use_restroom = function()   // use_restroom is visible to all
+    {
+        private_stuff();
+    }
+
+    this.buy_food = function()    // buy_food is visible to all
+    {
+        private_stuff();
+    }
+
+    this.convertLower = function ()
+    {
+        return privateFunction(param);
+    }
+
+    function privateFunction(param){
+        return param.toLowerCase();
+    }
+}
+
+from external:
+var testObj = new Restaurant();
+/// won't work
+testObj.privateFunction("Testing");
+/// working
+testObj.convertLower("Testing");
 [ ---  end  ---- ]
 
 === [ topic ][ sibling ] ===
@@ -154,4 +445,701 @@ if (document.addEventListener) {
 else {
     document.attachEvent('onmouseover', handleMouseover);
 }
+[ ---  end  ---- ]
+
+=== [ topic ][ onclick ] ===
+[ --- start ---- ]
+- function name needed to be quoated else won't be called
+/// will not be called
+<p id="para" onclick=changeContent()> This will be changed once clicked!  </p>
+
+/// ok!
+<p id="para" onclick="changeContent()"> This will be changed once clicked!  </p>
+
+[ ---  end  ---- ]
+
+=== [ topic ][ var ] ===
+[ --- start ---- ]
+- JavaScript is a loosely typed language, which means that it will 
+  “automagically” cast variables into other types when necessary (i.e. when 
+  adding a Number to a String)
+var number = 5;
+var string = "hello";
+var isTrue = true;
+var isTrue = false;
+/// false = { 0, -0, null, "", false, undefined, NaN }
+var array = null; /// contain nothing
+/// undefined variables can be test by using undefined keyword
+var sex = undefined;
+typeof(sex); /// output undefined
+
+/// declare the type of variable, but not assigning value
+var newString = new String();
+var newNum = new Num();
+var newNum = new Num("5");
+[ ---  end  ---- ]
+
+=== [ topic ][ number ][ format ] ===
+[ --- start ---- ]
+- MAX_VALUE
+- MIN_VALUE
+- NEGATIVE_INFINITY
+- NaN
+toExponential()
+toFixed()
+toLocaleString()
+toPrecision()
+toString()
+[ ---  end  ---- ]
+
+=== [ topic ][ string ] ===
+[ --- start ---- ]
+- charAt(index) - return char @ index
+- charCodeAt(index) - return Unicode value
+- concat()
+- fromCharCode() - convert Unicode value to a char. e.g. convert 65 to 'A'
+- indexOf() - return the first occurence of a search string
+- lastIndexOf()
+- match()
+- replace()
+- search()
+- slice()
+- split()
+- substr()
+- string.substring(start,end)
+- toLocaleLowerCase()
+- toLocaleUpperCase
+- toLowerCase
+- toUpperCase
+- valueOf() - return primitive value of a string's object.
+[ ---  end  ---- ]
+
+=== [ topic ][ HTML wrapper ] ===
+[ --- start ---- ]
+
+[ ---  end  ---- ]
+
+=== [ topic ][ date ] ===
+[ --- start ---- ]
+- toJSON() - output to JSON format
+[ ---  end  ---- ]
+
+=== [ topic ][ regular expression ] ===
+[ --- start ---- ]
+.  = any character except an end-of-line character
+\w = alphabetic char
+\W = character that isn't associate with words
+\d = digit
+\D = non-digit
+\s = white space character, including tab, space, form feed, newline, and CR return
+\S = non-whitespace character
+\b = search at beginning or end of a word
+\B = search for a character that doesn't appear at the beginning or end of a word
+\0 = null (NUL) character
+\n = newline character
+\f = formfeed character
+\r = carriage return
+\t = tab
+\v = vertical tab
+\xxx = octal number. e.g. A=\101
+\xdd = hexadecimal number. e.g. A=\x41
+\uxxxx = unicode character. e.g. A=\u0041
+
+n+ :: at least one n
+n* :: zero or more n
+n? :: zero or one n
+n{X} :: n for X times. e.g. A{3} = AAA
+n{minX, maxY} :: minimum x time occurences of n and maximum y time occurences of n
+n{minX, } :: minimum x time occurences of n, and no limit on maximum occurences
+n$ :: n at end of string
+^n :: n at beginning of String
+?=n :: find a string followed by specific string n. e.g. ?=ken, any string with aken, bken...
+?!n :: find a string not followed by specific string n
+
+modifiers:
+i = case insensitive
+g = global
+m = search on all of the lines in a search string that contains end-of-line
+    characters rather than searching just the first line
+
+properties of RegExp:
+ignoreCase : return true when i modifiers is set
+global : return true when g modifier is set
+multiline : return true if m modifier is set
+lastIndex : specifies the index at which the next search should begin
+source : the search expression used by RegExp
+
+methods provided by RegExp:
+- exec() : performs a test of the search expression against the search string and returns the result
+- test() : performs a test of the search expression against the search string 
+           and returns true when the search expression appears within the search string
+
+other notes:
+- compile() is deprecated. As the compilation is now automatically occurs when create the RegExp object
+[ ---  end  ---- ]
+
+=== [ topic ][ built-in function ] ===
+[ --- start ---- ]
+toString
+encodeURI (check escape())
+    replace space as %20
+decodeURI
+    decode what encodeURI has performed
+decodeComponent
+    protocl : HTTP, HTTPS, FTP, SMTP, NNTP
+    Host: blog.ken.common
+    port Number:
+    path: fully defined location or default path will be used
+    query string:
+escape
+    escape("encode this string!") ==> (encode%20this%20string%21)
+unescape
+    decode what escape() has performed
+eval
+    accepts a string that contains a script and then executes the string content as a script
+    disadvantage: 
+        - prone to security problem through injection attacks
+        - harder to debug, normal tools can't be used
+        - run slowly as browser can't compile and cache it
+isFinite
+isNaN
+Number()
+    - change to native number
+parseFloat
+    parse a string and return a floating point number
+parseInt
+    parse a string and returns an integer
+String 
+    convert value to a string
+[ ---  end  ---- ]
+
+=== [ topic ][ null ] ===
+[ --- start ---- ]
+the common way:
+var second, first = "something";
+if (first !== null || typeof first !== "undefined" || first !== '') {
+second = first;
+}
+console.log(second);
+
+shorthand:
+var second, first = "something";
+second = first || "";
+console.log(second);
+[ ---  end  ---- ]
+
+=== [ topic ][ undefined ] ===
+[ --- start ---- ]
+- typeof an yet defined variable belong to "undefined" type
+- "undefined" type vs undefined is different!!!:w
+
+foo;  // ReferenceError: foo is not defined  
+// debug
+try {  
+  foo;  
+} catch(e) {  
+  e.message;  // "foo is not defined"  
+}  
+[ ---  end  ---- ]
+
+=== [ topic ][ null vs undefined ] ===
+[ --- start ---- ]
+- null value and undefined valus is same, but null has typeof object, yet 
+  undefined has typeof undefined
+>> window.hello
+    null
+>> window.hello.something
+    window.hello has no properties
+>> window.hello == null
+    true
+>> window.hello === null
+    false
+>> window.hello === undefined
+    true
+>> if (window.hello) { alert('truthy'); } else { alert('falsy'); } // will print falsy.
+    null
+>> window.hello == undefined
+    true
+>> null == undefined
+    true // 
+>> null
+    null
+>> undefined
+    null
+>> typeof null
+    object
+>> typeof undefined
+    undefined
+[ ---  end  ---- ]
+
+=== [ topic ][ boolean ] ===
+[ --- start ---- ]
+if("0") {  // this will run because "0" is true  }  
+if("false") {  // this will run because "false" is true  }  
+
+check:
+Boolean(0);    // false  
+Boolean("0");  // true 
+
+or check with double exclaimation
+!!0;    // false  
+!!"0";  // true 
+[ ---  end  ---- ]
+
+=== [ topic ][ operator ] ===
+[ --- start ---- ]
+%= modulus
+=== (compare value and data type)
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ] ===
+[ --- start ---- ]
+Problem: nothing write to html when click on function
+Cause: the innerHTML was written as innerHtml
+Reminder: js is case-sensitve!
+[ ---  end  ---- ]
+
+=== [ topic ][ text ] ===
+[ --- start ---- ]
+- concatenate using '+'
+Example 1:
+var str = "text1" + "text2"
+[ ---  end  ---- ]
+
+=== [ topic ][ array ] ===
+[ --- start ---- ]
+- shift()
+- unshift()
+var myarray = new Array()
+myarray[0] = "text1";
+myarray[1] = "text1";
+
+var array1 = new Array("text1", "text2");
+var array2 = [ "text1", "text2" ];
+
+- length of array
+array1.length
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ simulate ] ===
+[ --- start ---- ]
+var myClass = {
+    pupilSize : 50;
+    className : "3C12";
+}
+
+alert(myClass.className + myClass.pupilSize);
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ do..while] ===
+[ --- start ---- ]
+do{
+    ...
+}while(xxx==yyy)
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ for...in ] ===
+[ --- start ---- ]
+function myClass(param){
+    this.size = param.shift();
+    this.teacher = param.shift();
+    this.location = param.shift();
+}
+
+var class = new myClass(50, "Mr Ken", "level 3");
+var output = "";
+for( prop in class){
+    output += prop; 
+}
+
+for (prop in class){
+    output += class[prop]
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ error handling ] ===
+[ --- start ---- ]
+- provide javascript version to tag to browser to facilitate debugging
+<script type="application/javascript;version=1.7">...</script>
+
+Error Type:
+- EvalError
+- RangeError
+    when do math operation
+- ReferenceError
+    using resource doesn't exist
+- SyntaxError
+- TypeError
+[ ---  end  ---- ]
+
+=== [ topic ][ error handling ][ try...catch ] ===
+[ --- start ---- ]
+Example 1:
+try{...
+} catch (Err) {
+    /// print Err.name, Err.message
+}
+
+Example 2:
+try{
+    throw new ReferenceError("description"+data);
+    throw TypeError("description"+data);
+} catch(Err){
+    /// print Err.name, Err.message
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ error handling ][ onerror ] ===
+[ --- start ---- ]
+onerror=handleErr;
+var txt="";
+
+function handleErr(msg,url,l)
+{
+    txt="There was an error on this page.\n\n";
+    txt+="Error: " + msg + "\n";
+    txt+="URL: " + url + "\n";
+    txt+="Line: " + l + "\n\n";
+    txt+="Click OK to continue.\n\n";
+    alert(txt);
+    return true;
+}
+
+function message()
+{
+    adddlert("Welcome guest!");
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ] ===
+[ --- start ---- ]
+console.log()
+console.info()
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ] ===
+[ --- start ---- ]
+- DOM = Document Object Model
+- The DOM is a W3C (World Wide Web Consortium) standard.
+JavaScript can change all the HTML elements in the page
+JavaScript can change all the HTML attributes in the page
+JavaScript can change all the CSS styles in the page
+JavaScript can remove existing HTML elements and attributes
+JavaScript can add new HTML elements and attributes
+JavaScript can react to all existing HTML events in the page
+JavaScript can create new HTML events in the page
+- The HTML DOM is a standard object model and programming interface for HTML. 
+  It defines:
+The HTML elements as objects
+The properties of all HTML elements
+The methods to access all HTML elements
+The events for all HTML elements
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ events ] ===
+[ --- start ---- ]
+- onresize
+- onscroll
+- onselect
+- onsubmit
+- onreset
+
+Examples of HTML events:
+
+When a user clicks the mouse
+When a web page has loaded
+When an image has been loaded
+When the mouse moves over an element
+When an input field is changed
+When an HTML form is submitted
+When a user strokes a key
+
+Example 1:
+<h1 onclick="this.innerHTML='Ooops!'">Click on this text!</h1>
+
+Example 2:
+function changetext(id) { id.innerHTML="Ooops!"; }
+<h1 onclick="changetext(this)">Click on this text!</h1>
+
+Example 3:
+<button onclick="displayDate()">Try it</button>
+document.getElementById("myBtn").onclick=function(){displayDate()};
+
+Example 4:
+<input type="text" id="fname" onchange="upperCase()">
+
+Example 5:
+function myFunction() {
+    var x=document.getElementById("fname");
+    x.value=x.value.toUpperCase();
+}
+Enter your name: <input type="text" id="fname" onchange="myFunction()">
+<p>When you leave the input field, a function is triggered which transforms the 
+input text to upper case.</p>
+
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ events ][ onload ] ===
+[ --- start ---- ]
+Example 1:
+function checkCookies() {
+if (navigator.cookieEnabled==true) { alert("Cookies are enabled") }
+else { alert("Cookies are not enabled") } }
+<body onload="checkCookies()">
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ events ][ mouse ] ===
+[ --- start ---- ]
+- ondblclick = on double click
+
+Example 1:
+<div onmouseover="mOver(this)" onmouseout="mOut(this)" >Default Text</div>
+function mOver(obj) { obj.innerHTML="Thank You" }
+function mOut(obj) { obj.innerHTML="Mouse Over Me" }
+
+Example 2: when mouse button is pressed - onmousedown
+<div onmousedown="mDown(this)" onmouseup="mUp(this)">Click Me</div>
+function mDown(obj) { obj.style.backgroundColor="#1ec5e5"; obj.innerHTML="Release Me" }
+function mUp(obj) { obj.style.backgroundColor="#D94A38"; obj.innerHTML="Thank You" }
+
+Example 3:
+.highlight { color: yellow; }
+.dim { color: grey; }
+function changeClass(id, class){ document.getElementById(id).setAttribute("class", class);}
+<p id="KenPara" onmouseover="changeClass('KenPara', 'highlight')"
+                onmouseout ="changeClass('KenPara', 'dim')"
+
+Example 4: using "this" for example 3
+function changeClass(id, class){ this.setAttribute("class", class);}
+<p id="KenPara" onmouseover="changeClass(this, 'highlight')"
+                onmouseout ="changeClass(this, 'dim')"
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ node ] ===
+[ --- start ---- ]
+everything in an HTML document is a node:
+The entire document is a document node
+Every HTML element is an element node
+The text inside HTML elements are text nodes
+Every HTML attribute is an attribute node
+All comments are comment nodes
+
+In a node tree, the top node is called the root (or root node)
+Every node has exactly one parent, except the root (which has no parent)
+A node can have a number of children
+Siblings (brothers or sisters) are nodes with the same parent
+
+Example 1:
+<html>
+  <head>
+    <title>DOM Tutorial</title>
+  </head>
+  <body>
+    <h1>DOM Lesson one</h1>
+    <p>Hello world!</p>
+  </body>
+
+</html>
+
+-- Decoding --
+<html> is the root node
+<html> has no parents
+<html> is the parent of <head> and <body>
+<head> is the first child of <html>
+<body> is the last child of <html>
+and
+<head> has one child: <title>
+<title> has one child (a text node): "DOM Tutorial"
+<body> has two children: <h1> and <p>
+<h1> has one child: "DOM Lesson one"
+<p> has one child: "Hello world!"
+<h1> and <p> are siblings
+
+Example 2:
+<p id="intro">Hello World!</p>
+txt=document.getElementById("intro").childNodes[0].nodeValue;
+/// txt=document.getElementById("intro").firstChild.nodeValue; ///similar
+document.write(txt);
+/// output Hello World!
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ Root Nodes ] ===
+[ --- start ---- ]
+document.documentElement - The full document
+document.body - The body of the document
+
+Example 1:
+alert(document.body.innerHTML);
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ nodeName ] ===
+[ --- start ---- ]
+The nodeName property specifies the name of a node.
+nodeName is read-only
+nodeName of an element node is the same as the tag name
+nodeName of an attribute node is the attribute name
+nodeName of a text node is always #text
+nodeName of the document node is always #document
+Note: nodeName always contains the uppercase tag name of an HTML element.
+
+The nodeValue Property
+The nodeValue property specifies the value of a node.
+nodeValue for element nodes is undefined
+nodeValue for text nodes is the text itself
+nodeValue for attribute nodes is the attribute value
+
+Element type	NodeType
+Element           1
+Attribute         2
+Text              3
+Comment           8
+Document          9
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ node ] ===
+[ --- start ---- ]
+-document.body.insertBefore(element_to_be_inserted, selected_element)
+
+Example 1:
+var p = document.createElement("p");
+p.setAttribute("id", "KenParaId");
+p.innerHTML = "a paragraph.";
+document.body.insertBefore(p, document.getElementById("oldPara"));
+document.body.removeChild(document.getElementById("KenParaId"));
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ nodelist ] ===
+[ --- start ---- ]
+Example 1:
+var x=document.getElementsByTagName("p");
+y=x[1];   /// select the second <p>
+
+Example 2:
+x=document.getElementsByTagName("p");
+for (i=0;i<x.length;i++) {
+document.write(x[i].innerHTML);
+document.write("<br />");
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ DOM ][ CSS ] ===
+[ --- start ---- ]
+var css = document.styleSheets[0];   /// first <style>...</style> tag
+var rules = css.cssRules;
+for (var i=0; i<rules.length; i++){
+    var rule = rules[i];
+    /// rule.selectorText;   /// the selector, .e.g h1, h2, p...
+    
+    var style = rule.style;
+    for (var j=0; j < style.length; j++){
+        var name = styles[j];  /// style name, e.g. background, color, font-weight...
+        /// style.getPropertyValue(name) /// print the style rules, e.g. "red", 15px..
+    }
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ cookies ] ===
+[ --- start ---- ]
+writing to cookies:
+- Cookies are saved in name-value pairs like: username=John Doe 
+document.cookie="username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 GMT";
+- With a path parameter, you can tell the browser what path the cookie 
+belongs to. By default, the cookie belongs to the current page.
+document.cookie="username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 GMT; path=/";
+
+reading a cookies:
+var x = document.cookie;
+
+changing a cookies: same as the way writing to it
+document.cookie="username=John Smith; expires=Thu, 18 Dec 2013 12:00:00 GMT; path=/";
+
+delete a cookies:
+- no need specify a cookie value
+document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 GMT"; 
+
+Example 1:
+
+function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    /// set to expire in (exdays * one day)
+    d.setTime(d.getTime()+(exdays*24*60*60*1000));
+    var expires = "expires="+d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function getCookie(cname)
+{
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) 
+      {
+      var c = ca[i].trim();
+      // name.length is "cname ="
+      // c.length is "cname = value"
+      if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+      }
+    return "";
+}
+
+function checkCookie()
+{
+var user=getCookie("username");
+if (user!="")
+  {
+  alert("Welcome again " + user);
+  }
+else 
+  {
+  user = prompt("Please enter your name:","");
+  if (user!="" && user!=null)
+    {
+    setCookie("username",user,30);
+    }
+  }
+}
+
+</script></head>
+
+<body onload="checkCookie()"></body>
+[ ---  end  ---- ]
+
+=== [ topic ][ framework ] ===
+[ --- start ---- ]
+    jQuery
+    Prototype
+    MooTools
+YUI - The Yahoo! User Interface Framework is a large library that covers a lot 
+     of functions, from simple JavaScript utilities to complete internet widgets.
+Ext JS - Customizable widgets for building rich Internet applications.
+Dojo - A toolkit designed around packages for DOM manipulation, events, widgets, and more.
+script.aculo.us - Open-source JavaScript framework for visual effects and interface behaviors.
+UIZE - Widgets, AJAX, DOM, templates, and more.
+[ ---  end  ---- ]
+
+=== [ topic ][ framework ][ CDN ] ===
+[ --- start ---- ]
+- Content Delivery Networks
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+</script> 
+[ ---  end  ---- ]
+
+=== [ topic ][ closure compiler ] ===
+[ --- start ---- ]
+- to download: wget http://dl.google.com/closure-compiler/compiler-latest.zip
+- minified, concatenate and check for error in javascript to make it 
+  smaller and run faster on the client
+- a map file is needed to debug as if in the development site
+- to generate the map file use:
+java -jar compiler.jar \ 
+     --js script.js \
+     --create_source_map ./script-min.js.map \
+     --source_map_format=V3 \
+     --js_output_file script-min.js
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ] ===
+[ --- start ---- ]
+Problem: apache log at /var/log/apache2/error.log shows the following:
+File does not exist: /home/knxy/public_html/php/jquery-2.0.3.min.map, referer: http://localhost/php/helloworld.html
+solution: refer to closure compiler section to compiler the map file for it
 [ ---  end  ---- ]

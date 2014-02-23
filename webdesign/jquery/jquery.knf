@@ -11,8 +11,29 @@ jQuery is easy to learn.
 <script src="/home/knxy/confignewpc/jquery/jquery-1.10.1.min.js">
 [ ---  end  ---- ]
 
-=== [ topic ][ pyrsync ][ example ] ===
+=== [ topic ][ the basic structure ] ===
 [ --- start ---- ]
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Demo</title>
+</head>
+<body>
+    <a href="http://jquery.com/">jQuery</a>
+    <script src="jquery.js"></script>
+    <script>
+ 
+    // Your code goes here.
+ 
+    </script>
+</body>
+</html>
+[ ---  end  ---- ]
+
+=== [ topic ][ ready ][ example ] ===
+[ --- start ---- ]
+Example 1:
 $(document).ready(function(){
 	$(".btn_show").click(function(){
 		var pos=$(this).attr("value")
@@ -28,9 +49,14 @@ $(document).ready(function(){
 	});
 });
 
+Example 2:
+function myFunction(){
+    ...
+}
+$(document).ready(myFunction);
 [ ---  end  ---- ]
 
-=== [ topic ][ insert html ] ===
+=== [ topic ][ insert html ][ innerHTML ] ===
 [ --- start ---- ]
 Example:
 $('#yourDivName').html('yourtHTML');
@@ -38,6 +64,14 @@ $('#yourDivName').html('yourtHTML');
 $('#yourDivName').append('yourtHTML');
 // add as the first item in the selected div
 $('#yourDivName').prepend('yourtHTML');
+[ ---  end  ---- ]
+
+=== [ topic ][ changing ][ attribute ] ===
+[ --- start ---- ]
+Example 1:
+$("#h01").attr("style","color:red").html("Hello jQuery")
+$(document).ready(myFunction);
+<h1 id="h01"></h1>
 [ ---  end  ---- ]
 
 === [ topic ][ appendChild ][ topic ] ===
@@ -222,4 +256,31 @@ var myArray = [ 3, 4, 6, 1 ];
 myArray.sort( descending ); // [ 6, 4, 3, 1 ]
 
 
+[ ---  end  ---- ]
+
+=== [ topic ][ web font ][ topic ] ===
+[ --- start ---- ]
+- to prevent web font slow down rendering time, use following
+- Omar Al Zabir: http://www.codeproject.com/Articles/462209/Using-custom-font-without-slowing-down-page-load
+$(document).ready(function(){
+  $.ajax({
+    url: fontFile,
+    beforeSend: function ( xhr ) {
+      xhr.overrideMimeType("application/octet-stream");
+    },
+    success: function(data) {
+      $("<link />", {
+        'rel': 'stylesheet'
+        'href': 'URL/TO/fonts.css'
+      }).appendTo('head');
+    }
+  });
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ] ===
+[ --- start ---- ]
+Problem: Uncaught TypeError: Illegal constructor
+Solution: change the $(Document) to $(document)
+Reason: js is case sensitive
 [ ---  end  ---- ]

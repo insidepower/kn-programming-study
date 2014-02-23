@@ -1,0 +1,124 @@
+=== [ topic ][ web application list ][ web framework ] ===
+[ --- start ---- ]
+http://www.bestwebframeworks.com/web-framework-review/serverside-javascript/108/nodejs/
+1. Node.Js vs websocket
+2. 
+[ ---  end  ---- ]
+=== [ topic ][ javascript ] ===
+[ --- start ---- ]
+1. Node.Js -
+   suited for real-time application: online games, collaboration tools, chat 
+   room, with the application needs to be seen by other users immediately, 
+   without a page refresh
+[ ---  end  ---- ]
+
+=== [ topic ][ java ] ===
+[ --- start ---- ]
+Apache Click: A free and opensource framework that is built on top of the Java Servlet API.
+AppFuse: Build apps quickly with a large number out-of-the-box features.
+Google Web Toolkit: Develop and maintain complex frontend Javascript applications in Java
+Play!: inspired by Rails and with scala support, harness the power of Java to build web applications.
+Apache Sling: Bring back the fun to web development in the creation of content centric web applications.
+ZK: code enterprise apps and slick looking user interfaces with no Javascript and little programming.
+[ ---  end  ---- ]
+
+=== [ topic ][ Ruby ] ===
+[ --- start ---- ]
+Ruby on Rails
+Rails is one of the most popular frameworks in the web development world. Built 
+on the Ruby programming language, it is most well known for its failure to 
+power Twitter. The idea that Rails is unable to perform effectively at scale is 
+a missnomer and can rather be attributed to Twitter not using Rails 
+appropriately. Many large websites have successfully leveraged Rails, most 
+notably, Scribd and Hulu.
+Rails follows convention over configuration, and a religious devotion to the 
+principles of the MVC model, though this may steepen the learning curve, it 
+will ensure that code remains simple and easy to understand.
+
+Camping: Ruby goodness in less than 4k, fully compatible with Rails if you ever out grow your tent.
+Ramaze: keeping things straight forward and simple
+Sinatra: dependent on the Rack web server interface, very flexible and allows you to create applications quickly.
+[ ---  end  ---- ]
+
+=== [ topic ][ php ] ===
+[ --- start ---- ]
+{ CakePHP }
+CakePHP is not only one of the most popular frameworks but it is one of the 
+oldest too. The framework, built on PHP, has a large community where you can 
+turn for tutorials and support.
+CakePHP draws many of its concepts from Ruby on Rails. As a result, you have a 
+set of strict conventions. Althought CakePHP may, in some cases, lack 
+flexability you can be sure that your application will be uniform throughout – 
+making code easy to understand and modify.
+Used by The Onion Store and followmy.tv
+
+{ CodeIgniter }
+With a small learning curve, CodeIgnitor attempts to get anyone coding. Built 
+on PHP and designed to take advantage of shared hosting, CodeIgniter has a 
+small footprint that requires very little configuration. The framework offering 
+is very flexible and does not require you to stick to the rigid coding 
+practices like frameworks. CodeIgnitor is a good starting point for beginners 
+who wish to explore web frameworks.
+Powers: The Mail & Guardian 
+
+DooPHP: fast, lightweight and easy to learn with great documentation.
+Horde: primed for use as an email client and groupware, comes with a modern library and a complete application stack.
+Joomla!: although traditionally used as a CMS, you can leverage to power of Joomla’s MVC framework to build your own apps.
+Lithium: adhering to no nonsense philosophies Lithium wants you to build better applications without sacrificing quality.
+Rain Framework: installed with a simple copy/paste action, seeks to help teams work together.
+Symfony: build robust applications for enterprise deployment.
+Yii: a framework that is quickly gaining traction, great for developing Web 2.0 applications.
+Zend Framework: powering some of the world’s most trafficked sites, build applications of any size.
+[ ---  end  ---- ]
+
+=== [ topic ][ python ] ===
+[ --- start ---- ]
+Django
+Built on Python, and orignally developed to cater for online-news operations, 
+Django prides itself on the ability to build high performance web applications 
+in rapid time. Python was designed with readability of the code as a key 
+factor. As a result, the framework adheres to the the principle of Don’t Repeat 
+Yourself (DRY) and tries automate as many tasks for you as possible. Django 
+builds a proffessional and production ready admin interface for you, and 
+provides a powerful templating system that lets you separately design, content 
+and code for easy editing.
+Being one of the largest and most popular frameworks Django has an excellent 
+community to turn to when you get stuck.
+
+CherryPy: wants you to build object orientated applications as you would normally do in Python
+CubicWeb: build applications quickly and efficiently with cubes.
+Flask: a mircoframework which has a very simple core. Developers only add on what is necessary.
+Grok: emphasizes agile web development, sutable for all levels of developers.
+Nagare: a web framework dedicated to application development rather than content publishing.
+Pylons: strongly influenced by Ruby on Rails, pylons gives you a near complete third party stack of schools with which to code.
+web2py: originally a teaching tool, development and easy are key.
+TurboGears: built with a large number of components and libraries, TurboGears attempts to make application developed easy, rapid and maintainable.
+[ ---  end  ---- ]
+
+=== [ topic ][ drupal ] ===
+[ --- start ---- ]
+Drupal
+Drupal is commonly perceived to be a Content Management System (CMS). This is 
+no mistake but such a description does not illustrate Drupal’s powerful 
+versatility. At it’s core, Drupal fits the bill for a web framework. With its 
+long list of features it is no surprise the at the php based framework powers 
+1.5% of the world’s websites. Drupal appeals to all levels of developers, 
+allowing the more experienced ones a set of tools to greatly manipulate the 
+framework. Less skilled users, meanwhile, can tap into the 10 000 free 
+community built addons.
+Drupal is great for powering content rich sites.
+Drupal powers large websites such as whitehouse.gov MTV United Kingdom and 
+Yahoo! Research.
+[ ---  end  ---- ]
+
+=== [ topic ][ websocket ] ===
+[ --- start ---- ]
+http://www.websocket.org/aboutwebsocket.html
+WebSocket is an HTML5 standard from W3C targeted for Client Side. So WebSocket 
+API can't obsolete nodejs, may be some npm packages can be developed which has 
+similar JS API like WebSocket but to use it in the server end. –
+
+WebSocket represents the next evolutionary step in web communication compared 
+to Comet and Ajax. However, each technology has its own unique capabilities. 
+
+[ ---  end  ---- ]

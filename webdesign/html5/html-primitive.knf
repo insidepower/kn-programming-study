@@ -234,6 +234,8 @@ Example:
 === [ topic ][ special characters ][ entity refereces ] ===
 [ --- start ---- ]
 - memorize the first five: " (&quot;), < (&lt;), > (&gt;), & (&amp;) and (&nbsp;).
+- &larr; left arrow
+- &uarr; up arrow
 ================================================================================
 Character				Entity Reference
 ================================================================================
@@ -328,8 +330,7 @@ Excepteur <ins>insert</ins> occaecat <del>delete</del> non proident,
 sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
 Physical-style formatting: (now controlled via css) (reference only)
-<b>...</b>	bold
-<i>...</i>	italic
+<b>...</b>	bold <i>...</i>	italic
 <u>...</u>	underline
 <big>...</big>	large font
 <small>...</small>	small font
@@ -374,5 +375,107 @@ mailto:help@zzz.com
 - size: 16x16 or 32x32
 - color depth: 8 bits or 24 bits
 - format of the image must be one of PNG (a W3C standard), GIF, or ICO.
+[ ---  end  ---- ]
+
+=== [ topic ][ link ][ g+ ] ===
+[ --- start ---- ]
+<!-- g+ -->
+<link href="https://plus.google.com/b/104459306872500508400/?rel=author" rel="publisher">
+[ ---  end  ---- ]
+
+=== [ topic ][ meta ][ propert ] ===
+[ --- start ---- ]
+- meta no longer provides benefits for SEO
+- useful for internal site search
+<meta property="og:site_name" content="Atlassian">
+[ ---  end  ---- ]
+
+=== [ topic ][ label ] ===
+[ --- start ---- ]
+- Labels are used by browser agents in different ways, including visually, read 
+  aloud, and so on
+- syntax <label for="id" accesskey="shortcut-key" form="associated form"></label>
+a, abbr, acronym, applet, b, basefont, bdo, big, br, button, cite, code, dfn, 
+em, font, i, iframe, img, input kbd, label, map, object, q, s, samp, script, 
+select, small, span, strike, strong, sub, sup, textarea, tt, u, var
+
+Example 1:
+<form> <label for="firstname"> First Name: </label>
+ <input type="text" name="firstname" id="firstname" />
+ </form>
+
+ Example 2:
+ <form> <label> First Name: <input type="text" name="firstname" /> </label>
+ </form>
+[ ---  end  ---- ]
+
+=== [ topic ][ button ] ===
+[ --- start ---- ]
+<button type="submit" name="submitButton" 
+value="value-submit-to-server-and-not-shown-to-user">value-show-to-user</button>
+[ ---  end  ---- ]
+
+=== [ topic ][ first topic ][ topic ] ===
+[ --- start ---- ]
+
+[ ---  end  ---- ]
+
+=== [ topic ][ content vs decoration ] ===
+[ --- start ---- ]
+- content should be included in html, using tag like <img>
+- decoration shoudl go to css, using background property
+[ ---  end  ---- ]
+
+=== [ topic ][ content type ] ===
+[ --- start ---- ]
+- MIME = multipurpose Internet Mail Extensions (
+- e.g. text/html, image/png, video/mpeg
+[ ---  end  ---- ]
+
+=== [ topic ][ object type ] ===
+[ --- start ---- ]
+<object data="video/myvide.mepg" type="video/mpeg"></object>
+[ ---  end  ---- ]
+
+=== [ topic ][ image type ] ===
+[ --- start ---- ]
+PNG
+- from W3C
+- support alpha channel
+- lossless compression
+- recommended for bitmap img other than photographics image (JPEG better choice)
+- 24-bit color
+
+JPEG
+- small in size due to heavy compression
+
+GIF
+- only 256 colors
+[ ---  end  ---- ]
+
+=== [ topic ][ form ] ===
+[ --- start ---- ]
+- web client will send the name-value pair to server
+<input type="checkbox" name="chk_color" checked="checked">
+- when more than radio button shares the same name value, the buttuons are 
+  considered to be a group. only one will be checked.
+[ ---  end  ---- ]
+
+=== [ topic ][ video ] ===
+[ --- start ---- ]
+- poster: image shown when video is not yet available, e.g. pre-buffering
+- autoplay
+- loop
+- controls
+Example 1:
+<video controls autoplay poster="xxx.png">
+    <!-- if mp4 is supported, then it will be used -->
+    <source src="xxx/xxx.mp4" type="video/mp4">
+    <!-- fallback if mp4 source is not supported -->
+    <source src="xxx/xxx.ogg" type="video/ogg">
+    <object data="path-to-mov.mov">
+    <p> This browser doesn't support mp4 and ogg </p>
+    </object>
+</video>
 [ ---  end  ---- ]
 </body>
