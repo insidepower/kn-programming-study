@@ -1,0 +1,329 @@
+=== [ topic ][ things to think about ] ===
+[ --- start ---- ]
+1. Show The Advantages Of Your Products
+    == A list of product categories or a grid of them 
+    == Special deals and new arrivals are also good to coax 
+2. Make Your Website Visitors Trust You
+    == let customer expect to know 
+        *** what they going to buy 
+        *** the purchase process
+        *** payment methods
+        *** delivery service
+        *** warranties
+    == have link to appropriate page
+[ ---  end  ---- ]
+
+=== [ topic ][ features ] ===
+[ --- start ---- ]
+1. Clear Logo
+    == a recognizable logo is is a reassuring symbol and an element of trust of 
+    the company or organization
+    == more popular brands usually have online store with fashionable home page
+    displaying minimum features
+    == A well-known logo, a mascot, a beautiful image or video ...
+
+    Example 1:
+    http://www.chanel.com/
+    http://store.sony.com/
+    http://www.shopadidas.com/
+
+2. Deals, Freebies And Free Shipping
+    == People decide very quickly whether they like a website or not
+    == need to grab the interests in a matter of second
+
+3. Latest News And Most Popular Products
+
+4. Brand Products
+    == If you have branded goods on sale, then display them upfront. 
+
+5. Shopping Cart, Login Box And Search Box
+    == shopping cart, login box and search box features are usually placed together
+    == Many stores also provide their customers with private accounts where it’s 
+    possible to check all their previous and current orders.
+    == receive special discount offers from the store owners and participate in 
+    different promotions or sales.
+
+6. Payment Systems Icons
+    == place payment icons at the footer or on the top right corner of sites
+
+7. Social Media Links
+    == It’s said that almost 20% of online purchases are accomplished after 
+    surfing through social media sites. People are inclined to take in public 
+    opinion. 
+    == excellent for self-promotion.
+    == Identify the most active and influential customers
+    == find new one who are not familiar with the web store
+
+8. Phone Numbers And Online Chats
+    == When there is a problem however, customers would more likely prefer to 
+    have someone they can talk with. 
+    == This is the core of the need for a store support team; 24/7 hotlines and 
+    live chats are highly appreciated forms of value-added customer service.
+
+9. Store Finder
+    == special store location search box for a country, city, zip code or 
+    address search
+
+10. Trustmarks
+    == Trustmarks are small images or logos that show a security guarantee by an 
+    external party indicating that it is safe to shop on the site. Some of these 
+    trustmarks come from Network solutions, McAfee, Verisign, BBB, TRUSTe, 
+    GeoTrust, etc. Such accreditation certificates give customers a sense of 
+    security and gives them confidence in sharing their private information. 
+    Visitors would be more inclined to make a purchase if they know that their 
+    payment details are safe from prying eyes.
+
+    == It should also be noted that trustmarks don’t matter for big brand 
+    stores. They don’t need to pass security and privacy tests to confirm their 
+    reliability because they already have a good reputation.
+
+    == Apart from trustmarks, a clear design, convenient menus, detailed product 
+    descriptions and user reviews are also important for creating better online 
+    reputation. Just note that trust plays an important role in a customer’s 
+    willingness to part with their money.
+
+    [ Validator ]
+    https://sealserver.trustwave.com
+    http://www.bbb.org/
+    http://privacy.truste.com/
+    http://www.bizrate.com/ratings_guide/merchant_detail__mid--85041.html?rf=sur
+    https://sealinfo.thawte.com/thawtesplash?form_file=fdf/thawtesplash.fdf&dn=WWW.3BALLS.COM&lang=en
+
+11. Bonus: How-To Guides
+     == How-to’s are not obligatory. It is however a way to arouse visitors’ 
+     interest in purchasing something that they may not be familiar with. For 
+     customers who are making major purchases, like a refrigerator or a new LCD 
+     TV, they would like guides or at least to know which specifications to look 
+     into before making a purchase. This tab has nothing in common with the help 
+     desk, which usually answers technical questions and solve problems 
+     associated with a purchase.
+[ ---  end  ---- ]
+
+=== [ topic ][ observation ] ===
+[ --- start ---- ]
+@ Recommend: You might also like <item1> <item2> at the side bar...
+Example :
+http://store.sony.com/cart
+nu skin product
+[ ---  end  ---- ]
+
+=== [ topic ][ setup ] ===
+[ --- start ---- ]
+The Process Of Building
+    == purchase the matching domain name ahead of time to secure your company 
+    name and logo
+    ==  Google Analytics for tracking your web page traffic
+
+Registering A Domain
+    == NameSilo for registering new domains. Their user accounts let you set up 
+    portfolios and organize your domain names into different structures. Their 
+    domain search is also quick and produces to-the-point results.
+
+Choosing The Web Hosting Service
+    == You’ll want to consider the backend language which your online shop will 
+    run, and to choose the proper server settings. If you don’t have any 
+    preference or just don’t care I recommend sticking with PHP. It’s open 
+    source and supported in mostly 99% of server environments. But just ensure 
+    that any hosting account you purchase will support PHP and MySQL databases.
+    == Some companies Hostgator and Bluehost offer some incredible solutions for 
+    first-time webmasters. The average cost is $100-$150/year for unlimited 
+    storage and bandwidth. Now some web hosts do cap their storage and bandwidth 
+    limit. But for even the cheapest solutions you’ll generally be using well 
+    under their rules.
+http://www.hongkiat.com/blog/10-important-factors-to-consider-before-choosing-a-web-host/
+http://www.hongkiat.com/blog/web-hosting-consumer-guide-9-tips-you-should-know/
+
+Choosing Your E-Commerce Package
+    == Hosted solutions 
+    are companies which provide you with everything you need 
+    on the backend and host the e-commerce script on their servers. This means 
+    you won’t need to perform any programming or file uploads of any kind. You 
+    will however still need a domain name to redirect and give your shop a 
+    distinct URL.
+    == Now you can also work with licensed scripts, both paid and open source. 
+    These kinds of e-commerce systems are easily customized and make up the 
+    majority of online web stores. Even if you aren’t a programmer at heart it’s 
+    a very simple process to download and re-upload script files onto your 
+    hosting server and follow some installation instructions.
+    But when you are working with money and payments online there are many 
+    security risks to consider. If you feel uncomfortable taking on that much 
+    responsibility it may be wise to choose a hosted solution. Many times you 
+    can talk with company representatives to figure out site security without 
+    any stress. The customer’s overall experience and safety should be held in 
+    regard to your bottom-line decision.
+
+Hosted E-Commerce Solutions
+    == Many of the hosted solutions can provide an amazing experience to your 
+    visitors with very little work on your end. The administration panel is also 
+    uniform to all other scripts, which should provide you an easy interface to 
+    upload photos and add catalogue entries.
+
+    There are so many choices out there it’s hard to pick just one. But I’ve 
+    included 3 below which stand out among the rest. They’re viable options for the 
+    average webmaster who isn’t interested in messing around with FTP and 
+    programming IDE’s. You do lose a lot of opportunity for customizations, but you 
+    are gaining added security and personal staff suppo
+       *** Shopify
+        You can check out Shopify for yourself to see this amazing service in action. 
+        Their website is designed beautifully and contains some wonderful demos. If you 
+        are on the edge with choosing any company, Shopify may possibly be the best 
+        option. Their features include a personal app store, SSL security, unlimited 
+        server bandwidth, a custom mobile template and a whole lot more!
+       *** Yahoo! Merchant Solution
+       *** BigCommerce
+        The BigCommerce shop software could be compared to Shopify with trimmed 
+        features. They offer a clean user interface which clears up a lot of confusion 
+        in the signup process. It’s a breeze to add in new features, products, users, 
+        and take payments online in just a few minutes.
+
+Custom-Owned Scripts
+http://www.hongkiat.com/blog/open-source-e-commerce-shopping-carts-best-of/
+
+http://www.zen-cart.com/
+    == Possibly one of the best known brands for e-commerce scripts on the web, 
+    Zen Cart is written in PHP and supports mostly all hosting environments. 
+    It’s free to download and install on as many websites as you’d like. The 
+    only retributions which they require is leaving the “Powered by Zen Cart” 
+    link open in the footer area.
+
+    Working with Zen Cart provides connections into other services. Some of these 
+    are included as modules and it’s possible to download them from their website. 
+    Others are simply companies which have tied into the Zen Cart software. Check 
+    out their personal recommended services list to see if anything jumps out.
+
+    If you know API development yourself there’s a simple XHTML templating system 
+    applied onto each website. It is incredibly easy for your standard web developer 
+    to create a custom theme.
+
+    Additionally the support community is alive and constantly buzzing. Zen Cart has 
+    personally sponsored an entire wiki devoted to the script and common topics. 
+    Their support forums are also often active with helpful members. You can ask 
+    questions ranging from setup and installation all the way to custom module 
+    controls.
+
+Magento
+http://www.magentocommerce.com/
+    == Magento has developed a very fine script for e-commerce websites. Their 
+    whole script is written on PHP and includes plenty of details for getting 
+    started. If you’re familiar with active development and FTP deployments 
+    check out the current SVN. It’s updated frequently and gives you a great way 
+    to access raw PHP files.
+
+    Certainly it’s possible for non-programmers to work with the Magento suite. 
+    But I would recommend checking out another option if you aren’t at least 
+    well-versed in HTML/CSS. Truly those looking to customize an amazing store 
+    with brilliant functionality should check out their product features and 
+    weigh the options. It won’t be a simple task to learn the Magento backend, 
+    however if you are familiar with PHP or a similar programming language you 
+    should be very comfortable within 2-3 weeks.
+
+    This is one company which provides a lot of support for users. Aside from 
+    the free edition there are many alternative options which you can pay per 
+    licence. Enterprise and Professional edition stand out as the two 
+    best-featured scripts. If you’re torn check their charts on the comparison 
+    page and choose what you think is best suited for your business need.
+
+    To get started with your learning spend a bit of time learning about their 
+    system, which includes screencast videos and some technical documentation. 
+    One area the Magento system isn’t lacking is in documentation.
+
+WordPress EShop
+http://wordpress.org/extend/plugins/eshop/
+    == With this method you will have to concern yourself with security and 
+    updates. It is of the utmost importance that your website stays secure and 
+    hack-free. SQL injections are all too common, and in this day personal user 
+    information and credit card numbers are much too important to lose. If 
+    you’re looking for a place to start on this, WordPress hosts support forums 
+    with many related topics. Try out their search feature to see if anybody has 
+    asked similar questions before.
+
+
+Taking Merchant Payments Online
+    == Additionally eWAY is a new launch targeting the international audience.
+    == PayPal is the obvious leader among the pack and can be featured on almost 
+    all of the most popular e-commerce empires,
+    == Many of the runner-up services work just as well as PayPal but haven’t 
+    gained enough attention. Specifically Google Checkout offers a very secure 
+    and speedy transaction process. 
+    == If you’re already using Gmail or have a Google Account it’s simple to tie 
+    into a new Google Checkout account. Their backend supports widgets which you 
+    can add onto your page for a nicer design.
+    == Both PayPal and Google Checkout support solutions for invoicing. This can 
+    be useful if you’re planning on purchasing modules or further domains. Try 
+    staying with a single account and use this for all your business 
+    transactions online. It’s a lot quicker than waiting for payments or working 
+    through shady non-secured payment pages.
+
+Add Content And Products
+    == 
+
+Marketing And Beyond
+    == Nobody is going to find your website without some form of marketing. If 
+    you haven’t signed up for a Google account yet I highly recommend creating 
+    one for Google Analytics. They provide completely free tracking software 
+    which boasts some incredible features you can’t find anywhere else! With 
+    their tools you can find your most trafficked pages and biggest referring 
+    websites. Alternatively you can also try out some worthy analytic tools to 
+    find the one which best suits you.
+    == Google AdWords is obviously very well known and trusted amongst hundreds 
+    of marketers – and for good reason! Google AdWords provides large traffic 
+    numbers and laser-targeted click results for whatever products you’re 
+    selling.
+    == Additionally Microsoft’s AdCenter and Yahoo! Advertising Solutions have 
+    really taken off the ground in recent months. These are viable options for 
+    smaller online stores with a much smaller marketing budget. You’ll be able 
+    to afford a lot more ad clicks and garner attention from a wide audience. 
+    Once you’ve run a few successful marketing campaigns your traffic numbers 
+    will slowly raise and you are sure to grow success in your online e-commerce 
+    shop.
+
+http://www.hongkiat.com/blog/e-commerce-design-resources-the-ultimate-round-up/
+http://www.hongkiat.com/blog/open-source-e-commerce-shopping-carts-best-of/
+http://www.hongkiat.com/blog/glossy-e-commerce-icon-set/
+http://www.hongkiat.com/blog/freebie-release-10-hand-drawn-e-commerce-icons/
+[ ---  end  ---- ]
+
+=== [ topic ][ domain name registrar ] ===
+[ --- start ---- ]
+namesilo
+Godaddy, 
+Name.com and 
+namecheap
+
+Before this I tried out DotEasy and my total experience was BAD!. They will ask 
+you fees for domain transfer out from their network
+
+I am with NameSilo and I just saw this thread. I certainly hope you give us a 
+try. We pride ourselves on being straightforward with no deceptive ploys in 
+pricing or policies of any kind. Our pricing is very good and our interface is 
+powerful, yet simple to use. We also do not charge for any extra services such 
+as WHOIS privacy, API access, DNS management or anything else. We also charge 
+the same for renewals as we do for registrations so you do not need to worry 
+about paying one price to "get in the door" and then another when it comes time 
+to renew. And, to address your concern with the different registrar you tried, 
+we certainly DO NOT charge any fees to transfer away if you are unhappy for any 
+reason.
+
+My main reason for looking to move to NameSilo is their inclusion of WHOIS Privacy, 
+Also the free access to API is worth to try namesilo
+
+Still, unless one needs private whois, they are slightly more expensive than 
+Dynadot with bulk pricing.
+
+I have been with Name.com for almost 10 years now and they have always been my 
+favorite and I don’t think they have ever let me down. Everything is easy with 
+name.com and their prices are almost always reasonable. They may not always be 
+the cheapest but in the long run I definitely feel like they have saved me 
+money. When I say that everything is easy I mean that they have actually put 
+some thought into their user interface and it’s remained almost the same for the 
+time I have been an account holder there. My initial reason for joining name.com 
+was to simply register my first domain without using my web host and at the time 
+I looked at all the available registrars and found name.com to be the most 
+reasonable.
+
+I recently had a bit of an argument with GoDaddy where I was unable to transfer 
+my domain to name.com. The reason for not being able to transfer my domain was 
+because the previous owner of that domain used a service called DomainsByProxy 
+with added protection which basically prevented me from transferring my domain.
+[ ---  end  ---- ]
+

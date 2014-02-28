@@ -1,0 +1,120 @@
+=== [ topic ][ dignose ][ location server ] ===
+[ --- start ---- ]
+- to query IP, use dig xxx.xxx.com A
+- to query mailserver, use dig xxx.xxx.com MX
+- dig www.hungrypenguin.net +short  /// remove all comment, show only answer section
+$ dig trials.adobe.com A
+
+$ dig trials.adobe.com +noall +answer
+output:
+$ dig trials.adobe.com A
+
+; <<>> DiG 9.9.2-P1 <<>> trials.adobe.com A
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 61693
+;; flags: qr rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 8, ADDITIONAL: 9
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;trials.adobe.com.		IN	A
+
+/// trials.adobe.com is an alias for trials.adobe.com.edgesuite.net
+/// trials.adobe.com.edgesuite.net is an alias for a1326.g.akamai.net
+/// IP of a1326.g.akamai.net is 123.136.105.138
+;; ANSWER SECTION:
+trials.adobe.com.	1712	IN	CNAME	trials.adobe.com.edgesuite.net.
+trials.adobe.com.edgesuite.net.	12512 IN CNAME	a1326.g.akamai.net.
+a1326.g.akamai.net.	20	IN	A	123.136.105.139
+a1326.g.akamai.net.	20	IN	A	123.136.105.138
+
+/// nameserver responsible for the domain name
+;; AUTHORITY SECTION:
+g.akamai.net.		1622	IN	NS	n5g.akamai.net.
+g.akamai.net.		1622	IN	NS	n2g.akamai.net.
+g.akamai.net.		1622	IN	NS	n1g.akamai.net.
+g.akamai.net.		1622	IN	NS	n7g.akamai.net.
+g.akamai.net.		1622	IN	NS	n0g.akamai.net.
+g.akamai.net.		1622	IN	NS	n4g.akamai.net.
+g.akamai.net.		1622	IN	NS	n3g.akamai.net.
+g.akamai.net.		1622	IN	NS	n6g.akamai.net.
+
+/// tell the nameserver IP
+;; ADDITIONAL SECTION:
+n0g.akamai.net.		2476	IN	A	88.221.81.194
+n1g.akamai.net.		2375	IN	A	123.136.105.140
+n2g.akamai.net.		2325	IN	A	23.15.10.69
+n3g.akamai.net.		2476	IN	A	23.15.10.76
+n4g.akamai.net.		2376	IN	A	123.136.105.140
+n5g.akamai.net.		2327	IN	A	123.136.105.135
+n6g.akamai.net.		2492	IN	A	219.93.34.60
+n7g.akamai.net.		2371	IN	A	219.93.34.60
+
+/// query time
+;; Query time: 78 msec
+;; SERVER: 127.0.1.1#53(127.0.1.1)
+;; WHEN: Fri Feb 28 10:47:33 2014
+;; MSG SIZE  rcvd: 422
+[ ---  end  ---- ]
+
+=== [ topic ][ migrate website to another dns ] ===
+[ --- start ---- ]
+- said the existing nameserver for the old hosting is in ns.hosteurope.com
+  If not sure, do a dig query and look for the authoritative section
+- after updating the old host to new host, remember to check if the original
+  name server has updated it, as local nameserver usually takes up to 48 hours
+  to see the changes
+- therefore, in order to use the DNS of ns.hosteurope.com, than the default (ISP 
+  DNS), which not showing the changes yet
+
+Example 1:
+dig @ns.hosteurope.com www.hungrypenguin.net
+[ ---  end  ---- ]
+
+=== [ topic ][ google public dns ][  ] ===
+[ --- start ---- ]
+google dns server:  8.8.8.8 and 8.8.4.4
+
+Select Internet Protocol Version 4 (TCP/IPv4), followed by Properties and them
+replace the IP addresses of your Preferred DNS server and Alternate DNS server
+with the IP addresses of the Google DNS servers which are 8.8.8.8 and 8.8.4.4
+
+/// flush the dns
+C:\>ipconfig /flushdns
+
+/// do nslookup
+C:\>nslookup www.microsoft.com
+Server:  any-in-0808.1e100.net
+Address:  8.8.8.8
+
+Non-authoritative answer:
+Name:    lb1.www.ms.akadns.net
+Addresses:  64.4.31.252
+          207.46.19.190
+          207.46.19.254
+Aliases:  www.microsoft.com
+          toggle.www.ms.akadns.net
+          g.www.ms.akadns.net
+[ ---  end  ---- ]
+
+=== [ topic ][ DNS Type ] ===
+[ --- start ---- ]
+AAAA
+    == Returns a 128-bit IPv6 address, most commonly used to map hostnames to an
+    IP address of the host.
+[ ---  end  ---- ]
+
+=== [ topic ][ voca ] ===
+[ --- start ---- ]
+- A record stores the host IP address.
+- CNAME is an alias record, which is used to give multiple aliases to a single computer.
+- The MX record is the mail exchange record, which tells mail servers how to route email for this domain.
+[ ---  end  ---- ]
+
+=== [ topic ][ url ] ===
+[ --- start ---- ]
+- to tell the server location of an ip
+GeoIP2 Precision Demo
+http://www.maxmind.com/en/geoip_demo
+[ ---  end  ---- ]

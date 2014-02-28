@@ -459,6 +459,7 @@ GIF
 <input type="checkbox" name="chk_color" checked="checked">
 - when more than radio button shares the same name value, the buttuons are 
   considered to be a group. only one will be checked.
+- placeholder="default text to show"
 [ ---  end  ---- ]
 
 === [ topic ][ video ] ===
@@ -478,4 +479,14 @@ Example 1:
     </object>
 </video>
 [ ---  end  ---- ]
+
+=== [ topic ][ guide ][ idiomatic html ] ===
+[ --- start ---- ]
+attributes order:
+class
+id
+data-*
+Everything else
+[ ---  end  ---- ]
 </body>
+

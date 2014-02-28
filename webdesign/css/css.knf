@@ -1250,11 +1250,48 @@ img {
 
 === [ topic ][ positioning ][ z-index ] ===
 [ --- start ---- ]
+- z-index will only work on an element whose position property has been 
+  explicitly set to absolute, fixed, or relative.
 - The z-index property specifies the stack order of an element.
 - An element with greater stack order is always in front of an element with a 
   lower stack order.
 Note: z-index only works on positioned elements (position:absolute, 
 position:relative, or position:fixed).
+
+problem: the z-index is not working as expected
+check if the the position of the element and its parent has been set to relative, fixed or absolute!
+[ ---  end  ---- ]
+
+=== [ topic ][ stacking-order ][ z-index ]===
+[ --- start ---- ]
+http://philipwalton.com/articles/what-no-one-told-you-about-z-index/
+New stacking contexts:
+1. When an element is the root element of a document (the <html> element)
+2. When an element has a position value other than static and a z-index value other than auto
+3. When an element has an opacity value less than 1
+
+In addition to opacity, several newer CSS properties also create stacking 
+contexts. These include: transforms, filters, css-regions, paged media,
+
+<div><!-- 1 -->
+  <span class="red" style="z-index: 1"><!-- 6 --></span>
+</div>
+<div><!-- 2 -->
+  <span class="green"><!-- 4 --><span>
+</div>
+<div><!-- 3 -->
+  <span class="blue"><!-- 5 --></span>
+</div>
+
+<div><!-- 1 -->
+  <span class="red" style="z-index: 1; opacity: 0.99;"><!-- 1.1 --></span>
+</div>
+<div><!-- 2 -->
+  <span class="green"><!-- 4 --><span>
+</div>
+<div><!-- 3 -->
+  <span class="blue"><!-- 5 --></span>
+</div>
 [ ---  end  ---- ]
 
 === [ topic ][ css advanced ][ align ] ===
@@ -1938,6 +1975,58 @@ $(document).ready(function()
 - text-indent: -9999px;
 [ ---  end  ---- ]
 
+=== [ topic ][ guideline ][ idiomatic css ] ===
+[ --- start ---- ]
+- all code should look like a single person typed it
+- indentation keep at 4 spaces
+- comment on a new line above the subject
+- keep line-lenght to a sensible maximum, e.g. 80 columns
+
+.selector {
+    /* Positioning */
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    /* Display & Box Model */
+    display: inline-block;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+    border: 10px solid #333;
+    margin: 10px;
+
+    /* Other */
+    background: #000;
+    color: #fff;
+    font-family: sans-serif;
+    font-size: 16px;
+    text-align: right;
+}
+
+.selector {
+    background-image:
+        linear-gradient(#fff, #ccc),
+        linear-gradient(#f3c, #4ec);
+    box-shadow:
+        1px 1px 1px #000,
+        2px 2px 1px 1px #ccc inset;
+}
+
+.selector-1 {
+    @extend .other-rule;
+    @include clearfix();
+    @include box-sizing(border-box);
+    width: x-grid-unit(1);
+    // other declarations
+}
+[ ---  end  ---- ]
+
 === [ topic ][ problem ][ text-align ] ===
 [ --- start ---- ]
 [ Problem ] 
@@ -1984,6 +2073,14 @@ problem:
 /// it is found that background-attachment is always set to scroll, regardless of .local define it as local or fixed
 solution: make .local more specific
 pre.local { background-attachment: local; }
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ mouse can click on submit button nor text input ] ===
+[ --- start ---- ]
+problem: 
+caused by setting the .page z-index to -999
+solution:
+remove the z-index line
 [ ---  end  ---- ]
 
 === [ topic ][ compatibility ][ support ][ earlier browser ] ===

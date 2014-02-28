@@ -1,0 +1,70 @@
+=== [ topic ][ list ] ===
+[ --- start ---- ]
+# Faster Internet Only 
+66.11.234.70
+66.11.234.71
+
+# Faster Internet &
+# Phishing Site Blocking 
+66.11.234.80
+66.11.234.81 
+
+# Faster Internet,
+# Phishing Site Blocking,
+# & Adult Site Blocking 
+66.11.234.90
+66.11.234.91
+
+# OpenDNS
+208.67.222.222
+208.67.220.220
+
+# Service provider:dnsadvantage
+# Dnsadvantage free dns server list:
+156.154.70.1
+156.154.71.1
+
+# Global DNS vnsc-pri.sys.gtei.net
+4.2.2.1
+4.2.2.2
+4.2.2.3
+4.2.2.4
+4.2.2.5
+4.2.2.6
+
+
+# Screamyx Orignal DNS
+202.188.0.132
+202.188.1.5
+
+202.188.0.133
+202.188.1.5
+
+# Time Net
+203.121.16.85
+203.121.16.120
+
+# Maxis
+202.75.129.101
+202.75.129.102
+
+# ARC Net
+203.115.225.25
+203.115.225.24
+
+# Free Public DNS Server
+# Service provider: Google
+8.8.8.8
+8.8.4.4
+
+# Service provider: ScrubIt
+# Public dns server address:
+67.138.54.100
+207.225.209.66
+[ ---  end  ---- ]
+
+=== [ topic ][ used ] ===
+[ --- start ---- ]
+u-mobile
+123.136.100.2 , 123.136.100.3
+[ ---  end  ---- ]

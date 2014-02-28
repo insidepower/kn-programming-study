@@ -138,24 +138,6 @@ echo 'foo'.'bar' ; //concatenates the 2 strings
 print('foo', 'bar'); //Fatal error
 [ ---  end  ---- ]
 
-=== [ topic ][ debug ] ===
-[ --- start ---- ]
-var_dump() function returns the data type and value of variables
-$x = 5985;
-var_dump($x); // int(5985)
-$x = -345; // negative number 
-var_dump($x); // int(-345)
-$x = 0x8C; // hexadecimal number
-var_dump($x); // int(140)
-$x = 047; // octal number
-var_dump($x); // int(39)
-$x = "test"; var_dump($x); // string(4) "test"
-$x = 1.314; var_dump($x);  // float(1.314)
-$x = array("ibm", "apple"); var_dump($x); // array(2) { [0]=> string(3) "ibm" [1]=> string(5) "apple" }
-$x = null; var_dump($x); // NULL
- 
-[ ---  end  ---- ]
-
 === [ topic ][ variable scope ] ===
 [ --- start ---- ]
 static $x=0; /// will not destroy after function is completed
@@ -259,6 +241,22 @@ $_GET when someone is requesting data from your application.
 - never use it to send sensitive data like password
 [ ---  end  ---- ]
 
+=== [ topic ][ var ][ handling function ] ===
+[ --- start ---- ]
+- boolean isset()
+- string gettype()
+    == possible value: 
+        "boolean"
+        "integer"
+        "double" (for float type)
+        "string"
+        "array"
+        "object"
+        "resource"
+        "NULL"
+        "unknown type"
+[ ---  end  ---- ]
+
 === [ topic ][ form ] ===
 [ --- start ---- ]
 - htmlspecialchars() function converts special characters to HTML entities.
@@ -348,12 +346,93 @@ Name: <input type="text" name="name" value="<?php echo $name;?>">
 echo strlen("Hello world!");
 echo strpos("Hello world!","world");  /// output: 6
 
+preg_split() - Split string by a regular expression
+str_split() - Convert a string to an array
+mb_split() - Split multibyte string using regular expression
+str_word_count() - Return information about words used in a string
+strtok() - Tokenize string
+nl2br() - Inserts HTML line breaks before all newlines in a string
+chunk_split() - Split a string into smaller chunks
+
+Example 1: implode()
+implode() - Join array elements with a string
+$array = array('lastname', 'email', 'phone');
+$comma_separated = implode(",", $array);
+echo $comma_separated; // lastname,email,phone
+[ ---  end  ---- ]
+
+=== [ topic ][ string ][ explode ] ===
+[ --- start ---- ]
+explode — Split a string by string
+- array explode ( string $delimiter , string $string [, int $limit ] )
+   == If limit is set and positive, the returned array will contain a maximum of 
+      limit elements with the last element containing the rest of string.
+   == if limit is negative, it return a total (count($array)-limit) of items
+
+Example 1:
 $pizza  = "piece1 piece2 piece3 piece4 piece5 piece6";
 /// explode will split the string and returning an array
 /// syntax: array explode ( string $delimiter , string $string [, int $limit ] )
 $pieces = explode(" ", $pizza);
 echo $pieces[0]; // piece1
 echo $pieces[1]; // piece2
+
+Example 2:
+$str = 'one|two|three|four';
+// positive limit
+print_r(explode('|', $str, 2));
+print_r(explode('|', $str, -1));
+Output:
+Array
+(
+    [0] => one
+    [1] => two|three|four
+)
+Array
+(
+    [0] => one
+    [1] => two
+    [2] => three
+)
+
+[ ---  end  ---- ]
+
+=== [ topic ][ string ][ conversion ] ===
+[ --- start ---- ]
+- conversion to number
+$foo = 1 + "10.5";                // $foo is float (11.5)
+$foo = 1 + "-1.3e3";              // $foo is float (-1299)
+$foo = 1 + "bob-1.3e3";           // $foo is integer (1)
+$foo = 1 + "bob3";                // $foo is integer (1)
+$foo = 1 + "10 Small Pigs";       // $foo is integer (11)
+$foo = 4 + "10.2 Little Piggies"; // $foo is float (14.2)
+$foo = "10.0 pigs " + 1;          // $foo is float (11)
+$foo = "10.0 pigs " + 1.0;        // $foo is float (11)   
+// test above with
+echo "\$foo==$foo; type is " . gettype ($foo) . "<br />\n";
+[ ---  end  ---- ]
+
+=== [ topic ][ string ][ wordwrap ] ===
+[ --- start ---- ]
+wordwrap — Wraps a string to a given number of characters
+string wordwrap ( string $str [, int $width = 75 [, string $break = "\n" [, bool $cut = false ]]] )
+
+Example 1:
+$text = "The quick brown fox jumped over the lazy dog.";
+$newtext = wordwrap($text, 20, "<br />\n");
+Output:
+The quick brown fox<br />
+jumped over the lazy<br />
+dog.
+
+Example 2: break a long word
+$text = "A very long woooooooooooord.";
+$newtext = wordwrap($text, 8, "\n", true);
+Output:
+A very
+long
+wooooooo
+ooooord.
 [ ---  end  ---- ]
 
 === [ topic ][ path ] ===
@@ -362,7 +441,7 @@ echo $pieces[1]; // piece2
 - string basename ( string $path [, string $suffix ] )
 echo "1) ".basename("/etc/sudoers.d", ".d").PHP_EOL;  // sudoers
 echo "2) ".basename("/etc/passwd").PHP_EOL;           // passwd
-echo "3) ".basename("/etc/").PHP_EOL;                 // etc    
+echo "3) ".basename("/etc/").PHP_EOL;                 // etc
 echo "4) ".basename(".").PHP_EOL;                     // .
 
 [ dirname ]
@@ -377,7 +456,7 @@ $path_parts = pathinfo('/www/htdocs/inc/lib.inc.php');
 echo $path_parts['dirname'], "\n";                        // /www/htdocs/inc
 echo $path_parts['basename'], "\n";                       // lib.inc.php
 echo $path_parts['extension'], "\n";                      // php
-echo $path_parts['filename'], "\n"; // since PHP 5.2.0    // lib.inc        
+echo $path_parts['filename'], "\n"; // since PHP 5.2.0    // lib.inc
 
 // empty extension (notice the dot at the end)
 $path_parts = pathinfo('/path/emptyextension.');
@@ -456,8 +535,188 @@ echo greeting;
 === [ topic ][ array ] ===
 [ --- start ---- ]
 $cars=array("Volvo","BMW","Toyota");
+- shorthand for array() is []
+- {} can be used for accessing element, $array[42] and $array{42} are same
+$car = ["Volvo", "BMW", "Toyota"];
 echo "My car is a {$cars[0]}";
 echo count($cars);  /// 3
+- comma at the last item is optional.
+- typically comma for last time of multiline-array is kept for easier new addition.
+- key can be integer or string.
+- key is optional. if not specified, increment of largest previouslyused integer key.
+- if no integer indices exist yet, the key will be 0 (zero)
+- value can be any type
+- following key cast will occur:
+  == strings containing just valid integer will be cast to "integer" type, e.g. "8"
+  == float -> integer, e.g. 8.7 is truncated -> 8 instead as key.
+  == bool as integer, e.g. false -> 0; true -> 1;
+  == Null into ""
+  == if multiple elements using same key, only the last one will be used.
+- array[bar]       /// bad, and wrong! unless bar is a constant already defined 
+  vs array['bar']  /// correct!
+- define ('bar', 'barConstant'); array[bar] ...   /// then ok!
+$myarray = array(
+    key => value,
+    key2 => value,
+    ...
+);
+
+/// or using shorthand
+$myarray = [
+    "foor" => "bar",
+    "bar" => "foor",
+];
+
+Example 1:
+$array = array(
+         "a",
+         "b",
+    6 => "c",
+         "d",   /// key will be 7
+);
+var_dump($array);
+output:
+array(4) {
+  [0]=> string(1) "a"
+  [1]=> string(1) "b"
+  [6]=> string(1) "c"
+  [7]=> string(1) "d"
+}
+
+Example 2:
+$array = array(
+    "foo" => "bar",
+    42    => 24,
+    "multi" => array(
+         "dimensional" => array(
+             "array" => "foo"
+         )
+    )
+);
+
+var_dump($array["foo"]);                           // string(3) "bar"
+var_dump($array[42]);                              // int(24)
+var_dump($array["multi"]["dimensional"]["array"]); // string(3) "foo"
+
+Example 3: array dereferencing
+function getArray() {
+    return array(1, 2, 3);
+}
+// on PHP 5.4
+$secondElement = getArray()[1];
+// previously
+$tmp = getArray();
+$secondElement = $tmp[1];
+// or
+list(, $secondElement) = getArray();
+
+Example 4: demo bad array index which is an undefined constant
+error_reporting(E_ALL);
+$arr = array('fruit' => 'apple', 'veggie' => 'carrot');
+// Correct
+print $arr['fruit'];  // apple
+print $arr['veggie']; // carrot
+// $arr[fruit] is Incorrect.  This works but also throws a PHP error of level
+// E_NOTICE because of an undefined constant named fruit
+//
+// Notice: Use of undefined constant fruit - assumed 'fruit' in...
+print $arr[fruit];    // apple
+// This defines a constant to demonstrate what's going on.  The value 'veggie'
+// is assigned to a constant named fruit.
+define('fruit', 'veggie');
+// Notice the difference now
+print $arr['fruit'];  // apple
+print $arr[fruit];    // carrot
+// The following is okay, as it's inside a string. Constants are not looked for
+// within strings, so no E_NOTICE occurs here
+print "Hello $arr[fruit]";      // Hello apple
+// With one exception: braces surrounding arrays within strings allows constants
+// to be interpreted
+print "Hello {$arr[fruit]}";    // Hello carrot
+print "Hello {$arr['fruit']}";  // Hello apple
+// This will not work, and will result in a parse error, such as:
+// Parse error: parse error, expecting T_STRING' or T_VARIABLE' or T_NUM_STRING'
+// This of course applies to using superglobals in strings as well
+print "Hello $arr['fruit']"; /// print cannot interpret variable inside...
+print "Hello $_GET['foo']";
+// Concatenation is another option
+print "Hello " . $arr['fruit']; // Hello apple
+
+Example 5:
+$a = array( 'color' => 'red',
+            'taste' => 'sweet',
+            'shape' => 'round',
+            'name'  => 'apple',
+            4        // key will be 0
+          );
+// same as
+$a = array();
+$a['color'] = 'red';
+$a['taste'] = 'sweet';
+$a['shape'] = 'round';
+$a['name']  = 'apple';
+$a[]        = 4;        // key will be 0
+
+Example 6:
+// fill an array with all items from a directory
+$handle = opendir('.');
+while (false !== ($file = readdir($handle))) {
+    $files[] = $file;
+}
+closedir($handle); 
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ count ] ===
+[ --- start ---- ]
+$array = array(1, 2);
+$count = count($array);
+for ($i = 0; $i < $count; $i++) { ... }
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ copy and dereference ] ===
+[ --- start ---- ]
+$arr1 = array(2, 3);
+$arr2 = $arr1;
+$arr2[] = 4; // $arr2 is changed, $arr1 is still array(2, 3)
+$arr3 = &$arr1;
+$arr3[] = 4; // now $arr1 and $arr3 are the same
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ sort ] ===
+[ --- start ---- ]
+sort($files);
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ delete item ] ===
+[ --- start ---- ]
+- unset() to delete an array element
+
+Example 1:
+$arr = array(5 => 1, 12 => 2);
+$arr[] = 56;    // This is the same as $arr[13] = 56;
+                // at this point of the script
+$arr["x"] = 42; // This adds a new element to
+                // the array with key "x"
+unset($arr[5]); // This removes the element from the array
+unset($arr);    // This deletes the whole array
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ index performance ] ===
+[ --- start ---- ]
+Using $idx = 0:
+$array[$idx]            // time: 0.45435905456543 seconds
+$array["$idx"]          // time: 1.0537171363831 seconds
+$array["{$idx}"]        // time: 1.0621709823608 seconds
+
+Using $idx = "0"
+$array[$idx]            // time: 0.5107250213623 seconds
+$array["$idx"]          // time: 0.77445602416992 seconds
+$array["{$idx}"]        // time: 0.77329802513123 seconds
+
+Using $idx = "blah"
+$array[$idx]           // time: 0.48077392578125 seconds
+$array["$idx"]         // time: 0.73676419258118 seconds
+$array["{$idx}"]       // time: 0.71499705314636 seconds
 [ ---  end  ---- ]
 
 === [ topic ][ array ][ list ] ===
@@ -465,8 +724,14 @@ echo count($cars);  /// 3
 Example 1:
 $data = "foo:*:1023:1000::/home/foo:/bin/sh";
 list($user, $pass, $uid, $gid, $gecos, $home, $shell) = explode(":", $data);
-echo $user; // foo
-echo $pass; // *
+Output:
+$user = foo;
+$pass = *;
+$uid = 1023;
+$gid = 1000;
+$gecos = ; // null as there are two :(null): connected
+$home = /home/foo;
+$shell = /bin/sh;
 
 Example 2:
 $info = array('coffee', 'brown', 'caffeine');
@@ -482,6 +747,36 @@ in_array("jpg", array("gif", "jpeg", "jpg", "png"));
 === [ topic ][ array ][ end ] ===
 [ --- start ---- ]
 $extension = end($temp);
+$fruits = array('apple', 'banana', 'cranberry');
+echo end($fruits); // cranberry
+
+prev() - Rewind the internal array pointer
+reset() - Set the internal pointer of an array to its first element
+next() - Advance the internal array pointer of an array
+[ ---  end  ---- ]
+
+=== [ topic ][ array ][ each ] ===
+[ --- start ---- ]
+$foo = array("Robert" => "Bob", "Seppo" => "Sepi");
+$bar = each($foo);
+$bar is now contains {
+    [1] => Bob
+    [value] => Bob
+    [0] => Robert
+    [key] => Robert
+    }
+
+Example 2:
+$fruit = array('a' => 'apple', 'b' => 'banana', 'c' => 'cranberry');
+
+reset($fruit);
+while (list($key, $val) = each($fruit)) {
+    echo "$key => $val\n";
+}
+Output: 
+a => apple
+b => banana
+c => cranberry
 [ ---  end  ---- ]
 
 === [ topic ][ array ][ associative array ] ===
@@ -491,7 +786,8 @@ or:
 $age['Peter']="35";
 $age['Ben']="37";
 $age['Joe']="43";
-foreach($age as $x=>$x_value)   {   echo "Key=" . $x . ", Value=" . $x_value; }
+foreach($age as $x=>$x_value) {   
+   echo "Key=" . $x . ", Value=" . $x_value; }
 [ ---  end  ---- ]
 
 === [ topic ][ array ][ sorting ] ===
@@ -730,7 +1026,7 @@ echo '<a href="/default.php">Home</a>
 </body>
 [ ---  end  ---- ]
 
-=== [ topic ][ date ] ===
+=== [ topic ][ datetime ][ date ] ===
 [ --- start ---- ]
 syntax: date(format{required},timestamp{optional})
 
@@ -751,7 +1047,28 @@ echo date("Y-m-d");                 // 2009-05-11
 Example 2:
 $tomorrow = mktime(0,0,0,date("m"),date("d")+1,date("Y"));
 echo "Tomorrow is ".date("Y/m/d", $tomorrow);
-output: Tomorrow is 2009/05/12
+Output: Tomorrow is 2009/05/12
+[ ---  end  ---- ]
+
+=== [ topic ][ datetime ][ time ] ===
+[ --- start ---- ]
+Example 1: object oriented
+$date = new DateTime();
+echo $date->format('U = Y-m-d H:i:s') . "\n";
+
+$date->setTimestamp(1171502725);
+echo $date->format('U = Y-m-d H:i:s') . "\n";
+
+Example 2: procedural
+$date = date_create();
+echo date_format($date, 'U = Y-m-d H:i:s') . "\n";
+
+date_timestamp_set($date, 1171502725);
+echo date_format($date, 'U = Y-m-d H:i:s') . "\n";
+
+output:
+1272508903 = 2010-04-28 22:41:43
+1171502725 = 2007-02-14 20:25:25
 [ ---  end  ---- ]
 
 === [ topic ][ password ] ===
@@ -776,7 +1093,7 @@ $string = 'April 15, 2003';
 $pattern = '/(\w+) (\d+), (\d+)/i';
 $replacement = '${1}1,$3';
 echo preg_replace($pattern, $replacement, $string);
-< output >: April1,2003
+Output: April1,2003
 [ ---  end  ---- ]
 
 === [ topic ][ file ] ===
@@ -822,6 +1139,130 @@ function directoryToArray($directory, $recursive) {
     }
     return $array_items;
 }
+[ ---  end  ---- ]
+
+=== [ topic ][ file ][ upload ] ===
+[ --- start ---- ]
+- debug: print_r($_FILES);
+<form enctype="multipart/form-data" action="__URL__" method="POST">
+<!-- MAX_FILE_SIZE must precede the file input field -->
+    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+    <!-- Name of input element determines name in $_FILES array -->
+    Send this file: <input name="userfile" type="file" />
+    <input type="submit" value="Send File" />
+</form>
+
+MAX_FILE_SIZE
+- hidden field (measured in bytes)
+- must precede the file input field
+- save user from waiting big file to be transferred then only realize it was too large
+
+$_FILES['userfile']['name']
+    The original name of the file on the client machine.
+$_FILES['userfile']['type']
+    The mime type of the file, if the browser provided this information. An example would be "image/gif". This mime type is however not checked on the PHP side and therefore don't take its value for granted.
+$_FILES['userfile']['size']
+    The size, in bytes, of the uploaded file.
+$_FILES['userfile']['tmp_name']
+    The temporary filename of the file in which the uploaded file was stored on the server.
+$_FILES['userfile']['error']
+    The error code associated with this file upload. This element was added in PHP 4.2.0
+
+temporary file location:
+- stored in the server's default temporary directory, 
+- unless specified in upload_tmp_dir directive in php.ini.
+- or change with variable TMPDIR in the environment in which PHP runs.
+
+[ move_uploaded_file ]
+bool move_uploaded_file ( string $filename , string $destination )
+
+Example 1: multiple files uploaded 
+<form action="" method="post" enctype="multipart/form-data">
+<p>Pictures:
+<input type="file" name="pictures[]" />
+<input type="file" name="pictures[]" />
+<input type="file" name="pictures[]" />
+<input type="submit" value="Send" />
+</p>
+</form>
+
+foreach ($_FILES["pictures"]["error"] as $key => $error) {
+    if ($error == UPLOAD_ERR_OK) {
+        $tmp_name = $_FILES["pictures"]["tmp_name"][$key];
+        $name = $_FILES["pictures"]["name"][$key];
+        move_uploaded_file($tmp_name, "$uploads_dir/$name");
+    }
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ file ][ upload ][ security ] ===
+[ --- start ---- ]
+is_uploaded_file — Tells whether the file was uploaded via HTTP POST
+
+Returns TRUE if the file named by filename was uploaded via HTTP POST. This is 
+useful to help ensure that a malicious user hasn't tried to trick the script 
+into working on files upon which it should not be working--for instance, 
+/etc/passwd.
+
+Example 1:
+if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
+   echo "File ". $_FILES['userfile']['name'] ." uploaded successfully.\n";
+   echo "Displaying contents\n";
+   readfile($_FILES['userfile']['tmp_name']);
+} else {
+   echo "Possible file upload attack: ";
+   echo "filename '". $_FILES['userfile']['tmp_name'] . "'.";
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ file ][ readfile ] ===
+[ --- start ---- ]
+readfile — Outputs a file
+Example #1 Forcing a download using readfile()
+<?php
+$file = 'monkey.gif';
+
+if (file_exists($file)) {
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename='.basename($file));
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($file));
+    ob_clean();
+    flush();
+    readfile($file);
+    exit;
+}
+?>
+[ ---  end  ---- ]
+
+=== [ topic ][ file ][ reads entire files into an array ] ===
+[ --- start ---- ]
+file — Reads entire file into an array
+array file ( string $filename [, int $flags = 0 [, resource $context ]] )
+
+Example 1:
+// Get a file into an array.  In this example we'll go through HTTP to get
+// the HTML source of a URL.
+$lines = file('http://www.example.com/');
+
+// Loop through our array, show HTML source as HTML source; and line numbers too.
+foreach ($lines as $line_num => $line) {
+    echo "Line #<b>{$line_num}</b> : " . htmlspecialchars($line) . "<br />\n";
+}
+
+// Another example, let's get a web page into a string.  See also file_get_contents().
+$html = implode('', file('http://www.example.com/'));
+
+// Using the optional flags parameter since PHP 5
+$trimmed = file('somefile.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+[ ---  end  ---- ]
+
+=== [ topic ][ file ][ rename ] ===
+[ --- start ---- ]
+rename() - Renames a file or directory
 [ ---  end  ---- ]
 
 === [ topic ][ exit ][ die ] ===
@@ -911,13 +1352,571 @@ $escaped_command = escapeshellcmd($command);
 system($escaped_command);
 [ ---  end  ---- ]
 
+=== [ topic ][ cookies ] ===
+[ --- start ---- ]
+- A cookie is often used to identify a user. 
+- A cookie is a small file that the server embeds on the user's computer. 
+- Each time the same computer requests a page with a browser, it will send the cookie too.
+- value argument portion of the cookie will automatically be urlencoded when you send 
+  the cookie, and when it is received, it is automatically decoded and assigned 
+  to a variable by the same name as the cookie name. If you don't want this, 
+  you can use setrawcookie() instead if you are using PHP 5.
+
+setcookie()
+- set a cookie.
+- must appear BEFORE the <html> tag
+- setcookie(name, value, expire, path, domain);
+  expire 
+   = is seconds since the epoch (measured in seconds from 1972)
+   = If set to 0, or omitted, the cookie will expire at the end of the session 
+   = e.g. time()+60*60*24*30, expire in 30 days
+  path
+   = if set to '/', available to entire domain
+   = if set to certain path, e.g. '/path', then only available to <domain>/path
+  secure
+   = if true, only transmit if a secure connection (HTTPS) exists
+
+Example 1: expire after one hour (60mins * 60seconds)
+setcookie("user", "Alex Porter", time()+3600);
+
+Example 2:
+// Print a cookie
+echo $_COOKIE["user"];
+// A way to view all cookies
+print_r($_COOKIE);
+
+Example 3:
+if (isset($_COOKIE["user"]))
+  echo "Welcome " . $_COOKIE["user"] . "!<br>";
+else
+  echo "Welcome guest!<br>";
+
+Example 4: cookies and array
+setcookie("cookie[three]", "cookiethree");
+setcookie("cookie[two]", "cookietwo");
+setcookie("cookie[one]", "cookieone");
+
+// after the page reloads, print them out
+if (isset($_COOKIE['cookie'])) {
+    foreach ($_COOKIE['cookie'] as $name => $value) {
+        $name = htmlspecialchars($name);
+        $value = htmlspecialchars($value);
+        echo "$name : $value <br />\n";
+    }
+}
+output:
+three : cookiethree
+two : cookietwo
+one : cookieone
+[ ---  end  ---- ]
+
+=== [ topic ][ cookie ][ delete ] ===
+[ --- start ---- ]
+setcookie("user", "", time()-3600);
+[ ---  end  ---- ]
+
+=== [ topic ][ cookie ][ pitfall ] ===
+[ --- start ---- ]
+Common Pitfalls:
+
+1. Cookies will not become availble until the next loading of a page.
+A nice way to debug the existence of cookies is by simply calling print_r($_COOKIE);.
+
+2. Cookies must be deleted with the same parameters as they were set with. If the 
+value argument is an empty string, or FALSE, and all other arguments match a 
+previous call to setcookie, then the cookie with the specified name will be 
+deleted from the remote client. This is internally achieved by setting value to 
+'deleted' and expiration time to one year in past.
+
+Because setting a cookie with a value of FALSE will try to delete the cookie, 
+you should not use boolean values. Instead, use 0 for FALSE and 1 for TRUE.
+
+Cookies names can be set as array names and will be available to your PHP 
+scripts as arrays but separate cookies are stored on the user's system. 
+Consider explode() to set one cookie with multiple names and values. It is not 
+recommended to use serialize() for this purpose, because it can result in 
+security holes.
+
+Multiple calls to setcookie() are performed in the order called.
+[ ---  end  ---- ]
+
+=== [ topic ][ cookie ][ login example ] ===
+[ --- start ---- ]
+session_start();
+if (isset($_POST['submit'])) //If the form has been submitted
+{
+    //Connect to database
+    $query = "SELECT password FROM logins WHERE username = '" . $_POST['username'] . "'";
+    $result = mysql_query($query);
+    $row = mysql_fetch_array($result);
+    mysql_close();
+    if ($row['password'] == md5($_POST['password'])) //Remember to encrypt our value
+    {
+        //Login success - set session cookie
+        $_SESSION['u']=$_POST['username'];
+        $_SESSION['p']=md5($_POST['password']);
+        header ("Location: login_success.php"); //Redirect the user to a logged in page
+        exit; //Do not display any more script for this page
+    }
+    else
+    {
+        //Login area, display the login form as before
+    }
+[ ---  end  ---- ]
+
+=== [ topic ][ session ] ===
+[ --- start ---- ]
+- store user information on the server for later use (i.e. username, shopping 
+  items, etc).
+- session information is temporary and will be deleted after the user has left 
+  the website. If you need a permanent storage you may want to store the data 
+  in a database.
+- Sessions work by creating a unique id (UID) for each visitor and store 
+  variables based on this UID.
+- The UID is either stored in a cookie or is propagated in the URL.
+- call session_start() to start the session
+
+Example 1:
+session_start();
+
+if(isset($_SESSION['views']))
+$_SESSION['views']=$_SESSION['views']+1;
+else
+$_SESSION['views']=1;
+echo "Views=". $_SESSION['views'];
+
+Example 2: free the specified session variable
+session_start();
+if(isset($_SESSION['views']))
+  unset($_SESSION['views']);
+
+Example 3:
+session_destroy();
+[ ---  end  ---- ]
+
+=== [ topic ][ filter ][ filter_var ] ===
+[ --- start ---- ]
+- filter_var — Filters a variable with a specified filter
+mixed filter_var ( mixed $variable [, int $filter = FILTER_DEFAULT [, mixed $options ]] )
+
+Example 0:
+<?php
+var_dump(filter_var('bob@example.com', FILTER_VALIDATE_EMAIL));
+var_dump(filter_var('http://example.com', FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED));
+?>
+Output:
+string(15) "bob@example.com"
+bool(false)
+
+Example 1:
+// for filters that accept options, use this format
+$options = array(
+    'options' => array(
+        'default' => 3, // value to return if the filter fails
+        // other options here
+        'min_range' => 0
+    ),
+    'flags' => FILTER_FLAG_ALLOW_OCTAL,
+);
+$var = filter_var('0755', FILTER_VALIDATE_INT, $options);
+
+// for filter that only accept flags, you can pass them directly
+$var = filter_var('oops', FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+// for filter that only accept flags, you can also pass as an array
+$var = filter_var('oops', FILTER_VALIDATE_BOOLEAN,
+                  array('flags' => FILTER_NULL_ON_FAILURE));
+
+// callback validate filter
+function foo($value)
+{
+    // Expected format: Surname, GivenNames
+    if (strpos($value, ", ") === false) return false;
+    list($surname, $givennames) = explode(", ", $value, 2);
+    $empty = (empty($surname) || empty($givennames));
+    $notstrings = (!is_string($surname) || !is_string($givennames));
+    if ($empty || $notstrings) {
+        return false;
+    } else {
+        return $value;
+    }
+}
+$var = filter_var('Doe, Jane Sue', FILTER_CALLBACK, array('options' => 'foo'));
+?>
+[ ---  end  ---- ]
+
+=== [ topic ][ filter ][ sanitize filter ] ===
+[ --- start ---- ]
+http://my1.php.net/manual/en/filter.filters.sanitize.php
+FILTER_SANITIZE_EMAIL
+    == Remove all characters except letters, digits and !#$%&'*+-/=?^_`{|}~@.[].
+[ ---  end  ---- ]
+
+=== [ topic ][ filter ][ validate filter ] ===
+[ --- start ---- ]
+FILTER_VALIDATE_EMAIL
+    == Validates value as e-mail.
+[ ---  end  ---- ]
+
+=== [ topic ][ mail ] ===
+[ --- start ---- ]
+- mail() to send email
+bool mail ( string $to , string $subject , string $message [, string $additional_headers [, string $additional_parameters ]] )
+  == Message to be sent.
+  Each line should be separated with a CRLF (\r\n). Lines should not be larger
+  than 70 characters.
+
+Example 1:
+$message = "Line 1\r\nLine 2\r\nLine 3";
+// In case any of our lines are larger than 70 characters, we should use wordwrap()
+$message = wordwrap($message, 70, "\r\n");
+// Send
+mail('caffeinated@example.com', 'My Subject', $message);
+
+Example 2:
+$to      = 'nobody@example.com';
+$subject = 'the subject';
+$message = 'hello';
+$headers = 'From: webmaster@example.com' . "\r\n" .
+    'Reply-To: webmaster@example.com' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+mail($to, $subject, $message, $headers);
+
+Example 3: send HTML email
+// multiple recipients
+$to  = 'aidan@example.com' . ', '; // note the comma
+$to .= 'wez@example.com';
+
+// subject
+$subject = 'Birthday Reminders for August';
+
+// message
+$message = '
+<html>
+<head>
+  <title>...</title>
+</head>
+<body>
+...
+</body>
+</html> ';
+
+// To send HTML mail, the Content-type header must be set
+$headers  = 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+// Additional headers
+$headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
+$headers .= 'From: Birthday Reminder <birthday@example.com>' . "\r\n";
+$headers .= 'Cc: birthdayarchive@example.com' . "\r\n";
+$headers .= 'Bcc: birthdaycheck@example.com' . "\r\n";
+
+// Mail it
+mail($to, $subject, $message, $headers);
+[ ---  end  ---- ]
+
+=== [ topic ][ filename ][ current php file ] ===
+[ --- start ---- ]
+<?php $pageName = basename($_SERVER['PHP_SELF']); ?>
+<body id="body_<?php echo $pageName; ?>">
+Append ID to body to do different CSS styles on different pages.
+[ ---  end  ---- ]
+
+=== [ topic ][ url ] ===
+[ --- start ---- ]
+- string rawurlencode ( string $str )
+- string rawurldecode ( string $str )
+
+Example 1:
+echo '<a href="ftp://user:', rawurlencode('foo @+%/'),
+     '@ftp.example.com/x.txt">';
+output:
+<a href="ftp://user:foo%20%40%2B%25%2F@ftp.example.com/x.txt">
+
+Example 2:
+echo rawurldecode('foo%20bar%40baz'); // foo bar@baz
+[ ---  end  ---- ]
+
+=== [ topic ][ error handling ] ===
+[ --- start ---- ]
+- die() terminate script
+- when error happens, send email
+syntax: bool error_log ( string $message [, int $message_type = 0 [, string
+                                $destination [, string $extra_headers ]]] )
+message
+    The error message that should be logged.
+message_type
+    Says where the error should go. The possible message types are as follows:
+    error_log() log types
+    0	message is sent to PHP's system logger, using the Operating System's
+        system logging mechanism or a file, depending on what the error_log
+        configuration directive is set to. This is the default option.
+    1	message is sent by email to the address in the destination parameter.
+        This is the only message type where the fourth parameter, extra_headers 
+        is used.
+    2	 No longer an option.
+    3	message is appended to the file destination. A newline is not
+        automatically added to the end of the message string.
+    4	message is sent directly to the SAPI logging handler.
+destination
+    The destination. Its meaning depends on the message_type parameter as
+    described above.
+extra_headers
+    The extra headers. It's used when the message_type parameter is set to 1.
+    This message type uses the same internal function as mail() does.
+error_log("sometext", 1, "zigzag@my.domain",
+  "Subject: Foo\nFrom: Rizzlas@my.domain\n");
+
+Example 1:
+<?php
+//error handler ~/kn-programming-study/webdesign/css/css.knf
+function customError($errno, $errstr)
+  {
+  echo "<b>Error:</b> [$errno] $errstr<br>";
+  echo "Webmaster has been notified";
+  error_log("Error: [$errno] $errstr",1,
+  "someone@example.com","From: webmaster@example.com");
+  }
+
+//set error handler
+set_error_handler("customError",E_USER_WARNING);
+
+//trigger error
+$test=2;
+if ($test>1)
+  {
+  trigger_error("Value must be 1 or below",E_USER_WARNING);
+  }
+?>
+
+Example 2:
+<?php
+// error handler function
+function myErrorHandler($errno, $errstr, $errfile, $errline)
+{
+    if (!(error_reporting() & $errno)) {
+        // This error code is not included in error_reporting
+        return;
+    }
+
+    switch ($errno) {
+    case E_USER_ERROR:
+        echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
+        echo "  Fatal error on line $errline in file $errfile";
+        echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+        echo "Aborting...<br />\n";
+        exit(1);
+        break;
+
+    case E_USER_WARNING:
+        echo "<b>My WARNING</b> [$errno] $errstr<br />\n";
+        break;
+
+    case E_USER_NOTICE:
+        echo "<b>My NOTICE</b> [$errno] $errstr<br />\n";
+        break;
+
+    default:
+        echo "Unknown error type: [$errno] $errstr<br />\n";
+        break;
+    }
+
+    /* Don't execute PHP internal error handler */
+    return true;
+}
+
+// function to test the error handling
+function scale_by_log($vect, $scale)
+{
+    if (!is_numeric($scale) || $scale <= 0) {
+        trigger_error("log(x) for x <= 0 is undefined, you used: scale = $scale", E_USER_ERROR);
+    }
+
+    if (!is_array($vect)) {
+        trigger_error("Incorrect input vector, array of values expected", E_USER_WARNING);
+        return null;
+    }
+
+    $temp = array();
+    foreach($vect as $pos => $value) {
+        if (!is_numeric($value)) {
+            trigger_error("Value at position $pos is not a number, using 0 (zero)", E_USER_NOTICE);
+            $value = 0;
+        }
+        $temp[$pos] = log($scale) * $value;
+    }
+
+    return $temp;
+}
+
+// set to the user defined error handler
+$old_error_handler = set_error_handler("myErrorHandler");
+
+// trigger some errors, first define a mixed array with a non-numeric item
+echo "vector a\n";
+$a = array(2, 3, "foo", 5.5, 43.3, 21.11);
+print_r($a);
+
+// now generate second array
+echo "----\nvector b - a notice (b = log(PI) * a)\n";
+/* Value at position $pos is not a number, using 0 (zero) */
+$b = scale_by_log($a, M_PI);
+print_r($b);
+
+// this is trouble, we pass a string instead of an array
+echo "----\nvector c - a warning\n";
+/* Incorrect input vector, array of values expected */
+$c = scale_by_log("not array", 2.3);
+var_dump($c); // NULL
+
+// this is a critical error, log of zero or negative number is undefined
+echo "----\nvector d - fatal error\n";
+/* log(x) for x <= 0 is undefined, you used: scale = $scale" */
+$d = scale_by_log($a, -2.5);
+var_dump($d); // Never reached
+?>
+output:
+vector a
+Array
+(
+    [0] => 2
+    [1] => 3
+    [2] => foo
+    [3] => 5.5
+    [4] => 43.3
+    [5] => 21.11
+)
+----
+vector b - a notice (b = log(PI) * a)
+<b>My NOTICE</b> [1024] Value at position 2 is not a number, using 0 (zero)<br />
+Array
+(
+    [0] => 2.2894597716988
+    [1] => 3.4341896575482
+    [2] => 0
+    [3] => 6.2960143721717
+    [4] => 49.566804057279
+    [5] => 24.165247890281
+)
+----
+vector c - a warning
+<b>My WARNING</b> [512] Incorrect input vector, array of values expected<br />
+NULL
+----
+vector d - fatal error
+<b>My ERROR</b> [256] log(x) for x <= 0 is undefined, you used: scale = -2.5<br />
+  Fatal error on line 35 in file trigger_error.php, PHP 5.2.1 (FreeBSD)<br />
+Aborting...<br />
+[ ---  end  ---- ]
+
+=== [ topic ][ error handling ][ try-throw-catch ] ===
+[ --- start ---- ]
+- if inner catch not handling an exception, it can throw up for upper catch to handle
+
+Example 0: user-defined function to handle all uncaught error
+function myException($exception) { echo "<b>Exception:</b> " , $exception->getMessage(); }
+set_exception_handler('myException');
+throw new Exception('Uncaught Exception occurred');
+
+Example 1:
+class customException extends Exception
+  {
+  public function errorMessage()
+    {
+    //error message
+    $errorMsg = $this->getMessage().' is not a valid E-Mail address.';
+    return $errorMsg;
+    }
+  }
+
+$email = "someone@example.com";
+
+try
+  {
+  try
+    {
+    //check for "example" in mail address
+    if(strpos($email, "example") !== FALSE)
+      {
+      //throw exception if email is not valid
+      throw new Exception($email);
+      }
+    }
+  catch(Exception $e)
+    {
+    //re-throw exception
+    throw new customException($email);
+    }
+  }
+
+catch (customException $e)
+  {
+  //display custom message
+  echo $e->errorMessage();
+  }
+[ ---  end  ---- ]
+
 === [ topic ][ to know ] ===
 [ --- start ---- ]
 short_open_tag true - in order to use <? ...php.. ?> inside html code
-
+Yii framework 
 [ ---  end  ---- ]
 
-=== [ topic ][ debug ] ===
+=== [ topic ][ trick ][ execute php on .html file ] ===
+[ --- start ---- ]
+open .htaccess, add
+AddType application/x-httpd-php .html
+AddType application/x-httpd-php .htm
+
+For single HTML file with php code inside it:
+<Files yourpage.html>
+AddType application/x-httpd-php .html
+</Files>
+
+Warning:
+Anything in your .html files that starts with <? will now be executed as PHP,
+so if it's in your file for some other reason (an XML tag for example) you will 
+need to echo these lines to prevent errors. For example:
+<?php echo '<?xml version="1.0" encoding="IUTF-8"?>'; ?>
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ print_r ] ===
+[ --- start ---- ]
+- print_r(): Prints human-readable information about a variable
+
+Example 1:
+$a = array ('a' => 'apple', 'b' => 'banana', 'c' => array ('x', 'y', 'z'));
+print_r ($a);
+
+Example 2:
+print_r($_FILES);
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ var_dump ] ===
+[ --- start ---- ]
+var_dump() function returns the data type and value of variables
+$x = 5985;
+var_dump($x); // int(5985)
+$x = -345; // negative number 
+var_dump($x); // int(-345)
+$x = 0x8C; // hexadecimal number
+var_dump($x); // int(140)
+$x = 047; // octal number
+var_dump($x); // int(39)
+$x = "test"; var_dump($x); // string(4) "test"
+$x = 1.314; var_dump($x);  // float(1.314)
+$x = array("ibm", "apple"); var_dump($x); // array(2) { [0]=> string(3) "ibm" [1]=> string(5) "apple" }
+$x = null; var_dump($x); // NULL
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ]===
+[ --- start ---- ]
+var_export — Outputs or returns a parsable string representation of a variable
+$a = array (1, 2, array ("a", "b", "c"));
+var_export($a);
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ ini ] ===
 [ --- start ---- ]
 To display error messages caused by your PHP script you can include these lines of code:
 
@@ -929,7 +1928,28 @@ edit php.ini (@ /etc/php5/apache2/php.ini ) file and include this option:
 error_reporting = E_ALL
 To turn error reporting off for a single document, include this line:
 
+// Turn off all error reporting
 error_reporting(0);
+
+// Report simple running errors
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
+// Reporting E_NOTICE can be good too (to report uninitialized
+// variables or catch variable name misspellings ...)
+error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+
+// Report all errors except E_NOTICE
+// This is the default value set in php.ini
+error_reporting(E_ALL ^ E_NOTICE);
+
+// Report all PHP errors (see changelog)
+error_reporting(E_ALL);
+
+// Report all PHP errors
+error_reporting(-1);
+
+// Same as error_reporting(E_ALL);
+ini_set('error_reporting', E_ALL);
 [ ---  end  ---- ]
 
 === [ topic ][ problem ] ===
@@ -957,4 +1977,22 @@ Reason:
 this is due to the strict reporting enabled in php.ini
 error_reporting = E_ALL
 So can also disable it to relax the rules.
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ setcookie ] ===
+[ --- start ---- ]
+problem: cookie not created when specifying the domain as "localhost"
+setcookie('username', $_POST['username'], time()+60*60*24, "/php", "localhost");
+step in investigation:
+1. remove the optional parameter domain to check if it is generated. Yes it is.
+setcookie('username', $_POST['username'], time()+60*60*24, "/php");
+then using browser console to check the cookies:
+document.cookie
+2. delete the cookie
+document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 GMT"; 
+3. make sure the page doesn't load without cookie
+4. change the domain name to 127.0.0.1 then test again
+solution: change to 127.0.0.1
+setcookie('username', $_POST['username'], time()+60*60*24, "/php", "127.0.0.1");
+
 [ ---  end  ---- ]

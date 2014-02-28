@@ -8,6 +8,7 @@ quit
 
 === [ topic ][ switching table ] ===
 [ --- start ---- ]
+mysql
 show databases;
 USE test;
 use wordpress;
@@ -48,4 +49,57 @@ shell> mysql -h host -u user -p menagerie
 === [ topic ][ version ] ===
 [ --- start ---- ]
 SELECT VERSION(), CURRENT_DATE;
+[ ---  end  ---- ]
+
+=== [ topic ][ create ] ===
+[ --- start ---- ]
+create table customrs(FirstName Char(30), lastname char(30), age int);
+[ ---  end  ---- ]
+
+=== [ topic ][ insert ] ===
+[ --- start ---- ]
+insert into customrs values ("Ken", "Ng", 30);
+[ ---  end  ---- ]
+
+=== [ topic ][ select ] ===
+[ --- start ---- ]
+select * from customrs;
+SELECT column_name,column_name FROM table_name;
+
+- only return distinct (unique )
+select distinct COLUMN_NAME,COLUMN_NAME from TABLE_NAME;
+
+[ ---  end  ---- ]
+
+=== [ topic ][ select ][ where ] ===
+[ --- start ---- ]
+select column_name,column_name from table_name where column_name operator value;
+Example 1:
+SELECT * FROM Customers WHERE Country='Mexico';
+SELECT * FROM Customers WHERE CustomerID=1;
+
+- where operator
+=	Equal
+<>	Not equal. Note: In some versions of SQL this operator may be written as !=
+>	Greater than
+<	Less than
+>=	Greater than or equal
+<=	Less than or equal
+BETWEEN	Between an inclusive range
+LIKE	Search for a pattern
+IN	To specify multiple possible values for a column
+
+[ ---  end  ---- ]
+
+=== [ topic ][ GUI ] ===
+[ --- start ---- ]
+MySQL Workbench
+phpMyAdmin which I found a bit slow
+Navicat which is a windows port and runs under wine
+linux native version of navicat.
+MySQL Workbench Install mysql-workbench is probably the most complete tool, but a bit sluggish according to me.
+I prefer "MySQL Query browser" and "MySQL Administrator". 
+I like Emma. Emma is an open source project that isn't developed by Oracle
+SQLYog to this list anyway since it is such a powerful tool... There is no 
+official build available for Linux but it works quite well on Wine.
 [ ---  end  ---- ]

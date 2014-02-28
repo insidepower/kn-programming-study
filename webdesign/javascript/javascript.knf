@@ -522,6 +522,28 @@ toString()
 === [ topic ][ date ] ===
 [ --- start ---- ]
 - toJSON() - output to JSON format
+Date.prototype.toUTCString()
+dateObj.toUTCString()
+
+Example 1:
+var today = new Date();
+var UTCstring = today.toUTCString();
+// Mon, 03 Jul 2006 21:44:38 GMT
+[ ---  end  ---- ]
+
+=== [ topic ][ date ][ time ] ===
+[ --- start ---- ]
+UTC = Coordinated Universal Time
+- most of the time zones on land are offset from UTC by a whole number of hours (UTC-12 to UTC+14)
+- measured with atomic clock
+- approximates GMT with a tolerance of 0.9 seconds
+Greenwich Mean Time (GMT)
+- measured with the sun
+From programming point of view, both are considered same...
+
+Unix epoch is the time 00:00:00 UTC on 1 January 1970
+Note that a 32-bit signed integer using 1970-1-1 as its epoch can represent 
+dates up to 2038-1-19, on which date it will wrap around to 1901-12-13.
 [ ---  end  ---- ]
 
 === [ topic ][ regular expression ] ===
@@ -591,9 +613,9 @@ decodeComponent
     port Number:
     path: fully defined location or default path will be used
     query string:
-escape
+escape - deprecated!
     escape("encode this string!") ==> (encode%20this%20string%21)
-unescape
+unescape - deprecated!
     decode what escape() has performed
 eval
     accepts a string that contains a script and then executes the string content as a script
@@ -611,6 +633,20 @@ parseInt
     parse a string and returns an integer
 String 
     convert value to a string
+
+Example 1:
+decodeURIComponent('your%20funky%20string');
+decodeURIComponent("JavaScript_%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"); // "JavaScript_шеллы"
+[ ---  end  ---- ]
+
+=== [ topic ][ encoreURI vs encodeURIComponen ] ===
+[ --- start ---- ]
+- encodeURI is intended for use on the full URI.
+- encodeURIComponent is intended to be used on URI components that is any 
+  part that lies between separators (; / ? : @ & = + $ , #).
+
+So, in encodeURIComponent these separators are encoded also because they are 
+regarded as text and not special characters.
 [ ---  end  ---- ]
 
 === [ topic ][ null ] ===
@@ -815,6 +851,26 @@ function message()
 [ --- start ---- ]
 console.log()
 console.info()
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ chrome ] ===
+[ --- start ---- ]
+Example 1:
+F12 to open chrome dev-tools, then
+ctrl + shift + F  == search source
+with regular expression
+foo\s*=\s*function
+
+Example 2: console
+F12 > ESC :
+keys(window)
+dir(window)
+or just type window == dir(window)
+
+Example 3: console
+for(var b in window) { 
+  if(window.hasOwnProperty(b)) console.log(b); 
+}
 [ ---  end  ---- ]
 
 === [ topic ][ DOM ] ===

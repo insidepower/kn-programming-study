@@ -1,0 +1,197 @@
+=== [ topic ][ connect ][ topic ] ===
+[ --- start ---- ]
+- use mysqli_connect()
+
+mysqli_connect(host,username,password,dbname);
+== mysqli::__construct
+Parameter:
+host
+    Can be either a host name or an IP address. Passing the NULL value or the
+    string "localhost" to this parameter, the local host is assumed. When
+    possible, pipes will be used instead of the TCP/IP protocol.
+    Prepending host by p: opens a persistent connection. mysqli_change_user() is
+    automatically called on connections opened from the connection pool.
+username
+    The MySQL user name.
+passwd
+    If not provided or NULL, the MySQL server will attempt to authenticate the
+    user against those user records which have no password only. This allows one
+    username to be used with different permissions (depending on if a password
+    as provided or not).
+dbname
+    If provided will specify the default database to be used when performing
+    queries.
+port
+    Specifies the port number to attempt to connect to the MySQL server.
+socket
+    Specifies the socket or named pipe that should be used.
+
+Example 1:
+$mysqli = new mysqli('localhost', 'my_user', 'my_password', 'my_db');
+if ($mysqli->connect_error) {
+    die('Connect Error (' . $mysqli->connect_errno . ') '
+            . $mysqli->connect_error);
+
+echo 'Success... ' . $mysqli->host_info . "\n";
+
+/// if extending mysqli class
+class foo_mysqli extends mysqli {
+    public function __construct($host, $user, $pass, $db) {
+        parent::__construct($host, $user, $pass, $db);
+
+        if (mysqli_connect_error()) {
+            die('Connect Error (' . mysqli_connect_errno() . ') '
+                    . mysqli_connect_error());
+        }
+    }
+}
+
+Example 2: procedural style
+$link = mysqli_connect('localhost', 'my_user', 'my_password', 'my_db');
+
+if (!$link) {
+    die('Connect Error (' . mysqli_connect_errno() . ') '
+            . mysqli_connect_error());
+}
+echo 'Success... ' . mysqli_get_host_info($link) . "\n";
+mysqli_close($link);
+[ ---  end  ---- ]
+
+=== [ topic ][ create ][ database ] ===
+[ --- start ---- ]
+- use mysqli_query()
+
+Example 1:
+$con=mysqli_connect("example.com","peter","abc123");
+// Check connection
+if (mysqli_connect_errno()) {
+    echo "Failed to connect to MySQL: " . mysqli_connect_error(); }
+
+// Create database
+$sql="CREATE DATABASE my_db";
+if (mysqli_query($con,$sql)) {
+    echo "Database my_db created successfully";
+} else {
+    echo "Error creating database: " . mysqli_error($con); }
+[ ---  end  ---- ]
+
+=== [ topic ][ create ][ table ] ===
+[ --- start ---- ]
+- use mysqli_query()
+- must specify the maximum length of the CHAR field, e.g. CHAR(50).
+
+Example 1:
+$sql="CREATE TABLE Persons(FirstName CHAR(30),LastName CHAR(30),Age INT)";
+if (mysqli_query($con,$sql)) {
+  echo "Table persons created successfully"; }
+else {
+  echo "Error creating table: " . mysqli_error($con); }
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ primary key ] ===
+[ --- start ---- ]
+- Each table in a database should have a primary key field.
+- A primary key is used to uniquely identify the rows in a table.
+- Each primary key value must be unique within the table.
+- the primary key field cannot be null
+
+Example 1:
+$sql = "CREATE TABLE Persons
+(
+    PID INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY(PID),
+    FirstName CHAR(15),
+    LastName CHAR(15),
+    Age INT
+)";
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ insert ] ===
+[ --- start ---- ]
+- take two forms:
+
+1) with only value
+INSERT INTO table_name
+VALUES (value1, value2, value3,...)
+
+2) name-value pairs
+INSERT INTO table_name (column1, column2, column3,...)
+VALUES (value1, value2, value3,...)
+
+Example 1:
+mysqli_query($con,"INSERT INTO Persons (FirstName, LastName, Age)
+VALUES ('Peter', 'Griffin',35)");
+
+mysqli_query($con,"INSERT INTO Persons (FirstName, LastName, Age) 
+VALUES ('Glenn', 'Quagmire',33)");
+
+Example 2: from HTML Form (action=POST)
+$sql="INSERT INTO Persons (FirstName, LastName, Age)
+VALUES ('$_POST[firstname]','$_POST[lastname]','$_POST[age]')";
+
+if (!mysqli_query($con,$sql)) {
+  die('Error: ' . mysqli_error($con)); }
+echo "1 record added";
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ select ] ===
+[ --- start ---- ]
+Example 1:
+$result = mysqli_query($con,"SELECT * FROM Persons");
+while($row = mysqli_fetch_array($result)) {
+  echo $row['FirstName'] . " " . $row['LastName'];
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ select...where ] ===
+[ --- start ---- ]
+SELECT column_name(s)
+FROM table_name
+WHERE column_name operator value
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ select...ordered by ] ===
+[ --- start ---- ]
+SELECT column_name(s)
+FROM table_name
+ORDER BY column_name(s) ASC|DESC
+
+SELECT column_name(s)
+FROM table_name
+ORDER BY column1, column2
+
+Example 1:
+$result = mysqli_query($con,"SELECT * FROM Persons ORDER BY age");
+while($row = mysqli_fetch_array($result)) {
+  echo $row['FirstName'];
+  echo " " . $row['LastName'];
+  echo " " . $row['Age'];
+  echo "<br>";
+  }
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ update ] ===
+[ --- start ---- ]
+UPDATE table_name
+SET column1=value, column2=value2,...
+WHERE some_column=some_value
+
+Example 1:
+mysqli_query($con,"UPDATE Persons SET Age=36
+WHERE FirstName='Peter' AND LastName='Griffin'");
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ delete ] ===
+[ --- start ---- ]
+DELETE FROM table_name
+WHERE some_column = some_value
+
+Example 1:
+mysqli_query($con,"DELETE FROM Persons WHERE LastName='Griffin'");
+[ ---  end  ---- ]
+
+=== [ topic ][ database ][ ODBC ] ===
+[ --- start ---- ]
+- ODBC is an Application Programming Interface (API) that allows you to connect to 
+a data source (e.g. an MS Access database).
+[ ---  end  ---- ]

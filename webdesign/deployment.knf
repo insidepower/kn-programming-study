@@ -43,3 +43,10 @@ In certain instances the two may be combined in a single application: for exampl
 The common gateway interface (CGI) is a standard way for a Web server to pass a Web user's request to an application program and to receive data back to forward to the user. When the user requests a Web page (for example, by clicking on a highlighted word or entering a Web site address), the server sends back the requested page. However, when a user fills out a form on a Web page and sends it in, it usually needs to be processed by an application program. The Web server typically passes the form information to a small application program that processes the data and may send back a confirmation message. This method or convention for passing data back and forth between the server and the application is called the common gateway interface (CGI). It is part of the Web's Hypertext Transfer Protocol (HTTP).
 Example CGI: c, c++, java, perl, ASP
 
+=== [ topic ][ things to check ] ===
+[ --- start ---- ]
+1. php error reporting mechanism if it is working
+2. emailing if it is working
+3. folder to update files/image if it is working
+[ ---  end  ---- ]
+
