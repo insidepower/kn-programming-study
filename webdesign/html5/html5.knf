@@ -94,7 +94,7 @@ Tag			 Description
 === [ topic ][ minimum ] ===
 [ --- start ---- ]
 <!DOCTYPE html>
-<html>
+<html lang="en"> /// lang type is recommended by H5BP
 <head>
 <meta charset="UTF-8">
 <title>Title of the document</title>
@@ -105,6 +105,11 @@ Content of the document......
 </body>
 
 </html>
+[ ---  end  ---- ]
+
+=== [ topic ][ noJS ] ===
+[ --- start ---- ]
+<html class="no-js" lang="en">
 [ ---  end  ---- ]
 
 === [ topic ][ span ] ===

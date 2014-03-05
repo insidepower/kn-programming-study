@@ -1,0 +1,50 @@
+=== [ topic ][ install ] ===
+[ --- start ---- ]
+To use Eclipse for Java programming, you need to first install JDK.
+
+To install Eclipse:
+Download Eclipse from http://www.eclipse.org/downloads/. Choose "Linux" 32-bit 
+or 64-bit ⇒ "Eclipse IDE for Java Developers" (or "Eclipse Classic") for Java 
+program development; or Eclipse IDE for Java EE Developers for developing 
+webapps. You will receive a TAR file (e.g., 
+"eclipse-java-juno-SR1-linux-gtk.tar.gz") in "~/Downloads" folder.
+Double-click the downloaded TAR file to expand it into a folder called 
+"eclipse". Move the expanded "eclipse" folder out of the "~/Downloads" folder to 
+your application folder, e.g., "/usr/local".  Alternatively, you can run the 
+following commands:
+$ cd /usr/local
+$ sudo tar xzvf ~/Downloads/eclipse-jee-kepler-R-linux-gtk-x86_64.tar.gz
+      // Extract the downloaded package
+      // x: extract, z: for gz, v: verbose, f: filename
+$ cd /usr/local/eclipse
+$ sudo chown -R your-username:your-groupname .
+      // Change ownership to your chosen username and groupname
+      // -R recursive
+$ cd /usr/bin
+$ sudo ln -s /usr/local/eclipse/eclipse
+      // Make a symlink in /usr/bin, which is in the PATH.
+$ ls -ld eclipse
+lrwxrwxrwx 1 root root 26 Aug 30 11:53 eclipse -> /usr/local/eclipse/eclipse
+$ which eclipse
+/usr/bin/eclipse
+$ whereis eclipse
+......
+To run Eclipse, open the "/usr/local/eclipse" folder and click on the "Eclipse" 
+icon; or start a "Terminal", enter "eclipse".
+
+Pin Eclipse on Launcher
+To pin Eclipse on the launcher, create a /usr/share/applications/eclipse.desktop 
+file with the following contents:
+[Desktop Entry]
+Name=Eclipse Type=Application
+Exec=eclipse
+Terminal=false
+Icon=/usr/local/eclipse/icon.xpm
+Comment=Integrated Development Environment
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=Eclipse
+Start Eclipse, right-click on the Eclipse icon on launcher ⇒ lock to launcher.
+Tips and Tricks for Ubuntu Eclipse
+Read "Eclipse How-To".
+[ ---  end  ---- ]

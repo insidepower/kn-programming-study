@@ -1,0 +1,108 @@
+=== [ topic ][ accessibility ][ role ] ===
+[ --- start ---- ]
+- add a role="navigation" to every navbar to help with accessibility.
+
+role="navigation"
+role="search"
+role="button"
+role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 
+role="presentation"
+role="menu"
+role="menuitem"
+
+Example 1:
+<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+    <span class="sr-only">60% Complete</span>
+
+Remove the .sr-only class from within the progress bar to show a visible 
+percentage. For low percentages, consider adding a min-width to ensure the 
+label's text is fully visible.
+[ ---  end  ---- ]
+
+=== [ topic ][ accessibility ][ aria ] ===
+[ --- start ---- ]
+aria-labelledby="dropdownMenu1"
+[ ---  end  ---- ]
+
+=== [ topic ][ color ] ===
+[ --- start ---- ]
+-success 
+    green, #5cb85c
+-info:
+    blue, #5bc0de
+-warning { /// orange?
+    background-color: #fcf8e3;
+-danger { /// red
+    background-color: #d9534f
+-muted
+-primary
+-default
+[ ---  end  ---- ]
+
+=== [ topic ][ navbar ][ icon-bar ] ===
+[ --- start ---- ]
+- the 3 <span class="icon-bar"> create a button with 3 lines
+- it is a block structure, so all lined up in 3 lines inside a button
+<nav class="nav navbar navbar-inverse navbar-fixed-top"> 
+        <div class="container-fluid">
+           <div class="navbar-header">
+               <button type="button" class="navbar-toggle" data-toggle="collapsed"
+                   data-target="#navbar-collapsable-1">
+                   <span class="sr-only">Toggle navigation</span>
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+                   </button>
+               <a class="navbar-brand" href="#">{ U-AngelicWed }</a>
+           </div> 
+[ ---  end  ---- ]
+
+=== [ topic ][ navbar ][ .nav ] ===
+[ --- start ---- ]
+.nav {
+margin-bottom: 0;
+padding-left: 0;
+list-style: none;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ navbar ][ problem ] ===
+[ --- start ---- ]
+.input-group {
+position: relative;
+display: table;
+border-collapse: separate;
+}
+
+.form-group {
+display: inline-block;
+margin-bottom: 0;
+vertical-align: middle;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ install ] ===
+[ --- start ---- ]
+Title: Install Jekyll
+- install Jekyll (requires v1.x) from http://jekyllrb.com/docs/installation/
+    == gem install jekyll
+- From the root /bootstrap directory, run jekyll serve in the command line.
+- Open http://localhost:9001
+
+Title: Compiling CSS and JavaScript
+npm install -g grunt-cli
+Navigate to the root /bootstrap directory, then run: npm install
+Run grunt to run tests locally and compile the CSS and JavaScript into /dist
+[ ---  end  ---- ]
+
+=== [ topic ][ install ][ problem ] ===
+[ --- start ---- ]
+/home/knxy/kn-programming-study-not-in-used/webdesign/web_reference/bootstrap/node_modules/grunt/lib/grunt/file.js:374
+  return fs.existsSync(filepath);
+
+need correct version of nodejs (version 0.6.19 is not usable!)
+- uninstall the ubuntu deb from default repo
+sudo apt-get remove nodejs
+
+add the path to the latest node binary
+[ ---  end  ---- ]

@@ -1193,9 +1193,67 @@ java -jar compiler.jar \
      --js_output_file script-min.js
 [ ---  end  ---- ]
 
+=== [ topic ][ do and dont ][ script tag ] ===
+[ --- start ---- ]
+Title: language="javascript"
+This attribute has been deprecated. It was used to select other programming 
+languages and specific versions of JavaScript. You don't need it. Don't use it.
+
+Title: type="text/javascript"
+- optional
+Since Netscape 2, the default programming language 
+in all browsers has been JavaScript. In XHTML, this attribute is required and 
+unnecessary. In HTML, it is better to leave it out. The browser knows what to 
+do.
+
+Do not use the <!-- //--> hack with scripts. It was intended to prevent scripts 
+from showing up as text on the first generation browsers Netscape 1 and Mosaic. 
+It has not been necessary for many years. <!-- //--> is supposed to signal an 
+HTML comment. Comments should be ignored, not compiled and executed. Also, HTML 
+comments are not to include --, so a script that decrements has an HTML error.
+
+Title: defer
+- This attribute was intended to alter the timing of component loading in pages. 
+- It is not well supported and should not be used.
+
+Title: for="name" event="name"
+- This attribute is a Microsoft feature for declaring event handlers. 
+- It is not standard. Don't use it.
+
+Title: Placement
+- <script> will block downloading of other page components
+- better to place at the end before </body>
+- if the script is used by another script/function, place it before that script
+[ ---  end  ---- ]
+
+=== [ topic ][ do and dont ][ document.write ] ===
+[ --- start ---- ]
+- The document.write write into the HTML content of the page. 
+- better to use .innerHTML and .createElement or HTML cloning patterns. 
+- Use of document.write should be avoided.
+- document.write is recklessly dependent on timing:
+    == if document.write is called before the onload event, it appends or insert 
+       text into page
+    == If document.write is called after onload, it completely replaces the page!
+- document.write encourages bad structure, in which script and markup are intermingled. 
+- A cleaner structure has minimal interaction between markup and script.
+[ ---  end  ---- ]
+
 === [ topic ][ problem ] ===
 [ --- start ---- ]
 Problem: apache log at /var/log/apache2/error.log shows the following:
 File does not exist: /home/knxy/public_html/php/jquery-2.0.3.min.map, referer: http://localhost/php/helloworld.html
 solution: refer to closure compiler section to compiler the map file for it
+[ ---  end  ---- ]
+
+=== [ topic ][ book ] ===
+[ --- start ---- ]
+O'Reilly:
+JavaScript: The Definitive Guide (4th Edition) by David Flanagan
+Dynamic HTML (2nd Edition) by Danny Goodman.
+[ ---  end  ---- ]
+
+=== [ topic ][ to know ] ===
+[ --- start ---- ]
+- lazy loading or on demand script loading
 [ ---  end  ---- ]

@@ -23,3 +23,13 @@ tools, chat rooms, or anything where what one user (or robot? or sensor?) does
 with the application needs to be seen by other users immediately, without a 
 page refresh.
 [ ---  end  ---- ]
+
+=== [ topic ][ install on ubuntu ] ===
+[ --- start ---- ]
+sudo apt-get install python-software-properties python g++ make
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs
+[ ---  end  ---- ]
+
+

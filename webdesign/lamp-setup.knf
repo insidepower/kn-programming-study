@@ -222,3 +222,450 @@ apache2 apache2-mpm-prefork apache2-utils apache2.2-common libapache2-mod-php5 l
 
 mysql-client-core-5.5 mysql-server-core-5.5
 [ ---  end  ---- ]
+
+=== [ topic ][ Prof Chua ][ notes - LAMP ] ===
+[ --- start ---- ]
+Reference: 
+http://www3.ntu.edu.sg/home/ehchua/programming/howto/Ubuntu_HowTo.html
+
+First, install the "tasksel" utility
+$ sudo apt-get install tasksel
+
+You can view the manual page of tasksel via "man tasksel".
+Then, run the "lamp-server" installation task:
+$ sudo tasksel install lamp-server
+
+To check the packages installed, issue:
+$ tasksel --task-packages lamp-server
+output:
+apache2
+......
+mysql-common
+mysql-server
+mysql-server-5.5
+mysql-server-core-5.5
+mysql-client-5.5
+mysql-client-core-5.5
+......
+php5-common
+php5-mysql
+php5-cli
+
+MySQL 5
+To configure MySQL 5, read "How to install MySQL".
+The MySQL's configuration files are located at "/etc/mysql", such as the main 
+configuration file "my.cnf".
+MySQL is installed as a service called "mysql" (at "/etc/init.d/mysql"), which 
+is started automatically after boot. To start/stop/restart mysql, you could:
+$ sudo service mysql start
+$ sudo service mysql stop
+$ sudo service mysql restart
+
+[ ---  end  ---- ]
+
+=== [ topic ][ Apache2 ] ===
+[ --- start ---- ]
+To configure Apache 2, read "How to install Apache 2".
+The apache's configuration files are located at "/etc/apache2", such as the main 
+configuration file "apache2.conf" "prots.conf" and "envvars".
+Apache is installed as a service called "apache2" (at "/etc/init.d/apache2"), 
+which is started automatically after boot. To start/stop/restart apache, you 
+could:
+$ sudo service apache2 start
+$ sudo service apache2 stop
+$ sudo service apache2 restart
+[ ---  end  ---- ]
+
+=== [ topic ][ php ] ===
+[ --- start ---- ]
+PHP 5
+PHP is installed in /usr/bin/php. You could try out the Command-Line (CLI) PHP 
+via:
+// Say hello
+$ php -r 'echo "Hello, world!\n";'
+Hello, world!
+ 
+// Run phpinfo()
+$ php -r 'phpinfo();'
+......
+The PHP configuration files are kept in "/etc/php5", with "apache2" for PHP 
+running under apache; and "cli" for Command-Line (standalone) PHP.
+Installing PhpMyAdmin
+Run apt-get to install phpmyadmin:
+sudo apt-get install phpmyadmin
+You can access PhpMyAdmin via http://localhost/phpmyadmin.
+The PHP's configuration file for Apache is 
+"/etc/apache2/conf.d/phpmyadmin.conf".
+Installing xdebug for PHP
+
+Download and install xdebug
+$ sudo apt-get install php5-xdebug
+Check the location of xdebug.so module, which is kept under 
+/usr/lib/php5/20100525, where the number depends on the PHP version.
+The installation creates a configuration file /etc/php5/conf.d/20-xdebug.ini 
+with the following line:
+zend_extension = "/usr/lib/php5/20100525/xdebug.so"
+Include the following lines into "20-xdebug.ini" to enable remote debugging:
+xdebug.remote_enable = 1
+xdebug.remote_port = 9000
+xdebug.remote_host = 127.0.0.1
+Check PHP configuration file /etc/php5/apache2/php.ini for the settings of the 
+followings:
+; Turn on the error display for development system, ; but not for production 
+system.
+display_errors = On
+
+; Format error in HTML
+html_errors = On
+Restart the Apache2:
+$ sudo service apache2 restart
+Check the phpinfo() output to verify xdebug has been started.
+Create a PHP script called test.php with the following lines, and save under the 
+Apache's base directory "/var/www":
+<?php
+phpinfo();
+?>
+Issue http://localhost/test.php, and search for xdebug.
+Installing Firebug plugin for Firefox for debugging HTML/CSS/JavaScript
+Start Firefox, select menu "Tools" ⇒ Add-ons ⇒ search for Firebug.
+Install Eclipse and Configure Eclipse to work with xdebug for PHP Debugging
+Read "Eclipse How-To" section "Eclipse PDT (PHP Developer Tool)".
+Installing Zend Debugger for PHP
+Note: I have problems setting up Zend Debugger. I suggest you use xDebug.
+Download the Zend PHP debugger from 
+http://www.zend.com/en/products/studio/downloads.
+Extract the tar-ball.
+Check your PHP version via "php --version".
+Copy the "ZendDebugger.so" module from the corresponding PHP version folder into 
+/usr/lib/php5. At the time of writing, PHP 5.4 is not supported!!!
+Edit the php configuration file /etc/php5/apache2/php.ini to append the below:
+; The section name is optional, but it's always a good idea to add it,
+; especially if you are not using a separate file
+[Zend]
+
+; This directive needs the full path to the Zend Debugger binary
+zend_extension =/usr/lib/php5/ZendDebugger.so
+
+; This directive allows Zend Debugger to start a debug session with:
+zend_debugger.allow_hosts=127.0.0.1/32
+
+; This directive allows Zend Debugger to expose itself
+; upon request (this is used in some service functionality).
+; The possible options are:
+; never – do not expose (default)
+; always – expose to whoever wants to know
+; allowed_hosts – expose only if the request comes from an IP listed above
+zend_debugger.expose_remotely=always
+Restart the Apache2 via
+$ sudo service apache2 restart
+Check the Apache's error log via
+$ tail /var/log/apache2/error.log
+If error "Failed loading /usr/lib/php5/ZendDebugger.so: libssl.so.0.9.8: cannot 
+open shared object file: No such file or directory" occurs, you need to install 
+libssl.
+$ sudo apt-cache search libssl0.9.8
+libssl0.9.8 - SSL shared libraries
+libssl0.9.8-dbg - Symbol tables for libssl and libcrypto
+
+$ sudo apt-get install libssl0.9.8
+Restart apache2 and check the Apache's error log.
+Check the phpinfo() output to verify Zend Debugger has been started.
+
+[ ---  end  ---- ]
+
+=== [ topic ][ setup SSL ][ HTTPS ] ===
+[ --- start ---- ]
+Step 1: Enable the SSL module:
+$ sudo a2enmod ssl
+Step 2: Create a self-signed Certificate for the apache server. Read 
+"/usr/share/doc/apache2.2-common/README.Debian.gz".
+$ sudo make-ssl-cert /usr/share/ssl-cert/ssleay.cnf 
+/etc/ssl/private/apache-ssl.crt
+// In the common name, enter the server's DNS name or IP address.
+// Common Name (e.g. server FQDN or YOUR name) []:127.0.0.1
+which generates a certificate 'apache-ssl.crt' and stores in '/etc/ssl/private'. 
+The key is contained in the certificate.
+Alternatively, you can generate a certificate via:
+$ sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout 
+/etc/ssl/private/apache.key -out /etc/ssl/private/apache.crt
+The self-signed certificate 'apache.crt' and key file 'apache.key' will be 
+created in '/etc/ssl/private'.
+The SSL key file should only be readable by root, the certificate file may be 
+globally readable. These files are read by the Apache parent process which runs 
+as root. Therefore it is not necessary to make the files readable by the 
+www-data user.
+Step 3: Create HTTPS config file:
+$ cd /etc/apache2/sites-available
+// Duplicate from default-ssl 
+$ cp default-ssl my-ssl
+
+// Edit configuration
+$ gksudo gkedit my-ssl
+// Set your DocumentRoot
+....
+// Set the certificate (no keyfile needed)
+SSLCertificateFile    /etc/ssl/private/apache-ssl.crt
+# SSLCertificateKeyFile /etc/ssl/private/apache.key
+Step 4: Activate the HTTPS site.
+$ sudo a2ensite
+// choose 'my-ssl'
+$ sudo service apache2 reload
+// or
+$ sudo service apache2 restart
+Step 5: You can access the site via https://localhost.
+Notes:
+To resolve the warning: "[warn] RSA server certificate CommonName (CN) `...' 
+does NOT match server name!?" Add a ServerName right below the Server Admin 
+email under <virtual host>, in the config file:
+ServerName example.com:443
+Switching between HTTPS and HTTP is not really needed, as HTTPS's overhead is 
+not very high (other than the initial hand-shake). Otherwise, you need to pass 
+session from HTTPS (login) to HTTP.
+
+9.  How to Install MySQL 5 on Ubuntu
+Step 1: Install MySQL
+Open a new Terminal and issue this command:
+$ sudo apt-get install mysql-server
+The installer will prompt for the password for the MySQL root user. Set a 
+password for root, and remember this password.
+The MySQL server program "mysqld" is installed in /usr/sbin (as reflected by 
+"which mysqld"), and the MySQL client program "mysql" and the utilities (such as 
+mysqladmin, mysqldump) in /usr/bin ("which mysql").
+Step 2: Configure MySQL Server
+The MySQL configuration file is located at /etc/mysql/my.cnf. Additional 
+configuration files (.cnf) can be placed under /etc/mysql/conf.d directory. The 
+configuration files are combined in this order: "/etc/my.cnf", 
+"/etc/mysql/my.cnf" ("SYSCONFDIR/mf.cnf"), "$MYSQL_HOME/my.cnf", 
+"[DataDir]/my.cnf", "~/.my.cnf".
+The MySQL server "mysqld" runs on the default port number of 3306.
+A special user called "mysql" is created to run the MySQL server.
+The data directory (datadir) is located at /var/lib/mysql (owned by user mysql).
+The error log is located at /var/log/mysql/error.log.
+Remove the anonymous users:
+// Login to MySQL Server using root user
+$ mysql -u root -p
+Enter Password:
+ 
+mysql> select user, host, password from mysql.user;
+// Look for users without password
+
+mysql> drop user ''@'localhost';
+mysql> drop user ''@'ubuntu';
+mysql> select user, host, password from mysql.user;
+Step 3: Start/Shutdown MySQL Server
+MySQL server will be started automatically after the installation. You CANNOT 
+start another instance! You can issue "ps aux | grep mysqld" to display the 
+mysqld process.
+You can restart/stop/start MySQL via:
+$ sudo service mysql restart
+$ sudo service mysql stop
+$ sudo service mysql start
+// OR
+$ sudo /etc/init.d/mysql restart
+$ sudo /etc/init.d/mysql stop
+$ sudo /etc/init.d/mysql start
+Step 4: Start/Stop MySQL Client
+To start a MySQL client
+$ mysql -u root -p
+   // Enter the password for the root user you have set in Step 1
+To quit the MySQL client, type "exit" or "quit" on the "mysql>" prompt.
+Step 5: (For Java Programmers) Install MySQL JDBC Driver
+Download the latest JDBC driver from http://www.mysql.com/downloads ⇒ MySQL 
+Connectors ⇒ Connector/J ⇒ Compressed TAR archive (e.g., 
+mysql-connector-java-{5.x.xx}.tar.gz, where {5.x.xx} is the latest release 
+number).
+Double-click on the downloaded TAR file to expand into folder 
+"mysql-connector-java-{5.x.xx}".
+Open the expanded folder. Copy the JAR file 
+"mysql-connector-java-{5.x.xx}-bin.jar" to JDK's extension directory at 
+"/usr/local/java/jdk1.7.0_{xx}/jre/lib/ext". You may need superuser right:
+$ cd /usr/local/java/jdk1.7.0_{xx}/jre/lib/ext
+$ sudo cp 
+~/Downloads/mysql-connector-java-{5.x.xx}/mysql-connector-java-{5.x.xx}-bin.jar 
+.
+Additional Notes:
+You can issue these commands to check the MySQL installation:
+// Check the location of MySQL server program "mysqld" and client program 
+// "mysql"
+$ which mysqld
+/usr/sbin/mysqld
+$ which mysql
+/usr/bin/mysql
+ 
+// Check the MySQL related files
+$ whereis mysqld
+mysqld: /usr/sbin/mysqld /usr/share/man/man8/mysqld.8.gz
+$ whereis mysql
+mysql: /usr/bin/mysql /etc/mysql /usr/lib/mysql /usr/bin/X11/mysql 
+/usr/share/mysql /usr/share/man/man1/mysql.1.gz
+
+// Check the mysqld server process
+$ ps aux | grep mysqld
+mysql    17851  0.1  1.1 552100 44552 ?        Ssl  09:51   0:02 
+/usr/sbin/mysqld
+   // mysqld is run by a special user "mysql"
+ 
+// Show locations of mysql package
+$ dpkg -L mysql-server
+The MySQL server program "mysqld" is kept in /usr/sbin (system software 
+binaries), while the client program "mysql" is kept in /usr/bin. The 
+databases/tables are kept in /var/lib/mysql. The startup script is kept in 
+/etc/init.d/mysql.
+
+10.  How to Install Apache 2 on Ubuntu
+Step 1: Install Apache
+Open a new Terminal and issue this command:
+$ sudo apt-get install apache2
+The Apache server program "apache2" ("httpd"??) is installed in /usr/sbin (as 
+reflected by "which apache2").
+Step 2: Configure Apache
+The Apache's main configuration file is located at /etc/apache2/apache2.conf. 
+Additional configuration files can be placed inside /etc/apache2/conf.d 
+directory.
+The configuration file /etc/apache2/envvars defines the environment variables 
+used by Apache, such as the APACHE_RUN_USER (www-data), APACHE_RUN_GROUP 
+(www-data), APACHE_RUN_DIR (/var/run/apache2), and etc.
+The configuration file /etc/apache2/ports.conf defines the listening ports. You 
+can add new virtual hosts configuration in /etc/apache2/sites-available; and 
+then run the utility a2ensite to enable the new site (which moves the 
+configuration file to /etc/apache2/sites-enabled).
+The default /etc/apache2/sites-enabled/000-default defines the default host (at 
+port number of 80) and its DocumentRoot (at /var/www).
+A special user www-data (of group www-data) is used to run the apache server 
+(defined in /etc/apache2/envvars). User www-data should have "r" permission to 
+all the files in the public www directory and "rx" permission to all the 
+directories leading to the public www directory and the sub-directories.
+For test system, you may include your login ID in the www-data group; and grant 
+"rw" permissions to all files and "rwx" permissions to all directories for 
+www-data group.
+Step 3: Start/Shutdown Apache Server
+The Apache server will be started automatically after the installation. You 
+CANNOT start another instance! You can issue "ps aux | grep apache" to display 
+the apache process.
+You can restart/stop/start Apache via:
+$ sudo service apache2 restart
+$ sudo service apache2 stop
+$ sudo service apache2 start
+$ sudo service apache2 reload  // Reload the configuration file
+// OR
+$ sudo /etc/init.d/apache2 restart
+$ sudo /etc/init.d/apache2 stop
+$ sudo /etc/init.d/apache2 start
+Note: The "service xxx reload" reloads the configuration file, without shutting 
+down the service. On the other hand, "service xxx restart" shutdown and restart 
+the service. No all services support reload.
+Step 4: Accessing the Apache 2 Server
+Start a web browser (such as firefox) and issue URL http://localhost.
+
+11.  How to Install Tomcat 7 on Ubuntu
+Step 1: Download and Install Tomcat
+Goto http://tomcat.apache.org ⇒ Download ⇒ Tomcat 7.0 ⇒ 7.0.{xx} (where {xx} 
+denotes the latest release) ⇒ Binary distribution ⇒ Core ⇒ Download the "tar.gz" 
+package (e.g., "apache-tomcat-7.0.{xx}.tar.gz").
+To install Tomcat:
+Goto "~/Downloads", double-click the downloaded TAR file (e.g., 
+"apache-tomcat-7.0.{xx}.tar.gz") to expand it into a folder (e.g., 
+"apache-tomcat-7.0.{xx}").
+Alternatively, you can use the tar command to expand the tarball as follow:
+$ cd ~/Downloads
+$ tar xzvf apache-tomcat-7.0.{xx}.tar.gz
+Create a directory, says "myproject" under your HOME directory (i.e., 
+~/myproject). Move the extracted folder (e.g., "apache-tomcat-7.0.{xx}") to 
+"~/myproject".
+Rename the folder "tomcat", for ease of use.
+Notes: It is probably better to keep the tomcat in /usr/local or /opt, but you 
+may need the superuser right to access these folders.
+Step 2: Setup Environment Variable JAVA_HOME
+Check if the environment variable JAVA_HOME, containing the JDK installed 
+directory, has been set. To verify:
+$ echo $JAVA_HOME
+[JDK installed directory]
+If JAVA_HOME is not set, you can edit "/etc/profile":
+$ gksudo gedit /etc/profile   // OR "sudo nano /etc/profile" to use the 
+console-based nano editor
+Include the following line at the end of the file. I shall assume that JDK is 
+installed in /usr/local/java/jdk1.7.0_{xx}. But you need to verify the location 
+of your JDK installed directory!!!
+export JAVA_HOME=/usr/local/java/jdk1.7.0_{xx}
+Rerun the script:
+$ source /etc/profile
+ 
+// To verify:
+$ echo $JAVA_HOME
+[/usr/local/java/jdk1.7.0_{xx}]
+Step 3: Configure Tomcat Server
+Read "Configure Tomcat Server".
+Step 4: Start the Tomcat Server
+To start the Tomcat server, open a new "Terminal" and issue:
+$ cd ~/myproject/tomcat/bin
+$ ./catalina.sh run
+If you will get an error "permission denied" on running the script, you need to 
+set the script to be executable, via command "chmod uga+x *.sh".
+Check for the Tomcat server's TCP port number from the console messages. The 
+default is 8080.
+To verify if the Tomcat server is started, start a browser and issue URL 
+http://localhost:8080, suppose that Tomcat is running on the default TCP port 
+number of 8080.
+Also try URL http://localhost:8080/examples which shows the Servlet/JSP 
+examples.
+Step 5: Shutdown the Tomcat Server
+To shutdown the Tomcat server, you can simply press control-c on the tomcat 
+console, or issue command:
+$ cd ~/myproject/tomcat/bin
+$ ./shutdown.sh
+Step 6: Servlet API
+To write Java servlets, you need to COPY the Servlet API JAR file 
+("servlet-api.jar") from "~/myproject/tomcat/lib" to the JDK's extension 
+directory at "/usr/local/java/jdk1.7.0_{xx}/jre/lib/ext". You may need the 
+superuser right.
+Advanced Notes
+For security reasons, you should NOT run tomcat as root user. It is recommended 
+to create a low privilege user called tomcat in group nobody, with login shell 
+set to /sbin/nologin and password locked.
+// Create a user called "tomcat"
+$ sudo groupadd nobody
+$ sudo useradd -g nobody -s /sbin/nologin -d /opt/tomcat/temp tomcat
+   // -g <group-name>: specify the user's group as "nobody"
+   // -s <login-shell>: specify the login shell
+   // -d <home-dir>
+
+// Expand the downloaded tarball
+$ tar xzvf apache-tomcat-7.0.{xx}.tar.gz
+
+// Change Ownership to user "tomcat"
+$ sudo chmod -R tomcat apache-tomcat-7.0.{xx}
+   // -R: recursively for the sub-directories
+ 
+// Run tomcat using nobody [TODO]
+
+12.  How to Install Postfix Mail Server
+Reference: Postfix @ https://help.ubuntu.com/community/Postfix.
+To install postfix mail server:
+$ sudo apt-get install postfix
+To configure postfix, run:
+$ sudo dpkg-reconfigure postfix
+Read "postfix" @ https://help.ubuntu.com/community/Postfix for the configuration 
+options.
+The utility "sendmail" is installed in /usr/sbin/sendmail.
+To send an email:
+$ sendmail -v user@example.com
+Subject: test
+This is a test message
+Ctrl-D
+The -v option requests for a mail delivery report, which is optional.
+You should also install the "mailutils", for the "mail" utility.
+$ sudo apt-get install mailutils
+Try sending an email to a user at the localhost, via "sendmail local-username", 
+you can then read the email by logging-in as the local-username, and run:
+$ mail
+.......
+The postfix configuration is kept in /etc/postfix/main.cf. Run 
+"/etc/init.d/postfix reload" to reload the configuration.
+Disable Incoming Mail
+You can use the inet_interfaces directive in /etc/postfix/main.cf to control 
+what address Postfix listens on for incoming connections. If you set it to the 
+following it will only listen on the loopback interface, which means that 
+connections can only originate from that machine.
+inet_interfaces = loopback-only
+
+[ ---  end  ---- ]

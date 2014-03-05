@@ -874,6 +874,22 @@ margin: top, right/left, bottom;
 margin: top/bottom, right/left;
 [ ---  end  ---- ]
 
+=== [ topic ][ box-sizing ] ===
+[ --- start ---- ]
+- the current box model in CSS
+    width+padding+border = actual visible/rendered width of box
+    height+padding+border = actual visible/rendered height of box
+
+  there is a problem with this model, in scenario like this.
+  <div style='width: 500px'>
+      <div style='width: 100%; padding: 10px; border: 2px;'>
+      this child div has a visible/rendered width of 524!!!
+      it actually breaks out of parent's div width...
+      </div>
+  </div>
+[ ---  end  ---- ]
+
+
 <<< [ topic ][ css advanced ] >>>
 
 === [ topic ][ css advanced ][ grouping ][ nesting ] ===
