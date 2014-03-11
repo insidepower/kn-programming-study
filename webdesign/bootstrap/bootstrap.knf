@@ -66,19 +66,83 @@ list-style: none;
 }
 [ ---  end  ---- ]
 
-=== [ topic ][ navbar ][ problem ] ===
+=== [ topic ][ navbar ][ problem ][ search on next line ] ===
 [ --- start ---- ]
-.input-group {
-position: relative;
-display: table;
-border-collapse: separate;
-}
+Problem: input-group-btn always go into next line of navbar-header
+Reason: input-group-btn has table display, thus always takes 100% of width
+        need to contain its size with another div which has class of col-xxx
+Solution: add col-
+<div class="col-sm-3 navbar-right">
+    <form class="nav navbar-form" role="search" method="get" action="todo.php">
+        <div class="input-group">
+            <input class="form-control" type="text" name="search" id="" placeholder="Search">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </span>
+        </div>
+    </form>
+</div>
+[ ---  end  ---- ]
 
-.form-group {
-display: inline-block;
-margin-bottom: 0;
-vertical-align: middle;
+=== [ topic ][ navbar ][ problem ][ collapse but still visible ] ===
+[ --- start ---- ]
+Problem: the menu on navbar during collapse still visible
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#navbar-collapsed-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{ U-AngelicWed }</a>
+        </div> 
+
+        <!-- collapsable group: toggle by screen width -->
+
+        <div class="navbar-collapse collapse in" id="navbar-collapsed-1">
+            <ul class="nav navbar-nav navbar-right">
+                   <li class="dropdown">
+Solution: remove the "in" from div class
+<div class="navbar-collapse collapse" id="navbar-collapsed-1">
+
+[ ---  end  ---- ]
+
+=== [ topic ][ example ][ grid ] ===
+[ --- start ---- ]
+
+[ ---  end  ---- ]
+
+=== [ topic ][ overriding [ specific css ]] ===
+[ --- start ---- ]
+- put own style after bootstrap.css
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/site-specific.css" />
+which define the same style as in the bootstrap
+.sidebar { float: right; }
+[ ---  end  ---- ]
+
+=== [ topic ][ overriding ][ sass ] ===
+[ --- start ---- ]
+- check the variable of bootstrap
+http://twitter.github.com/bootstrap/customize.html#variables
+
+Change any of them, such as:
+$bodyBackground: red;
+@import "bootstrap";
+
+Alternatively if there isn't a variable available for what you want to change,
+you can override the styles or add your own.
+
+Sass:
+@import "bootstrap";
+/* override anything manually, like rounded buttons */
+.btn {
+  border-radius: 0;
 }
+Also see this: Proper SCSS Asset Structure in Rails
 [ ---  end  ---- ]
 
 === [ topic ][ install ] ===
@@ -88,6 +152,13 @@ Title: Install Jekyll
     == gem install jekyll
 - From the root /bootstrap directory, run jekyll serve in the command line.
 - Open http://localhost:9001
+
+Step:
+/// download the rubydevkit and extract into path (path cannot have space, e.g. "program files")
+cd rubydevkit
+ruby dk.rb init
+ruby dk.rb install
+gem install jekyll --version "=1.4.2"
 
 Title: Compiling CSS and JavaScript
 npm install -g grunt-cli

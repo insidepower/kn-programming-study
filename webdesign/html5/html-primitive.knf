@@ -488,5 +488,21 @@ id
 data-*
 Everything else
 [ ---  end  ---- ]
+
+=== [ topic ][ space between inline-block div ] ===
+[ --- start ---- ]
+- a space is inserted between the inline-block
+<div style="background-color: gold; height: 20px;">
+    <div style="background-color: pink; display: inline-block; width: 30%; height:100%;"></div>
+    <div style="background-color: brown; display: inline-block; width: 40%;
+        height:100%;"></div>
+    <div style="background-color: pink; display: inline-block; width: 30%; height:100%;"></div>
+</div>
+same as <span>b</span> <span>c</span>, a space will be created
+output: "b c"
+Solution:
+- combine all <div> as one line
+- or set font-size to 0
+[ ---  end  ---- ]
 </body>
 

@@ -1,0 +1,6 @@
+=== [ topic ][ to use ] ===
+[ --- start ---- ]
+$(document).ready(function(){
+    $('a#demo2').jqzoom({
+        zoomType: 'reverse' }); });
+[ ---  end  ---- ]

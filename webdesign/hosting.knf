@@ -118,3 +118,54 @@ AAAA
 GeoIP2 Precision Demo
 http://www.maxmind.com/en/geoip_demo
 [ ---  end  ---- ]
+
+=== [ topic ][ mail server ] ===
+[ --- start ---- ]
+mail server:
+- check with mxtoolbox.com/blacklists.aspx
+
+DNS:
+- tools to check DNS problem
+dnscheck.pingdom.com
+intodns.com
+
+before moving to new host, keep the old host for one or two more months
+- just in cast realize old host is better.
+- some data is missing or corrupted during move.
+
+ Things to know for painless move:
+- websites files (+hidden files)
+- database
+- subdomains
+- add-on domains
+- parked domains
+- email account
+- emails
+- mailing lists
+- multiple FTP accounts
+- password-protected areas
+
+checklist: www.dummies.com/cheatsheet/webhosting
+
+security:
+- sucuri.net
+
+
+graceful reboot
+$ reboot
+forceful reboot
+$ echo 1 > /proc/sys/kernel/sysrq
+$ echo b > /proc/sysrq-trigger
+
+Free Apps:
+MySQL Workbench
+FileZilla
+Caesium - image compression
+
+online resource
+TentBlogger.com
+cPanel.net
+w3schools.com/hosting
+webhostingTutorial.com
+peterpollock.com/webhosting
+[ ---  end  ---- ]

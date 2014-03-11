@@ -69,11 +69,145 @@ function myFunction(){
     ...
 }
 $(document).ready(myFunction);
-
 Example 3: shorthand for $(document).ready(function(){...})
 $(function(){
     ...
 });
+[ ---  end  ---- ]
+
+=== [ topic ][ ready vs onload ] ===
+[ --- start ---- ]
+/// js onload function only executes after all images are finished downloading
+/// until iframes or images is ready
+/// take note it is window.onload not document.onload
+window.onload = function() {  ...  }
+$(window).load(function(){
+    console.log("window(iframes and images) is ready")
+});
+
+/// jquery ready run once the dom is ready to be manipulated, w/o waiting for
+/// images to finish download
+$(document).ready( function(){
+    console.log("DOM object is ready");
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ $ vs $() ] ===
+[ --- start ---- ]
+[ jQuery object method ]
+- these methods are part of "$.fn namespace", or 'jQuery prototype'
+- can be thought as "jQuery object methods". 
+- automatically receive and return the selection as "this"
+Example 1:
+$( "h1" ).remove();
+
+[ jQuery method ]
+- several methods do not act on a selection
+- these methods are said to be part of the "jQuery namespace"
+- are best thought of as core "jQuery methods"
+- method in the $ namespace are generally utility-type methods
+- they are not automatically passed any arguments, and their return value vary
+
+[ same names ]
+- convention 
+utility: $.each()
+selection: .each()
+
+from so:
+jQuery.data(document.body, 'foo', 'bar') === $(document.body).data('foo', 'bar');
+[ ---  end  ---- ]
+
+=== [ topic ][ non-conflict mode ] ===
+[ --- start ---- ]
+- by default, jQuery use $ as a shortcut for jQuery.
+- if using another javascript library that uses $ variable, will run into
+  conflicts with jQuery
+
+Example 1:
+<!-- Putting jQuery into no-conflict mode. -->
+<script src="prototype.js"></script>
+<script src="jquery.js"></script>
+<script>
+ 
+var $j = jQuery.noConflict();
+// $j is now an alias to the jQuery function; creating the new alias is optional.
+ 
+$j(document).ready(function() {
+    $j( "div" ).hide();
+});
+ 
+// The $ variable now has the prototype meaning, which is a shortcut for
+// document.getElementById(). mainDiv below is a DOM element, not a jQuery object.
+window.onload = function() {
+    var mainDiv = $( "main" );
+}
+</script>
+
+Example 2: use $ for jQuery instead, dont' care about using other library's $
+<!-- Another way to put jQuery into no-conflict mode. -->
+<script src="prototype.js"></script>
+<script src="jquery.js"></script>
+<script>
+ 
+jQuery.noConflict();
+ 
+jQuery( document ).ready(function( $ ) {
+    // You can use the locally-scoped $ in here as an alias to jQuery.
+    $( "div" ).hide();
+});
+ 
+// The $ variable in the global scope has the prototype.js meaning.
+window.onload = function(){
+    var mainDiv = $( "main" );
+}
+ 
+</script>
+
+Example 3: 
+- load jQuery before others, $ have meaning defined by other library
+- no need to relingquish the $ alias by calling jQuery.noConflict()
+<!-- Loading jQuery before other libraries. -->
+<script src="jquery.js"></script>
+<script src="prototype.js"></script>
+<script>
+ 
+// Use full jQuery function name to reference jQuery.
+jQuery( document ).ready(function() {
+    jQuery( "div" ).hide();
+});
+ 
+// Use the $ variable as defined in prototype.js
+window.onload = function() {
+    var mainDiv = $( "main" );
+};
+ 
+</script>
+
+Example 4:
+<script src="jquery.js"></script>
+<script src="prototype.js"></script>
+<script>
+ 
+jQuery(document).ready(function( $ ) {
+    // Your jQuery code here, using $ to refer to jQuery.
+});
+ 
+</script>
+
+Example 5: concise form
+<script src="jquery.js"></script>
+<script src="prototype.js"></script>
+<script>
+ 
+jQuery(function($){
+    // Your jQuery code here, using the $
+});
+ 
+</script>
+
+Example 6: from source code
+// Expose jQuery to the global object
+window.jQuery = window.$ = jQuery;
 [ ---  end  ---- ]
 
 === [ topic ][ insert html ][ innerHTML ] ===
@@ -296,6 +430,72 @@ $(document).ready(function(){
     }
   });
 });
+[ ---  end  ---- ]
+
+=== [ topic ][ preventDefault ] ===
+[ --- start ---- ]
+- default action of event will not be triggered
+- event.isDefaultPrevented() 
+Example 1:
+<a href="http://jquery.com">default click action is prevented</a>
+<div id="log"></div>
+<script>
+$( "a" ).click(function( event ) {
+        event.preventDefault();
+        $( "<div>" )
+        .append( "default " + event.type + " prevented" )
+        .appendTo( "#log" );
+        });
+</script>
+[ ---  end  ---- ]
+
+=== [ topic ][ callback and function ] ===
+[ --- start ---- ]
+/// mycallback() will be invoke once $.get() finishes getting the mypage.html
+$.get('mypage.html', mycallback);
+/// call back with parameter
+$.get('mypage.html', function(){
+    mycallback(param);
+});
+/// wrong way to use callback, as the function got executed and its return value
+/// is passed as an option to $.get()
+$.get('mypage.html', mycallback(param));
+[ ---  end  ---- ]
+
+=== [ topic ][ sizzle ] ===
+[ --- start ---- ]
+Sizzle 
+- more lightweight than jQuery. 
+- jQuery is an entire DOM manipulation library and 
+- sizzle is just a selector engine. 
+- jQuery is 80kb gzipped and minified. Sizzle is 50kb uncompressed.
+- is a component of jQuery. 
+- jQuery uses sizzle when no native DOM selectors are available, or when you use
+  selectors the DOM doesn't support.
+- Sizzle is 34% faster in Chrome for these tests
+[ ---  end  ---- ]
+
+=== [ topic ][ event.preventDefault vs return false ] ===
+[ --- start ---- ]
+- returning false will only trigger stopPropagation() if you use jQuery: if you
+  add the event handler manually, it won't stop the event from bubbling!
+Example 1:
+If the event handler is added using old model, for example
+elem.onclick = function(){
+    return false;
+};
+Then, return false prevents default action, like event.preventDefault().
+
+If the event handler is added using addEventListener, for example
+elem.addEventListener(
+    'click',
+    function(e){
+        return false;
+    },
+    false
+);
+Then, return false doesn't prevent the default action.
+
 [ ---  end  ---- ]
 
 === [ topic ][ problem ] ===

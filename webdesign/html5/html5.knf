@@ -178,3 +178,47 @@ other sections of the document.
 [ --- start ---- ]
 - not yet supported on safari
 [ ---  end  ---- ]
+
+=== [ topic ][ section ][ article ] ===
+[ --- start ---- ]
+summary:
+<header></header>
+<nav></nav>
+<div container>
+<section id=siderbar1> </section>
+<section id=main></section>
+<aside></aside>
+</div>
+<footer></footer>
+
+<section>: 
+Used to either group different articles into different purposes or subjects, or 
+to define the different sections of a single article.
+
+Example 1: grouping distinct sections of content or functionality
+<section id="main">
+    <article>
+      <!-- first blog post -->
+    </article>
+
+    <article>
+      <!-- second blog post  -->
+    </article>
+
+    <article>
+      <!-- third blog post -->
+    </article>
+</section>
+
+Example 2: related articles, but with distinct section
+<article>
+  <section id="introduction">
+  </section>
+
+  <section id="content">
+  </section>
+
+  <section id="summary">
+  </section>
+</article>
+[ ---  end  ---- ]

@@ -1,0 +1,52 @@
+=== [ topic ][ stalemate ] ===
+[ --- start ---- ]
+@font-face {
+  font-family: 'Stalemate';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Stalemate'), local('Stalemate-Regular'), url(http://themes.googleusercontent.com/static/fonts/stalemate/v2/ILXfSNYxooD2TPt48NlaPz8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ Alegreya Sans SC ] ===
+[ --- start ---- ]
+    @font-face {
+        font-family: 'Alegreya Sans SC';
+        font-style: normal;
+        font-weight: 400;
+        src: local('☺'),local('Alegreya Sans SC'), local('AlegreyaSansSC-Regular'),
+        url("fonts/Alegreya_Sans_SC.woff") format('woff');
+[ ---  end  ---- ]
+
+=== [ topic ][ Handlee ][ topic ] ===
+[ --- start ---- ]
+@font-face {
+  font-family: 'Handlee';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Handlee Regular'), local('Handlee-Regular'), url(http://themes.googleusercontent.com/static/fonts/handlee/v3/6AfIXNH5pZ1Jj_pfExPOWQ.woff) format('woff');
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ Rancho ][ topic ] ===
+[ --- start ---- ]
+@font-face {
+  font-family: 'Rancho';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rancho'), url(http://themes.googleusercontent.com/static/fonts/rancho/v4/puZHhCfWV5yqA8Qtz4KZUg.woff) format('woff');
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ open sans ] ===
+[ --- start ---- ]
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+
+font-family: 'Open Sans', sans-serif;
+[ ---  end  ---- ]
+

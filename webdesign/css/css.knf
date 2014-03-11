@@ -573,6 +573,11 @@ font-size:2.5em;
 font-size:1.875em;
 
 font-weight: normal, bold
+
+shorthand:
+font: font-style font-variant font-weight font-size/line-height|caption|icon|menu|message-box|small-caption|status-bar|initial|inherit;
+Example 1:
+font:italic bold 12px/30px Georgia, serif;
 [ ---  end  ---- ]
 
 === [ topic ][ font ][ size ] ===
@@ -1728,6 +1733,15 @@ Example 1:
 
 [ ---  end  ---- ]
 
+=== [ topic ][ zoom ] ===
+[ --- start ---- ]
+- zoom / scale
+-  "zoom" has incomplete browser support.
+- -moz-transform: scale(x)
+a { zoom:1; }
+a:hover { zoom:2; }
+[ ---  end  ---- ]
+
 === [ topic ][ resize ] ===
 [ --- start ---- ]
 - let user ability to resize the box
@@ -1991,6 +2005,67 @@ $(document).ready(function()
 - text-indent: -9999px;
 [ ---  end  ---- ]
 
+=== [ topic ][ dash vs underscore ] ===
+[ --- start ---- ]
+Title: dash:
+- This is encouraged by SEO best practices. Google explicitly "recommend that 
+  you use hyphens (-) instead of underscores (_) in your URLs": 
+  http://www.google.com/support/webmasters/bin/answer.py?answer=76329.
+Example 1:
+http://www.example.com/green-dress.html is much more useful to google than 
+http://www.example.com/greendress.html
+- historical reason, underscore need escaped
+- for use of  |= attribute selector
+Example 1:
+span[class|="em"] { font-style: italic; }
+<span class="em">I'm italic</span>
+<span class="em-strong">I'm italic too</span>
+[ ---  end  ---- ]
+
+=== [ topic ][ centering ] ===
+[ --- start ---- ]
+Example 1:
+<table style="width: 100%;">
+  <tr>
+     <td style="text-align: center; vertical-align: middle;">
+          Unknown stuff to be centered.
+     </td>
+  </tr>
+</table>
+
+Example 2:
+/* This parent can be any width and height */
+.block {
+  text-align: center;
+}
+ 
+/* The ghost, nudged to maintain perfect centering */
+.block:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+/* The element to be centered, can
+   also be of any width and height */ 
+.centered {
+  display: inline-block;
+  vertical-align: middle;
+  width: 300px;
+}
+
+<div class="block" style="height: 600px;">
+    
+    <div class="centered">
+        <h1>Some text</h1>
+        <p>text...</p>
+    </div>
+    
+</div>
+[ ---  end  ---- ]
+
 === [ topic ][ guideline ][ idiomatic css ] ===
 [ --- start ---- ]
 - all code should look like a single person typed it
@@ -2102,5 +2177,19 @@ remove the z-index line
 === [ topic ][ compatibility ][ support ][ earlier browser ] ===
 [ --- start ---- ]
 http://code.google.com/p/ie7-js/
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ align img inside div ] ===
+[ --- start ---- ]
+- set image display: block; && margin: auto;
+<div id="over" style="position:absolute; width:100%; height:100%>
+ <img src="img.png">
+</div
+
+#over img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 [ ---  end  ---- ]
 

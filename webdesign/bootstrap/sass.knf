@@ -1,0 +1,278 @@
+=== [ topic ][ intro ] ===
+[ --- start ---- ]
+- The main syntax is referred to as "SCSS" Sassy CSS
+- SCSS was designed to be a superset of CSS3's syntax. 
+- This means that every valid CSS3 stylesheet is valid SCSS. 
+[ ---  end  ---- ]
+
+=== [ topic ][ test ] ===
+[ --- start ---- ]
+/// cd /path-to-website/web
+$ compass create test
+/// to compile
+$ compass compile
+/// to compile automatically when there is change
+$ compass watch
+
+- copy any css to, said screen.scss
+- find the screen.css 
+- Compass have compiled that compressed un-readable CSS to readable, perfectly 
+indented CSS along with comments
+[ ---  end  ---- ]
+
+
+=== [ topic ][ install ][ sass ] ===
+[ --- start ---- ]
+/// download and install ruby
+gem install zurb-foundation
+gem install zurb-foundation --pre
+gem install compass
+gem install css_parser
+/// cd into project directory
+compass create sass-test
+cd sass-test
+compass watch
+
+/// check the config.rb
+[ ---  end  ---- ]
+
+=== [ topic ][ var ] ===
+[ --- start ---- ]
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #333;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ var inside css ] ===
+[ --- start ---- ]
+p {
+  $font-size: 12px;
+  $line-height: 30px;
+  font: #{$font-size}/#{$line-height};
+}
+output:
+p {
+  font: 12px/30px; }
+[ ---  end  ---- ]
+
+=== [ topic ][ nesting ] ===
+[ --- start ---- ]
+nav {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li { display: inline-block; }
+
+  a {
+    display: block;
+    padding: 6px 12px;
+    text-decoration: none;
+  }
+}
+output:
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav li {
+  display: inline-block;
+}
+
+nav a {
+  display: block;
+  padding: 6px 12px;
+  text-decoration: none;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ partial ] ===
+[ --- start ---- ]
+Partials
+- naming start with underscore, e.g.:  _partial.css
+- used with @import directive
+[ ---  end  ---- ]
+
+=== [ topic ][ import ] ===
+[ --- start ---- ]
+- css import creates another HTTP request
+- sass @import combine all files into a single css
+[ ---  end  ---- ]
+
+=== [ topic ][ mixins ] ===
+[ --- start ---- ]
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+.box { @include border-radius(10px); }
+[ ---  end  ---- ]
+
+=== [ topic ][ extend ][ inheritance ] ===
+[ --- start ---- ]
+- share a set of CSS properties from one selector to another. 
+
+Example 1:
+.message {
+  border: 1px solid #ccc;
+  padding: 10px;
+  color: #333;
+}
+
+.success {
+  @extend .message;
+  border-color: green;
+}
+
+.error {
+  @extend .message;
+  border-color: red;
+}
+
+.warning {
+  @extend .message;
+  border-color: yellow;
+}
+
+output:
+.message, .success, .error, .warning {
+  border: 1px solid #cccccc;
+  padding: 10px;
+  color: #333;
+}
+
+.success {
+  border-color: green;
+}
+
+.error {
+  border-color: red;
+}
+
+.warning {
+  border-color: yellow;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ operator ] ===
+[ --- start ---- ]
+- example in creating fluid grid, based on 960px. Operations in Sass let
+us do something like take pixel values and convert them to percentages without
+much hassle.
+Example 1:
+.container { width: 100%; }
+
+article[role="main"] {
+  float: left;
+  width: 600px / 960px * 100%;
+}
+
+aside[role="complimentary"] {
+  float: right;
+  width: 300px / 960px * 100%;
+}
+
+output:
+.container {
+  width: 100%;
+}
+
+article[role="main"] {
+  float: left;
+  width: 62.5%;
+}
+
+aside[role="complimentary"] {
+  float: right;
+  width: 31.25%;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ parent selector ][ & ] ===
+[ --- start ---- ]
+Referencing Parent Selectors: &
+a {
+  font-weight: bold;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+  body.firefox & { font-weight: normal; }
+}
+output:
+a {
+  font-weight: bold;
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+  body.firefox a {
+    font-weight: normal; }
+[ ---  end  ---- ]
+
+=== [ topic ][ namespace property ] ===
+[ --- start ---- ]
+- using the xxx:
+- The property namespace itself can also have a value (example 2)
+Example 1:
+.funky {
+  font: {
+    family: fantasy;
+    size: 30em;
+    weight: bold;
+  }
+}
+output:
+.funky {
+  font-family: fantasy;
+  font-size: 30em;
+  font-weight: bold; }
+
+Example 2:
+.funky {
+  font: 2px/3px {
+    family: fantasy;
+    size: 30em;
+    weight: bold;
+  }
+}
+output:
+.funky {
+  font: 2px/3px;
+    font-family: fantasy;
+    font-size: 30em;
+    font-weight: bold; }
+[ ---  end  ---- ]
+
+=== [ topic ][ comment ] ===
+[ --- start ---- ]
+Comments: /* */ and //
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ] ===
+[ --- start ---- ]
+Data Types
+
+SassScript supports six main data types:
+
+numbers (e.g. 1.2, 13, 10px)
+strings of text, with and without quotes (e.g. "foo", 'bar', baz)
+colors (e.g. blue, #04a3f9, rgba(255, 0, 0, 0.5))
+booleans (e.g. true, false)
+nulls (e.g. null)
+lists of values, separated by spaces or commas (e.g. 1.5em 1em 0 2em, Helvetica, Arial, sans-serif)
+maps from one value to another (e.g. (key1: value1, key2: value2))
+[ ---  end  ---- ]
+
+=== [ topic ][ reference ] ===
+[ --- start ---- ]
+http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+[ ---  end  ---- ]
