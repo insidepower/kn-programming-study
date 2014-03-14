@@ -1457,6 +1457,20 @@ console.info()
 
 === [ topic ][ debug ][ chrome ] ===
 [ --- start ---- ]
+- about:appcache-internals
+- shift+enter : multiline function editing
+- Ctrl + ] and Ctrl + [) shortcuts allow you to move right and left between the
+  different tabs
+- ? to see all shortcut
+> console.log(window)
+> $0
+> $($0)
+then can right click > reveal in element panel
+$x(xpath)
+> $x('//img')
+var frame = document.getElementsByTagName('iframe')[0].contentWindow.document.body;
+$x('//'img, frame);
+
 Example 1:
 F12 to open chrome dev-tools, then
 ctrl + shift + F  == search source
@@ -1473,6 +1487,44 @@ Example 3: console
 for(var b in window) { 
   if(window.hasOwnProperty(b)) console.log(b); 
 }
+
+Example 4: $_ to access last result
+> $_
+
+Example 5:  console.dir() - lists out all of the properties of a provided object
+> console.dir(document.body)
+
+
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ MutationObserver ] ===
+[ --- start ---- ]
+- use MutationObserver. Mutation events was deprecated.
+
+html:
+<p id="observable" style="color: red">Lorem ipsum</p>
+
+javascript:
+var MutationObserver = window.WebKitMutationObserver;
+
+var target = document.querySelector('#observable');
+
+var observer = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    console.log('old', mutation.oldValue);
+    console.log('new', mutation.target.style.cssText);
+  });    
+});
+
+var config = { attributes: true, attributeOldValue: true }
+
+observer.observe(target, config);
+
+// click event to change colour of the thing we are observing
+target.addEventListener('click', function(ev) {
+    observable.style.color = 'green';
+    return false;
+}, false);
 [ ---  end  ---- ]
 
 === [ topic ][ DOM ] ===

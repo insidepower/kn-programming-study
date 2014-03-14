@@ -145,6 +145,69 @@ Sass:
 Also see this: Proper SCSS Asset Structure in Rails
 [ ---  end  ---- ]
 
+=== [ topic ][ customize ][ grid ][ 24 ] ===
+[ --- start ---- ]
+Simple enough to alter in less - 
+http://twitter.github.com/bootstrap/scaffolding.html#gridCustomization
+
+e.g.
+@gridColumns: 24
+@gridColumnWidth: 30px
+@gridGutterWidth: 10px
+If using a fluid-grid, you'll want to change these variables proportionally too,
+otherwise span12 will still take up 100% of the width and span24 will take up
+200%
+
+@fluidGridColumnWidth
+@fluidGridGutterWidth
+As stated:
+
+How to customize
+Modifying the grid means changing the three @grid* variables and recompiling
+Bootstrap. Change the grid variables in variables.less and use one of the four
+ways documented to recompile. If you're adding more columns, be sure to add the
+CSS for those in grid.less.
+
+You can change the variables and download the new css right here:
+http://twitter.github.com/bootstrap/download.html#variables
+
+Example : calculation
+960px
+45px *16 =720 Column
+15px *16 =240 Gutter
+1200px
+53px *16 =848 Column
+22px *16 =352 Gutter
+768px
+33px *16 =528 Column
+15px *16 =240 Gutter
+
+
+Example 1:
+24 Grid system with Gutter
+@gridColumns: 24
+@gridColumnWidth: 30px
+@gridGutterWidth: 1px
+@gridColumnWidth1200: 35px
+@gridGutterWidth1200: 15px
+@gridColumnWidth768: 21px
+@gridGutterWidth768: 10px
+
+24 Grid system without Gutter
+@gridColumns: 16
+@gridColumnWidth: 40px
+@gridGutterWidth: 0px
+@gridColumnWidth1200: 50px
+@gridGutterWidth1200: 0px
+@gridColumnWidth768: 31px
+@gridGutterWidth768: 0px
+[ ---  end  ---- ]
+
+=== [ topic ][ avoid ][ select ] ===
+[ --- start ---- ]
+- Avoid using <select> elements as they cannot be fully styled in WebKit browsers.
+[ ---  end  ---- ]
+
 === [ topic ][ install ] ===
 [ --- start ---- ]
 Title: Install Jekyll

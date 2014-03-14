@@ -23,8 +23,9 @@ or consider to gracefully reload the configuration instead of restart
 sudo apache2ctl graceful
 [ ---  end  ---- ]
 
-=== [ topic ][ apache ][ local dev-only ] ===
+=== [ topic ][ httpd.conf ] ===
 [ --- start ---- ]
+On Ubuntu, httpd.conf is located in the directory /etc/apache2/apache2.conf
 [ ---  end  ---- ]
 
 === [ topic ][ apache ][ virtual host ] ===
@@ -45,6 +46,62 @@ $ sudo a2dissite default && sudo a2ensite mysite
 $ sudo /etc/init.d/apache2 restart
 [ ---  end  ---- ]
 
+=== [ topic ][ apache ][ virtual host ][ multi domain ] ===
+[ --- start ---- ]
+NameVirtualHost *:80
+
+<VirtualHost *:80>
+    DocumentRoot /home/roy/sobuhu
+    ServerName aaa.com
+</VirtualHost>
+
+<VirtualHost *:80>
+    DocumentRoot /disk1/allen/www
+    ServerName bbb.com
+    ServerAlias *.bbb.com
+</VirtualHost>
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ virtual host ][ diff site on diff port ] ===
+[ --- start ---- ]
+http://httpd.apache.org/docs/2.2/vhosts/examples.html
+Running different sites on different ports.
+
+You have multiple domains going to the same IP and also want to serve multiple
+ports. By defining the ports in the "NameVirtualHost" tag, you can allow this to
+work. If you try using <VirtualHost name:port> without the NameVirtualHost
+name:port or you try to use the Listen directive, your configuration will not
+work.
+
+Server configuration
+
+Listen 80
+Listen 8080
+
+NameVirtualHost 172.20.30.40:80
+NameVirtualHost 172.20.30.40:8080
+
+<VirtualHost 172.20.30.40:80>
+ServerName www.example.com
+DocumentRoot /www/domain-80
+</VirtualHost>
+
+<VirtualHost 172.20.30.40:8080>
+ServerName www.example.com
+DocumentRoot /www/domain-8080
+</VirtualHost>
+
+<VirtualHost 172.20.30.40:80>
+ServerName www.example.org
+DocumentRoot /www/otherdomain-80
+</VirtualHost>
+
+<VirtualHost 172.20.30.40:8080>
+ServerName www.example.org
+DocumentRoot /www/otherdomain-8080
+</VirtualHost>
+[ ---  end  ---- ]
+
 === [ topic ][ apache ][ problem ] ===
 [ --- start ---- ]
 { problem: }
@@ -56,6 +113,64 @@ add a new line
 ServerName localhost
 [ ---  end  ---- ]
 
+=== [ topic ][ apache ][ permission ] ===
+[ --- start ---- ]
+Error Log: /var/log/apache2/ErrorLog
+Permission denied: /media/knxy/.htaccess pcfg_openfile: unable to check htaccess
+file, ensure it is readable
+
+Nautilus mounts NTFS partitions with odd permissions so that no user but
+yourself (and root, of course) can read or write from/to it.
+To solve that, close all Nautilus windows, stop apache2, open a terminal and do
+the following:
+$ sudo umount /dev/sda3
+$ mkdir /media/DriveD
+$ sudo ntfs-3g /dev/sda3 /media/DriveD
+
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ mounting ] ===
+[ --- start ---- ]
+sudo mount -t ntfs -o rw,auto,user,fmask=0022,dmask=0000 /dev/whatever
+/mnt/whatever
+
+- or - 
+
+udisks --mount /dev/sda3 --mount-options umask=022
+
+- or -
+
+sudo blkid
+sudo vim /etc/fstab
+# change the "UUID" to your partition UUID
+UUID=12102C02102CEB83 /media/windows ntfs-3g auto,users,permissions 0 0
+
+- or - 
+/dev/disk/by-uuid/4ED2A451B2A23F59 /media/windows ntfs-3g
+defaults,permissions,users,uid=1000,utf8  0 0
+
+- mine - 
+# mount to musics
+UUID="EAC601B4C60181D5" /media/musics                     ntfs-3g defaults,permissions,users,uid=1000,utf8  0 0
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ problem ] ===
+[ --- start ---- ]
+Error Log:
+configuration error:  couldn't perform authentication. AuthType not set!
+Solution:
+sudo vim /etc/apache2/sites-available/u-angelic
+change:
+<Directory />
+		Require all granted
+	</Directory>
+To:
+<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+</Directory>
+[ ---  end  ---- ]
+
 === [ topic ][ apahce ][ log ] ===
 [ --- start ---- ]
 check the location of log @ /etc/apache2/apache2.conf
@@ -64,6 +179,59 @@ ErrorLog ${APACHE_LOG_DIR}/error.log
 to know the definition for APACHE_LOG_DIR, 
 check envvars
 default is location @ /var/log/apache2/
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ virtual host ] ===
+[ --- start ---- ]
+- Apache2 has the concept of sites, which are separate configuration files that
+  Apache2 will read
+-  /etc/apache2/sites-available
+- By default, there is one site available called 000-default
+- This is what you will see when you browse to http://localhost or
+  http://127.0.0.1
+
+Example : we want the default site to be /home/user/public_html/
+1. copy default website as starting point. 
+$ sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/mysite.conf
+2. edit the config file
+sudo vim /etc/apache2/site-available/mysite.conf
+    == change the DocumentRoot to point to new location
+        e.g. /home/user/public_html/
+    == add a line before the DocumentRoot for ServerName
+        e.g.: ServerName u-angelic.localhost
+    == change the directory directive replace <Directory /var/wwww> to
+    <Directory /home/user/public_html/>
+    == can set separate logs for each site, set the CustomLog directives
+3. enable the new site
+    == sudo a2ensite mysite 
+    == if need to disable default site
+        $ a2dissite default
+    == sudo /etc/init.d/apache2 restart
+4. edit the /etc/hosts to include the u-angelic.localhost
+        127.0.0.1	u-angelic.localhost
+[ ---  end  ---- ]
+
+=== [ topic ][ apache2 ][ local access only ] ===
+[ --- start ---- ]
+- change the ports.conf @ /etc/apache2/ports.conf
+from 
+NameVirtualHost *:80
+Listen 80
+
+to 
+NameVirtualHost *:80
+Listen 127.0.0.1:80
+- restart apache
+/etc/apache2/ports.conf
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ ntfs ] ===
+[ --- start ---- ]
+- check the ntfs partition id
+$ sudo blkid
+
+default permission:
+/dev/sda6 on /media/knxy/musics type fuseblk (rw,nosuid,nodev,allow_other,default_permissions,blksize=4096)
 [ ---  end  ---- ]
 
 === [ topic ][ permission ][ uid and gid ] ===

@@ -212,7 +212,12 @@ window.jQuery = window.$ = jQuery;
 
 === [ topic ][ insert html ][ innerHTML ] ===
 [ --- start ---- ]
-Example:
+- getter
+$(..).html()
+- setter
+$(...).html("new html content")
+
+Example :
 $('#yourDivName').html('yourtHTML');
 // add as the last item of the selected div
 $('#yourDivName').append('yourtHTML');
@@ -226,6 +231,520 @@ Example 1:
 $("#h01").attr("style","color:red").html("Hello jQuery")
 $(document).ready(myFunction);
 <h1 id="h01"></h1>
+
+
+Example 2:
+// Using a function to determine an attribute's new value.
+$( "#myDiv a:first" ).attr({
+    rel: "super-special",
+    href: function( idx, href ) {
+        return "/new/" + href;
+    }
+});
+ 
+$( "#myDiv a:first" ).attr( "href", function( idx, href ) {
+    return "/new/" + href;
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ attr ] ===
+[ --- start ---- ]
+$( "a" ).attr( "href", "allMyHrefsAreTheSameNow.html" );
+ 
+$( "a" ).attr({
+    title: "all titles are the same too!",
+    href: "somethingNew.html"
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ css ] ===
+[ --- start ---- ]
+// Getting CSS properties.
+Example 1:
+$( "h1" ).css( "fontSize" ); // Returns a string such as "19px".
+$( "h1" ).css( "font-size" ); // Also works.
+
+- setting css value
+Example 1:
+$( "h1" ).css( "fontSize", "100px" ); // Setting an individual property.
+// Setting multiple properties.
+$( "h1" ).css({
+    fontSize: "100px",
+    color: "red"
+});
+
+Example 2:
+var $h1 = $( "h1" );
+ 
+$h1.addClass( "big" );
+$h1.removeClass( "big" );
+$h1.toggleClass( "big" );
+ 
+if ( $h1.hasClass( "big" ) ) {
+    ...
+}
+
+Example 3:
+// Basic dimensions methods.
+// Sets the width of all <h1> elements.
+$( "h1" ).width( "50px" );
+// Gets the width of the first <h1> element.
+$( "h1" ).width();
+// Sets the height of all <h1> elements.
+$( "h1" ).height( "50px" );
+// Gets the height of the first <h1> element.
+$( "h1" ).height();
+// Returns an object containing position information for
+// the first <h1> relative to its "offset (positioned) parent".
+$( "h1" ).position();
+[ ---  end  ---- ]
+
+=== [ topic ][ jQuery object ][ selecting ] ===
+[ --- start ---- ]
+- jQuery returns the element in a collection.
+- jQuery returned collection is more than an array
+
+Example : Compatibility
+javascript:
+var target = document.getElementById( "target" );
+target.innerHTML = "<td>Hello <b>World</b>!</td>";
+jQuery:
+var target = document.getElementById( "target" );
+$( target ).html( "<td>Hello <b>World</b>!</td>" );
+
+Example : Convenience
+// Inserting a new element after another with the native DOM API.
+var target = document.getElementById( "target" );
+var newElement = document.createElement( "div" );
+target.parentNode.insertBefore( newElement, target.nextSibling )
+
+// Inserting a new element after another with jQuery.
+var target = document.getElementById( "target" );
+var newElement = document.createElement( "div" );
+$( target ).after( newElement );
+
+[ ---  end  ---- ]
+
+=== [ topic ][ jQuery object ][ retrieving ] ===
+[ --- start ---- ]
+var headings = $("h1")
+alert( allHeadings.length );
+/// select first element, the firstHeading is a jQuery object
+var firstHeading = headings.eq( 0 );
+/// firstHeadingElem contains the native DOM element
+/// native DOM doesn't has access to jQuery methods like .html() etc
+var firstHeadingElem = $( "h1" ).get( 0 );
+var firstHeadingElem = $( "h1" )[ 0 ];
+[ ---  end  ---- ]
+
+=== [ topic ][ jQuery object ][ vs native DOM ] ===
+[ --- start ---- ]
+Example 1:
+var logo1 = $( "#logo" );
+var logo2 = $( "#logo" );
+/// comparing jQuery object
+alert( $( "#logo" ) === $( "#logo" ) ); // alerts "false"
+
+Example 2:
+// Comparing DOM elements.
+var logo1 = $( "#logo" );
+var logo1Elem = logo1.get( 0 );
+var logo2 = $( "#logo" );
+var logo2Elem = logo2.get( 0 );
+alert( logo1Elem === logo2Elem ); // alerts "true"
+
+Example 3: the $logo1 just indicate it is jQuery variable, no magic done
+// Comparing DOM elements (with more readable variable names).
+var $logo1 = $( "#logo" );
+var logo1 = $logo1.get( 0 );
+var $logo2 = $( "#logo" );
+var logo2 = $logo2.get( 0 );
+alert( logo1 === logo2 ); // alerts "true"
+
+Example 4:
+Error messages like "event.target.closest is not a function"' and "TypeError:
+Object [object Object] has no method 'setAttribute'" indicate the presence of
+this common mistake.
+e.g.:
+$logo2Elem.html()  /// resulting in error
+[ ---  end  ---- ]
+
+=== [ topic ][ traversing ][ parent ] ===
+[ --- start ---- ]
+Example 1:
+@@@ html:
+<div class="grandparent">
+    <div class="parent">
+        <div class="child">
+            <span class="subchild"></span>
+        </div>
+    </div>
+    <div class="surrogateParent1"></div>
+    <div class="surrogateParent2"></div>
+</div>
+
+@@@ jquery:
+///  Selecting an element's direct parent:
+ 
+// returns [ div.child ]
+$( "span.subchild" ).parent();
+ 
+// Selecting all the parents of an element that match a given selector:
+// returns [ div.parent ]
+$( "span.subchild" ).parents( "div.parent" );
+ 
+// returns [ div.child, div.parent, div.grandparent ]
+$( "span.subchild" ).parents();
+ 
+// Selecting all the parents of an element up to, but *not including* the selector:
+// returns [ div.child, div.parent ]
+$( "span.subchild" ).parentsUntil( "div.grandparent" );
+ 
+// Selecting the closest parent, note that only one parent will be selected
+// and that the initial element itself is included in the search:
+ 
+// returns [ div.child ]
+$( "span.subchild" ).closest( "div" );
+ 
+// returns [ div.child ] as the selector is also included in the search:
+$( "div.child" ).closest( "div" );
+[ ---  end  ---- ]
+
+=== [ topic ][ traversing ][ children ] ===
+[ --- start ---- ]
+- .children() operates on direct child nodes
+- .find() can traverse recursively into children, children of children, and so on
+Example 1:
+@@@ html:
+<div class="grandparent">
+    <div class="parent">
+        <div class="child">
+            <span class="subchild"></span>
+        </div>
+    </div>
+    <div class="surrogateParent1"></div>
+    <div class="surrogateParent2"></div>
+</div>
+
+@@@ jqeury:
+// Selecting an element's direct children:
+ 
+// returns [ div.parent, div.surrogateParent1, div.surrogateParent2 ]
+$( "div.grandparent" ).children( "div" );
+ 
+// Finding all elements within a selection that match the selector:
+ 
+// returns [ div.child, div.parent, div.surrogateParent1, div.surrogateParent2 ]
+$( "div.grandparent" ).find( "div" );
+[ ---  end  ---- ]
+
+=== [ topic ][ traversing ][ siblings ] ===
+[ --- start ---- ]
+// Selecting a next sibling of the selectors:
+ 
+// returns [ div.surrogateParent1 ]
+$( "div.parent" ).next();
+ 
+// Selecting a prev sibling of the selectors:
+ 
+// returns [] as No sibling exists before div.parent
+$( "div.parent" ).prev();
+ 
+// Selecting all the next siblings of the selector:
+ 
+// returns [ div.surrogateParent1, div.surrogateParent2 ]
+$( "div.parent" ).nextAll();
+ 
+// returns [ div.surrogateParent1 ]
+$( "div.parent" ).nextAll().first();
+ 
+// returns [ div.surrogateParent2 ]
+$( "div.parent" ).nextAll().last();
+ 
+// Selecting all the previous siblings of the selector:
+ 
+// returns [ div.surrogateParent1, div.parent ]
+$( "div.surrogateParent2" ).prevAll();
+ 
+// returns [ div.surrogateParent1 ]
+$( "div.surrogateParent2" ).prevAll().first();
+ 
+// returns [ div.parent ]
+$( "div.surrogateParent2" ).prevAll().last(); 
+
+// Selecting an element's siblings in both directions that matches the given selector:
+ 
+// returns [ div.surrogateParent1, div.surrogateParent2 ]
+$( "div.parent" ).siblings();
+ 
+// returns [ div.parent, div.surrogateParent2 ]
+$( "div.surrogateParent1" ).siblings();
+[ ---  end  ---- ]
+
+=== [ topic ][ selecting element ] ===
+[ --- start ---- ]
+select ID
+> $("#myId")
+
+select class
+> $(".myClass")
+
+select element by attribute
+/// beware, might be slow in older browser
+> $("input[name='first_name']")
+
+select element by compund css selector
+> $("#contents ul.people li")
+
+pseudo-selectors
+> $("a.external:first")
+> $("tr:odd")
+/// select all input-like elements in a form
+> $("#myForm :input")
+> $("div:visible")
+/// all except the first three divs
+> $("div:gt(2)")
+/// all currently animated divs
+> $("div:animated")
+- for :visible and :hidden pseudo-selectors, jQuery tests actual visibility of
+  the element, not its CSS visibility or display properties
+    == jQuery looks to see if the element's physical height and width on page are
+        both greater than zero.
+    == but for <tr> element, jQuery check the CSS display
+    == elements not yet added to DOM will be considered hidden
+
+regular expression
+/// find all elements whose rel attribute ends with "endWithThis"
+/// useful, but can be extremely slow in older browser
+> $("a[rel$='endWithThis']")
+
+$("*")                     Selects all elements
+$(this)                    Selects the current HTML element
+$("p.intro")               Selects all <p> elements with class="intro"
+$("p:first")               Selects the first <p> element
+$("ul                      li:first")    Selects the first <li> element of the first <ul>
+$("ul                      li:first-child")  Selects the first <li> element of every <ul>
+$("[href]")                Selects all elements with an href attribute
+$("a[target='_blank']")    Selects all <a> elements with a target attribute value equal to "_blank"
+$("a[target!='_blank']")   Selects all <a> elements with a target attribute value NOT equal to "_blank"
+$(":button")               Selects all <button> elements and <input> elements of type="button"
+$("tr:even")               Selects all even <tr> elements
+$("tr:odd")                Selects all odd <tr> elements
+
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ empty ] ===
+[ --- start ---- ]
+- $("div.foo") always return an object, and object is always evaluted to true
+- so this statement will be always true
+> if ( $("div.foo")) { 
+>        /// always get executed
+>  }
+- check with its length to see if a selection contains element
+> if ($("div.foo").length){
+>     // length will tell how many elements has been selected. 0 if none.
+> }
+[ ---  end  ---- ]
+
+=== [ topic ][ selection ][ refining ] ===
+[ --- start ---- ]
+// Refining selections.
+$( "div.foo" ).has( "p" );         // div.foo elements that contain <p> tags
+$( "h1" ).not( ".bar" );           // h1 elements that don't have a class of bar
+$( "ul li" ).filter( ".current" ); // unordered list items with class of current
+$( "ul li" ).first();              // just the first unordered list item
+$( "ul li" ).eq( 5 );              // the sixth
+[ ---  end  ---- ]
+
+=== [ topic ][ selection ][ form ] ===
+[ --- start ---- ]
+/// select all <button> and elements with type="button"
+$("form :button")
+/// use :button for best performance than use .filter(":button")
+/// read: http://api.jquery.com/button-selector/
+$("form :checkbox")
+$( "form :checked" );
+$( "form :disabled" );
+$( "form :enabled" );
+/// <input type=file>
+/// for better performance in modern browser, use [type="file"] instead of :file
+$( "form :file" );
+/// <input type=image>
+// use [type="image"] instead of the :image
+$( "form :image" );
+/// select <input>, <textarea>, <select>, <button>
+$( "form :input" );
+// use [type="password"] instead of the :password pseudo-selector.
+$( "form :password");
+// use [type="radio"] instead of the :radio
+$( "form :radio" );
+// Selects all radio buttons with the name attribute of gender.
+$( "form input[name='gender']:radio" );
+// use [type="reset"] instead of the :reset
+$( "form :reset" );
+/// select <option> elements
+$( "form :selected" );
+/// select <button>, <input type=button>
+// use [type="submit"] instead of the :submit pseudo-selector.
+$( "form :submit" );
+// select <input> elements with a type="text":
+// :text selects <input> elements that have no specified type attribute. So,
+// type="text" is implied
+$( "form :text" );
+
+[ ---  end  ---- ]
+
+=== [ topic ][ selection ][ saving ] ===
+[ --- start ---- ]
+- jQuery doesn't cached element, but can be saved like this
+- In the example below, the variable name begins with a dollar sign. Unlike in
+  other languages, there's nothing special about the dollar sign in JavaScript –
+  it's just another character. Here, it's used to indicate that the variable
+  contains a jQuery object. This practice is merely convention, and is not
+  mandatory.
+var $divs = $("div")
+[ ---  end  ---- ]
+
+=== [ topic ][ selection ][ not ] ===
+[ --- start ---- ]
+Example : not class
+$(this).parents(".catalog-header")
+                //.find("img :not(.active)");
+                .find(".catalog-photo")
+                .not(".active")
+                .addClass('not-active');
+
+Example : not class
+$("ul#list li").not(".active") // not method
+$("ul#list li:not(.active)")   // not selector
+
+
+Example : not attribute
+/// better and faster
+$('#para').filter(':not([attr_all])');
+- get the id with para, then filter those without attr_all
+- this is faster than below
+
+
+/// select descendant of #para
+$("#para :not([attr_all])")
+/// #para without attr_all
+$("#para:not([attr_all])")
+- select those without attribute attr_all, then select those with id #para
+- elements without attribute attr_all would be a large set for jquery to work
+[ ---  end  ---- ]
+
+=== [ topic ][ chaining ] ===
+[ --- start ---- ]
+$( "#content" )
+    .find( "h3" )
+    .eq( 2 )
+    .html( "new text for the third h3!" );
+
+- use end() to restore original selection
+Example :
+$( "#content" )
+    .find( "h3" )
+    /// get the third h3 inside #content
+    .eq( 2 )
+        .html( "new text for the third h3!" )
+        .end() // Restores the selection to all h3s in #content
+    /// get the first h3 inside #content
+    .eq( 0 )
+        .html( "new text for the first h3!" );
+
+Example 2:
+ $("button").click(function(){
+    $("#p1").css("color","red").slideUp(2000).slideDown(2000);
+  });
+[ ---  end  ---- ]
+
+=== [ topic ][ manipulate element ] ===
+[ --- start ---- ]
+.html() – Get or set the HTML contents.
+.text() – Get or set the text contents; HTML will be stripped.
+.attr() – Get or set the value of the provided attribute.
+.width() – Get or set the width in pixels of the first element in the selection as an integer.
+.height() – Get or set the height in pixels of the first element in the selection as an integer.
+.position() – Get an object with position information for the first element in the selection, relative to its first positioned ancestor. This is a getter only.
+.val() – Get or set the value of form elements
+[ ---  end  ---- ]
+
+=== [ topic ][ moving ][ copying ] ===
+[ --- start ---- ]
+- two approach to move thing around:
+Place the selected element(s) relative to another element.
+Place an element relative to the selected element(s).
+
+.insertAfter(), .insertBefore(), .appendTo(), and .prependTo()
+
+syntax:
+$(content).insertAfter(selectedElement)
+$(selectedElement).after(contentToBePlaced)
+
+Example :
+// Make the first list item the last list item:
+var $li = $( "#myList li:first" ).appendTo( "#myList" );
+// Another approach to the same problem:
+$( "#myList" ).append( $( "#myList li:first" ) );
+
+Example :cloning
+// Copy the first list item to the end of the list:
+$( "#myList li:first" ).clone().appendTo( "#myList" );
+[ ---  end  ---- ]
+
+=== [ topic ][ remove ] ===
+[ --- start ---- ]
+- .remove() and .detach(), empty()
+- .remove():
+    == permanently remove the selection from the page.
+    == While .remove() does return the removed element(s), those elements will not
+    have their associated data and events attached to them if you return them to
+    the page.
+- .detach()
+    == Use .detach() if you need the data and events to persist. 
+    == Like .remove(), it returns the selection, but it also maintains the data
+    and events associated with the selection, so you can restore the selection
+    to the page at a later time.
+    == The .detach() method is extremely valuable if you are doing heavy
+    manipulation on an element. In that case, it's beneficial to .detach() the
+    element from the page, work on it in your code, then restore it to the page
+    when you're done. This limits expensive "DOM touches" while maintaining the
+    element's data and events.
+- empty()
+    ==  leave the element on the page but remove its contents, you can use
+    .empty() to dispose of the element's inner HTML.
+[ ---  end  ---- ]
+
+=== [ topic ][ create new element ] ===
+[ --- start ---- ]
+- Note that the attributes object in the second argument above, the property
+  name class is quoted, although the property names text and href are not.
+  Property names generally do not need to be quoted unless they are reserved
+  words (as class is in this case). (see example 2)
+
+Example 1:
+
+// Creating new elements from an HTML string.
+$( "<p>This is a new paragraph</p>" );
+$( "<li class=\"new\">new list item</li>" );
+
+Example 2: new element with attribute
+$( "<a/>", {
+    html: "This is a <strong>new</strong> link",
+    "class": "new",
+    href: "foo.html"
+});
+
+
+- use a list to to combine all new content as a string for better performance
+Example 3: 
+var myItems = [];
+var $myList = $( "#myList" );
+for ( var i = 0; i < 100; i++ ) {
+    myItems.push( "<li>item " + i + "</li>" );
+}
+$myList.append( myItems.join( "" ) );
 [ ---  end  ---- ]
 
 === [ topic ][ appendChild ][ topic ] ===
@@ -340,6 +859,23 @@ myArray.forEach( printElementAndIndex );
 // myArray is now [ -1, -2, -3, -4, -5 ]
 myArray.forEach( negateElement );
 
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ iterate ] ===
+[ --- start ---- ]
+- $.each is a drop-in replacement for for-in
+Example :
+for ( var i = 0, l = arr.length; i < l; i++ ) {
+    sum += arr[ i ]; }
+console.log( sum ); // 15
+
+/// below are doing the same thing
+/// Notice that we don't have to access arr[ index ] as the value is conveniently
+///  passed to the callback in $.each().
+$.each( arr, function( index, value ){
+    sum += value;
+});
+console.log( sum ); // 15
 [ ---  end  ---- ]
 
 === [ topic ][ array ][ concatenate ] ===
@@ -460,6 +996,285 @@ $.get('mypage.html', function(){
 /// wrong way to use callback, as the function got executed and its return value
 /// is passed as an option to $.get()
 $.get('mypage.html', mycallback(param));
+[ ---  end  ---- ]
+
+=== [ topic ][ data methods ] ===
+[ --- start ---- ]
+Example 1:
+// Storing and retrieving data related to an element.
+$( "#myDiv" ).data( "keyName", { foo: "bar" } );
+$( "#myDiv" ).data( "keyName" ); // Returns { foo: "bar" }
+
+Example 2:
+// Storing a relationship between elements using .data()
+$( "#myList li" ).each(function() {
+    var $li = $( this );
+    var $div = $li.find( "div.content" );
+    $li.data( "contentDiv", $div );
+});
+ 
+// Later, we don't have to find the div again;
+// we can just read it from the list item's data
+var $firstLi = $( "#myList li:first" );
+$firstLi.data( "contentDiv" ).html( "new content" );
+[ ---  end  ---- ]
+
+=== [ topic ][ utility methods ] ===
+[ --- start ---- ]
+- jQuery offers several utility methods in the $ namespace
+    $.trim() - remove leading and trailing whitespace
+    $.each() - Iterates over arrays and objects:
+    $.inArray() - return the value's index in an array, or -1 if not found
+    $.extend() - Changes the properties of the first object using the properties of subsequent objects:
+    $.proxy() - Returns a function that will always run in the provided scope — that is, sets
+the meaning of this inside the passed function to the second argument.
+- $("selection").each(), not $.each(), should be used for iterating over elements
+in a selection. These are not interchangeable.
+
+Example :
+$.trim( "    lots of extra whitespace    " );
+
+Example :
+$.each([ "foo", "bar", "baz" ], function( idx, val ) {
+    console.log( "element " + idx + " is " + val );
+});
+ 
+$.each({ foo: "bar", baz: "bim" }, function( k, v ) {
+    console.log( k + " : " + v );
+});
+
+Example :
+var myArray = [ 1, 2, 3, 5 ];
+if ( $.inArray( 4, myArray ) !== -1 ) {
+    console.log( "found it!" );
+}
+
+Example :
+var firstObject = { foo: "bar", a: "b" };
+var secondObject = { foo: "baz" };
+ 
+var newObject = $.extend( firstObject, secondObject );
+ 
+console.log( firstObject.foo ); // "baz"
+console.log( newObject.foo ); // "baz"
+
+Example :
+var firstObject = { foo: "bar", a: "b" };
+var secondObject = { foo: "baz" };
+var newObject = $.extend( firstObject, secondObject );
+console.log( firstObject.foo ); // "baz"
+console.log( newObject.foo ); // "baz"
+
+Example : $.proxy
+var myFunction = function() {
+    console.log( this );
+};
+var myObject = {
+    foo: "bar"
+};
+myFunction(); // window
+var myProxyFunction = $.proxy( myFunction, myObject );
+myProxyFunction(); // myObject
+
+Example : $.proxy
+var myObject = {
+    myFn: function() {
+        console.log( this );
+    }
+};
+$( "#foo" ).click( myObject.myFn ); // HTMLElement #foo
+$( "#foo" ).click( $.proxy( myObject, "myFn" ) ); // myObject
+
+[ ---  end  ---- ]
+
+=== [ topic ][ event ] ===
+[ --- start ---- ]
+================================================================================-
+"Mouse Events" "Keyboard Events" "Form Events" "Document/Window Events"
+================================================================================
+click          keypress          submit        load
+dblclick       keydown           change        resize
+mouseenter     keyup             focus         scroll
+mouseleave     blur              unload
+--------------------------------------------------------------------------------
+[ ---  end  ---- ]
+
+=== [ topic ][ animate ] ===
+[ --- start ---- ]
+$(selector).hide(speed,callback);
+$(selector).show(speed,callback);
+$(selector).toggle(speed,callback);
+speed parameter: "slow", "fast", or milliseconds.
+callback parameter is a function to be executed after toggle() completes.
+- fadeOut (display become none in the end)
+- slideUp (display become none in the end)
+$(selector).animate({params},speed,callback);
+    == params parameter defines the CSS properties to be animated.
+$(selector).fadeTo(speed,opacity,callback);
+
+Example 1:
+$("p").hide(1000);
+$("p").toggle();
+
+Example 2:
+$(".flip").click(function() {
+    $(".panel").fadeToggle(1000);
+});
+
+Example 3: fadeIn, fadeOut, fadeToggle()
+  $("button").click(function(){
+    $("#div1").fadeIn();
+    $("#div2").fadeIn("slow");
+    $("#div3").fadeIn(3000);
+  });
+
+  $("button").click(function(){
+    $("#div1").fadeTo("slow",0.15);
+    $("#div2").fadeTo("slow",0.4);
+    /// if it is 1.0 then it in its original color
+    /// if become 0, it become transparent
+    $("#div3").fadeTo("slow",0.7);
+  });
+
+  $("button").click(function(){
+    $("#div1").fadeToggle();
+    $("#div2").fadeToggle("slow");
+    $("#div3").fadeToggle(3000);
+  });
+
+Example 4:
+$("#panel").slideDown();
+$("#panel").slideUp();
+$("#panel").slideToggle();
+
+Example 5:
+$("button").click(function(){
+  $("div").animate({left:'250px'});
+}); 
+
+$("button").click(function(){
+  $("div").animate({
+    left:'250px',
+    opacity:'0.5',
+    height:'150px',
+    width:'150px'
+  });
+}); 
+
+/// using relative value
+/// will always increase based on previous value
+/// e.g. 150 -> 300 -> 450 ...
+$("button").click(function(){
+  $("div").animate({
+    left:'250px',
+    height:'+=150px',
+    width:'+=150px'
+  });
+}); 
+
+/// toggle (from original property value to 0, set display to none, reset property to
+//  original value)
+/// By default, all HTML elements have a static position, and cannot be moved.
+//To manipulate the position, remember to first set the CSS position property of
+//the element to relative, fixed, or absolute!
+  $("button").click(function(){
+    $("div").animate({
+      height:'toggle'
+    });
+  });
+[ ---  end  ---- ]
+
+=== [ topic ][ animate ][ hover then others fade ] ===
+[ --- start ---- ]
+<ul id="sites">
+  <li style="opacity: 1;" class=""> site 1
+   <ul><li>sub item 1</li><li>sub item 2</li><li>sub item 3</li></ul>
+  </li><li style="opacity: 1;" class=""> site 2
+   <ul><li>sub item 1</li><li>sub item 2</li><li>sub item 3</li></ul>  
+  </li><li style="opacity: 1;" class=""> site 3  
+   <ul><li>sub item 1</li><li>sub item 2</li><li>sub item 3</li></ul>
+  </li><li style="opacity: 1;" class=""> site 4
+   <ul><li>sub item 1</li><li>sub item 2</li><li>sub item 3</li></ul>  
+  </li><li style="opacity: 1;" class=""> site 5
+</li></ul>
+
+$(function() {
+    
+    $("#sites").hover(
+    function() {
+    }, 
+    function() {
+        $('#sites>li').fadeTo("fast", 1.0);
+    }
+    );
+    
+    $("#sites>li").hoverIntent(
+    function() {
+        $(this).attr('class', 'current'); // Add class .current
+        $(this).siblings().fadeTo("fast", 0.3); // Fade other items to 30%
+        $(this).fadeTo("slow", 1.0); // Fade current to 100%
+    
+    }, 
+    function() {
+        $(this).removeClass("current"); // Remove class .current
+        $(this).fadeTo("fast", 1.0); // This should set the other's opacity back to 100% on mouseout   
+    });
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ animate ][ queue ] ===
+[ --- start ---- ]
+- for multiple animate(), jQuery create internal queues, then run one by one
+- can make use of this behaviour to perform animation one after another
+
+Example :
+$("button").click(function(){
+  var div=$("div");
+  div.animate({height:'300px',opacity:'0.4'},"slow");
+  div.animate({width:'300px',opacity:'0.8'},"slow");
+  div.animate({height:'100px',opacity:'0.4'},"slow");
+  div.animate({width:'100px',opacity:'0.8'},"slow");
+}); 
+
+[ ---  end  ---- ]
+
+=== [ topic ][ animate ][ stop ] ===
+[ --- start ---- ]
+syntax:
+$(selector).stop(stopAll,goToEnd);
+    == stopAll parameter specifies whether also the animation queue should be
+    cleared or not. Default is false, which means that only the active animation
+    will be stopped, allowing any queued animations to be performed afterwards.
+    == The optional goToEnd parameter specifies whether or not to complete the
+    current animation immediately. Default is false.
+
+Example :
+$(document).ready(function(){
+  $("#flip").click(function(){
+    $("#panel").slideDown(5000);
+  });
+  $("#stop").click(function(){
+    $("#panel").stop();
+  });
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ callback ] ===
+[ --- start ---- ]
+- no callback, the alert perform immediately before element completely hidden
+Example :
+$("button").click(function(){
+  $("p").hide(1000);
+  alert("The paragraph is now hidden");
+});
+
+- with callback, alert only trigger after the animation complete
+Example :
+$("button").click(function(){
+  $("p").hide("slow",function(){
+    alert("The paragraph is now hidden");
+  });
+});
 [ ---  end  ---- ]
 
 === [ topic ][ sizzle ] ===

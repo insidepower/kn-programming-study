@@ -1733,6 +1733,25 @@ Example 1:
 
 [ ---  end  ---- ]
 
+=== [ topic ][ transition ] ===
+[ --- start ---- ]
+-moz-transition: opacity .5s ease-in-out;
+-webkit-transition: opacity .5s ease-in-out;
+transition: opacity .5s ease-in-out;
+
+Example 1:
+a {
+  color:blue; background:white;
+  -o-transition:color .2s ease-out, background 1s ease-in;
+  -ms-transition:color .2s ease-out, background 1s ease-in;
+  -moz-transition:color .2s ease-out, background 1s ease-in;
+  -webkit-transition:color .2s ease-out, background 1s ease-in;
+  /* ...and now override with proper CSS property */
+  transition:color .2s ease-out, background 1s ease-in;
+}
+a:hover { color:red; background:yellow; }
+[ ---  end  ---- ]
+
 === [ topic ][ zoom ] ===
 [ --- start ---- ]
 - zoom / scale
@@ -2116,6 +2135,65 @@ Example 2:
     width: x-grid-unit(1);
     // other declarations
 }
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ float ] ===
+[ --- start ---- ]
+Although elements like <div>s normally grow to fit their contents, using the
+float property can cause a startling problem for CSS newbies: if floated
+elements have non-floated parent elements, the parent will collapse.
+
+For example:
+
+<div>
+    <div style="float: left;">Div 1</div>
+    <div style="float: left;">Div 2</div>
+</div>
+The parent div in this example will not expand to contain its floated children -
+it will appear to have height: 0.
+
+How do you solve this problem?
+I would like to create an exhaustive list of solutions here. If you're aware of
+cross-browser compatibility issues, please point them out.
+
+Title: Solution 1
+Float the parent.
+<div style="float: left;">
+    <div style="float: left;">Div 1</div>
+    <div style="float: left;">Div 2</div>
+</div>
+Pros: Semantic code.
+Cons: You may not always want the parent floated. Even if you do, do you float
+the parents' parent, and so on? Must you float every ancestor element?
+
+Title: Solution 2
+Give the parent an explicit height.
+<div style="height: 300px;">
+    <div style="float: left;">Div 1</div>
+    <div style="float: left;">Div 2</div>        
+</div>
+Pros: Semantic code.
+Cons: Not flexible - if the content changes or the browser is resized, the
+layout will break.
+
+Title: Solution 3
+Append a "spacer" element inside the parent element, like this:
+<div>
+    <div style="float: left;">Div 1</div>
+    <div style="float: left;">Div 2</div>
+    <div class="spacer" style="clear: both;"></div>
+</div>
+Pros: Straightforward to code.
+Cons: Not semantic; the spacer div exists only as a layout hack.
+
+Title: Solution 4:
+Set parent to overflow: auto.
+<div style="overflow: auto;">
+    <div style="float: left;">Div 1</div>
+    <div style="float: left;">Div 2</div>        
+</div>
+Pros: Doesn't require extra div.
+Cons: Seems like a hack - that's not the overflow property's stated purpose.
 [ ---  end  ---- ]
 
 === [ topic ][ problem ][ text-align ] ===
