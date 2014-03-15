@@ -169,3 +169,49 @@ w3schools.com/hosting
 webhostingTutorial.com
 peterpollock.com/webhosting
 [ ---  end  ---- ]
+
+=== [ topic ][ mail ][ hosted ] ===
+[ --- start ---- ]
+- recommend mailbox size around 250MB
+[ ---  end  ---- ]
+
+=== [ topic ][ mail ][ pop3 ] ===
+[ --- start ---- ]
+- advantage
+    == downloaded a local copy
+    == can always retrieve copy accidentally deleted locally from online
+- disadvantage
+    == each devices keep its own record of what it has downloaded and what it
+    hasn't, regardless of what you've downloaded elsewhere
+[ ---  end  ---- ]
+
+=== [ topic ][ mail ][ imap ] ===
+[ --- start ---- ]
+- works simliar way to POP3, except it synchronizes the email your email client
+  with what's on the client
+- advantage if reading email on more than one device
+- IMAP has no fail-safe system, once deleted, it's gone 
+[ ---  end  ---- ]
+
+=== [ topic ][ database ] ===
+[ --- start ---- ]
+- port: usually 3306
+[ ---  end  ---- ]
+
+=== [ topic ][ script ] ===
+[ --- start ---- ]
+- install 
+http://yoursite.com/your_script_folder/install.php
+[ ---  end  ---- ]
+
+=== [ topic ][ security ][ ssl ] ===
+[ --- start ---- ]
+- symantec: Equifax, Tawte, VeriSign, Geotrust
+- GoDaddy: GoDaddy.com and Starfield TEchnologies
+- Comodo: Comodo CA and UTN-USERFirst-Hardware
+
+- browser give a list of its trusted certificate authorities
+Firefox: Options > Options > Adv > Encryption > View Certificates
+
+- best is to buy certificates from web host (sometimes at discounted prices)
+[ ---  end  ---- ]
