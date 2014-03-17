@@ -14,6 +14,73 @@ USE test;
 use wordpress;
 [ ---  end  ---- ]
 
+=== [ topic ][ naming ][ back-quoted ] ===
+[ --- start ---- ]
+Back-Quoted Identifiers (`name`)
+[ ---  end  ---- ]
+
+=== [ topic ][ comment ] ===
+[ --- start ---- ]
+MySQL multi-line comments are enclosed within /* and */; 
+end-of-line comments begins with -- (followed by a space) or #.
+[ ---  end  ---- ]
+
+=== [ topic ][ version ] ===
+[ --- start ---- ]
+SELECT version()
+[ ---  end  ---- ]
+
+=== [ topic ][ database ][ use ] ===
+[ --- start ---- ]
+- set which database to use
+> use mysql;
+
+- to check currently used database
+> select database();
+
+- to use table not currently in used, then need to use fully qualified name of
+the table, e.g. database3.table2
+[ ---  end  ---- ]
+
+=== [ topic ][ database ][ create ][ drop ] ===
+[ --- start ---- ]
+CREATE DATABASE IF NOT EXISTS southwind;
+DROP DATABASE IF EXISTS southwind;
+
+Title: Show Create
+-  to display the full command and check these default values
+> SHOW CREATE DATABASE southwind \G
+*************************** 1. row ***************************
+       Database: southwind
+Create Database: CREATE DATABASE `southwind` /*!40100 DEFAULT CHARACTER SET
+latin1 */
+[ ---  end  ---- ]
+
+=== [ topic ][ database ][ backup ] ===
+[ --- start ---- ]
+backup: # mysqldump -u root -p[root_password] [database_name] > dumpfilename.sql
+restore:# mysql -u root -p[root_password] [database_name] < dumpfilename.sql
+
+Title: Backup multiple databases
+# mysqldump -u root -ptmppassword --databases database1 database2 > backup.sql
+# grep -i "Current database:" backup.sql
+-- Current Database: `database1`
+-- Current Database: `database2`
+
+Title: Backup all databases
+# mysqldump -u root -ptmppassword --all-databases > /tmp/all-database.sql
+
+Title: Backup particular table from a database
+# mysqldump -u root -ptmppassword database1 table1 > backup-table1.sql
+
+Title: Restore
+# mysqldump -u root -ptmppassword database1 table1 < backup-table1.sql
+
+Title: Backup and Restore remotely
+# mysqldump -u root -ptmppassword sugarcrm | mysql \
+                 -u root -ptmppassword --host=remote-server -C sugarcrm1
+[ ---  end  ---- ]
+
 === [ topic ][ permission ] ===
 [ --- start ---- ]
 mysql> GRANT ALL ON menagerie.* TO 'your_mysql_name'@'your_client_host';
@@ -35,40 +102,63 @@ SELECT SIN(PI()/4), (4+1)*5;
 SELECT * FROM my_table WHERE name = 'Smith AND age < 30;
 [ ---  end  ---- ]
 
-=== [ topic ][ tutorial ] ===
-[ --- start ---- ]
-mysql> GRANT ALL ON menagerie.* TO 'your_mysql_name'@'your_client_host';
-mysql> CREATE DATABASE menagerie;
-mysql> USE menagerie
-/// show all the tables contained in menagerie
-mysql> show tables;
-/// to login and use database menagerie
-shell> mysql -h host -u user -p menagerie
-[ ---  end  ---- ]
-
 === [ topic ][ version ] ===
 [ --- start ---- ]
 SELECT VERSION(), CURRENT_DATE;
 [ ---  end  ---- ]
 
-=== [ topic ][ create ] ===
+=== [ topic ][ table ][ create ] ===
 [ --- start ---- ]
 create table customrs(FirstName Char(30), lastname char(30), age int);
+CREATE TABLE example( 
+  id INT NOT NULL AUTO_INCREMENT, 
+  name VARCHAR(30), 
+  age INT,
+  PRIMARY KEY(id)
+  );
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ create ][ enum ] ===
+[ --- start ---- ]
+- restrict the value of a column
+- can't have any operation inside, only literal string is allowed
+
+Example :
+CREATE TABLE sizes ( name ENUM('small', 'medium', 'large'));
+/// error on below
+CREATE TABLE sizes ( c1 ENUM('small', CONCAT('med','ium'), 'large'));
+/// error on below
+SET @mysize = 'medium';
+CREATE TABLE sizes ( name ENUM('small', @mysize, 'large'));
+
+in mysqlite:
+create table MyTable
+( name string check(name = "car" or name = "bike" or name = "van"));
 [ ---  end  ---- ]
 
 === [ topic ][ insert ] ===
 [ --- start ---- ]
 insert into customrs values ("Ken", "Ng", 30);
 [ ---  end  ---- ]
-
-=== [ topic ][ select ] ===
-[ --- start ---- ]
+=== [ topic ][ select ] === [ --- start ---- ]
 select * from customrs;
 SELECT column_name,column_name FROM table_name;
 
 - only return distinct (unique )
 select distinct COLUMN_NAME,COLUMN_NAME from TABLE_NAME;
+[ ---  end  ---- ]
 
+=== [ topic ][ select ][ vertical ] ===
+[ --- start ---- ]
+- beautifier the select, show result vertically
+select * from user where user="xinying"\G;
+
+mysql> pager less -SFX
+mysql> SELECT * FROM sometable;
+
+Title: saving output
+echo 'desc table_name' | mysql -uroot database -t
+mysql -uroot table_name --table < /tmp/somequery.sql
 [ ---  end  ---- ]
 
 === [ topic ][ select ][ where ] ===
@@ -91,6 +181,22 @@ IN	To specify multiple possible values for a column
 
 [ ---  end  ---- ]
 
+=== [ topic ][ select ][ two table ] ===
+[ --- start ---- ]
+SELECT a.playerid,a.pla_lname,pla_fname,b.teamname FROM players a,teams b WHERE
+a.teamid=b.teamid;
+
+SELECT a.playerid,a.pla_lname,pla_fname,b.teamname FROM players a INNER JOIN
+teams b ON a.teamid=b.teamid;
+[ ---  end  ---- ]
+
+=== [ topic ][ delete ] ===
+[ --- start ---- ]
+- delete from table where xxx=yyy;
+
+delete from user where user="testing";
+[ ---  end  ---- ]
+
 === [ topic ][ GUI ] ===
 [ --- start ---- ]
 MySQL Workbench
@@ -102,4 +208,186 @@ I prefer "MySQL Query browser" and "MySQL Administrator".
 I like Emma. Emma is an open source project that isn't developed by Oracle
 SQLYog to this list anyway since it is such a powerful tool... There is no 
 official build available for Linux but it works quite well on Wine.
+[ ---  end  ---- ]
+
+=== [ topic ][ reset password ] ===
+[ --- start ---- ]
+$ su
+$ service mysql stop
+$ mysqld_safe --skip-grant-tables &
+$ mysql -u root
+
+MariaDB [(none)]> use mysql;
+MariaDB [(none)]> update user set password=PASSWORD("NEWPASSWORD") where
+User='root';
+MariaDB > flush privileges;
+Query OK, 0 rows affected (0.00 sec) 
+MariaDB [(none)]> exit; 
+
+$ service mysql restart
+$ mysql -u root -p
+[ ---  end  ---- ]
+
+=== [ topic ][ create user ] ===
+[ --- start ---- ]
+- Each time you update or change a permission be sure to use the Flush
+  Privileges command. 
+
+Title: Syntax
+GRANT [type of permission] ON [database name].[table name] TO ‘[username]’
+@'localhost’;
+    == Type of permission:
+      ALL PRIVILEGES
+      CREATE- allows them to create new tables or databases
+      DROP- allows them to them to delete tables or databases
+      DELETE- allows them to delete rows from tables
+      INSERT- allows them to insert rows into tables
+      SELECT- allows them to use the Select command to read through databases
+      UPDATE- allow them to update table rows
+      GRANT OPTION- allows them to grant or remove other users' privileges
+
+REVOKE [type of permission] ON [database name].[table name] FROM ‘[username]’
+@‘localhost’;
+
+DROP USER ‘demo’@‘localhost’;
+
+Example :
+create user username@"Ideapad-Lenovo" identified by 'password';
+/// sometimes the hostname is not resolved by server, use ip instead
+create user username@'192.168.1.1200' identified by 'password';
+GRANT ALL ON databaseName.* TO 'your_mysql_name'@'your_client_host';
+flush privileges;
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ show all ] ===
+[ --- start ---- ]
+> show tables;
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ describe ] ===
+[ --- start ---- ]
+- show the table information, like type, null, primary key etc
+
+> describe mytable;
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ alter ][ add column ] ===
+[ --- start ---- ]
+- Original table:
+assessmentid | q1 | q2 | q3 | q4 | q5 
+
+ALTER TABLE yourtable ADD q6 VARCHAR( 255 ) after q5
+- new table:
+assessmentid | q1 | q2 | q3 | q4 | q5 | q6
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ alter ][ modify ] ===
+[ --- start ---- ]
+alter table product_catalogue modify category char(20) not null
+[ ---  end  ---- ]
+
+=== [ topic ][ primary key ] ===
+[ --- start ---- ]
+MySQL unique keys can be NULL whereas primary keys cannot be
+[ ---  end  ---- ]
+
+=== [ topic ][ foreign key ] ===
+[ --- start ---- ]
+- foreign key ("column name") references "referenced-table-name"
+("column-name-in-reference table")
+- on delete cascade, delete this column when referenced-table id got deleted?
+
+CREATE TABLE IF NOT EXISTS `feeds` (
+  `Feed_ID` int(11) NOT NULL,
+  `Feed_Name` varchar(32) NOT NULL,
+  `Feed_Url` varchar(255) NOT NULL,
+  PRIMARY KEY (`Feed_ID`)
+)
+
+CREATE TABLE IF NOT EXISTS `feeditems` (
+  `FeedItem_ID` int(11) NOT NULL,
+  `Feed_ID` int(11) NOT NULL,
+  `FeedItem_Date` datetime NOT NULL,
+  `FeedItem_Title` varchar(255) NOT NULL,
+  `FeedItem_Url` varchar(255) NOT NULL,
+  `FeedItem_Name` varchar(255) NOT NULL,
+  PRIMARY KEY (`FeedItem_ID`),
+  FOREIGN KEY (`Feed_ID`) REFERENCES `feeds`(`Feed_ID`)
+                      ON DELETE CASCADE
+)
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ unique ] ===
+[ --- start ---- ]
+- NULL is treated as a unique value — which is why you cannot use comparisons
+such as value = NULL and need to use value IS NULL
+- ensure no two records have the same country, area, number and extension
+DROP TABLE IF EXISTS `phone`;
+ 
+CREATE TABLE `phone` (
+    `id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `country` DECIMAL(5,0) UNSIGNED NOT NULL,
+    `area` DECIMAL(5,0) UNSIGNED NOT NULL,
+    `number` DECIMAL(8,0) UNSIGNED NOT NULL,
+    `extension` DECIMAL(5,0) UNSIGNED DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ix_phone` (`country`, `area`, `number`, `extension`),
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+try insert:
+INSERT INTO `phone`
+(`country`, `area`, `number`, `extension`)
+(44, 9876, 54321, 42);
+
+resulted error:
+Error Code: 1062
+Duplicate entry '44-9876-54321-42' for key 'ix_phone'
+
+try insert: (no error, as default null is considered as unique)
+INSERT INTO `phone`
+(`country`, `area`, `number`)
+(1, 234, 567890);
+[ ---  end  ---- ]
+
+=== [ topic ][ connect ][ remote ] ===
+[ --- start ---- ]
+sudo nano /etc/mysql/my.cnf
+bind-address = 127.0.0.1
+bind-address = 0.0.0.0
+/etc/init.d/mysql restart
+netstat -tnl | grep 3306
+tcp        0      0 0.0.0.0:3306          0.0.0.0:*               LISTEN
+[ ---  end  ---- ]
+
+=== [ topic ][ tutorial ] ===
+[ --- start ---- ]
+Title: Create
+CREATE TABLE `products` (
+  `productID`    int(10) unsigned  NOT NULL AUTO_INCREMENT,
+  `productCode`  char(3)           NOT NULL DEFAULT '',
+  `name`         varchar(30)       NOT NULL DEFAULT '',
+  `quantity`     int(10) unsigned  NOT NULL DEFAULT '0',
+  `price`        decimal(7,2)      NOT NULL DEFAULT '99999.99',
+  PRIMARY KEY (`productID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+Title: Insert
+// need to specify the first primary_key for the first time?
+> INSERT INTO products VALUES (1001, 'PEN', 'Pen Red', 5000, 1.23);
+// subsequent primary key can be use null, mysql will auto-increment
+> INSERT INTO products VALUES
+         (NULL, 'PEN', 'Pen Blue',  8000, 1.25),
+         (NULL, 'PEN', 'Pen Black', 2000, 1.25);
+> INSERT INTO products (productCode, name, quantity, price) VALUES
+         ('PEC', 'Pencil 2B', 10000, 0.48),
+         ('PEC', 'Pencil 2H', 8000, 0.49);
+> INSERT INTO products (productCode, name) VALUES ('PEC', 'Pencil HB');
+
+Title: Select
+SELECT name, price FROM products;
+SELECT * FROM products;
+
+SELECT 1+1;
+SELECT NOW();  // show time
+SELECT 1+1, NOW();
 [ ---  end  ---- ]

@@ -2132,6 +2132,20 @@ var boundGetUser = getUser.bind( module );
 boundGetUser();
 [ ---  end  ---- ]
 
+=== [ topic ][ multiline ] ===
+[ --- start ---- ]
+var htmlString = [
+'',
+'',
+''
+].join(”);
+
+Example : not really compatible
+var htmlSTring = "<div>\
+  This is a string.\
+</div>";
+[ ---  end  ---- ]
+
 === [ topic ][ framework ] ===
 [ --- start ---- ]
     jQuery

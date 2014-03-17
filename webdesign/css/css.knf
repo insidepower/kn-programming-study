@@ -2085,6 +2085,21 @@ Example 2:
 </div>
 [ ---  end  ---- ]
 
+=== [ topic ][ image replacement ][ text-index -9999px] ===
+[ --- start ---- ]
+Replace:
+
+h1 {
+	background: url("myimage") 0 0 no-repeat;
+	text-indent: -9999px; }
+With:
+
+#replace {
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden; }
+[ ---  end  ---- ]
+
 === [ topic ][ guideline ][ idiomatic css ] ===
 [ --- start ---- ]
 - all code should look like a single person typed it
