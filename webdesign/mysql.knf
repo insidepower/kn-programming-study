@@ -6,10 +6,11 @@ mysql -u root -p
 quit
 [ ---  end  ---- ]
 
-=== [ topic ][ switching table ] ===
+=== [ topic ][ databases ][ switching table ] ===
 [ --- start ---- ]
 mysql
 show databases;
+show tables;
 USE test;
 use wordpress;
 [ ---  end  ---- ]
@@ -140,7 +141,9 @@ create table MyTable
 [ --- start ---- ]
 insert into customrs values ("Ken", "Ng", 30);
 [ ---  end  ---- ]
-=== [ topic ][ select ] === [ --- start ---- ]
+
+=== [ topic ][ select ] === 
+[ --- start ---- ]
 select * from customrs;
 SELECT column_name,column_name FROM table_name;
 
@@ -390,4 +393,74 @@ SELECT * FROM products;
 SELECT 1+1;
 SELECT NOW();  // show time
 SELECT 1+1, NOW();
+[ ---  end  ---- ]
+=== [ topic ][ php ][ connect ] ===
+[ --- start ---- ]
+<?php
+    mysql_connect("your.database.host", "your-user-name", "your-password")
+        or die ("<p> Error connecting to databases: ". mysql_error(). "</p>");
+
+    echo "Connected to database!"
+?>
+[ ---  end  ---- ]
+
+=== [ topic ][ php ][ select ] ===
+[ --- start ---- ]
+<? 
+    mysql_select_db("your_database_name")
+        or die(" Error in selecting database". mysql_error() );
+    echo "selected database!";
+?>
+[ ---  end  ---- ]
+
+=== [ topic ][ php ][ query ] ===
+[ --- start ---- ]
+    $result = mysql_query("SHOW TABLES;");
+
+    // if ( false === $result) {  
+    // - or -
+    if (!$result){
+        die ("Error in query ". mysql_error());
+    }
+
+    echo " table in database ";
+    echo "<ul>";
+    while ($row = mysql_fetch_row($result)){
+        echo "<li>".$row[0]."</li>"
+    }
+    echo "</ul>"
+[ ---  end  ---- ]
+
+=== [ topic ][ abstracting info ] ===
+[ --- start ---- ]
+@@@ app_config.php:
+<?php
+    $database_hot = "your.database.host";
+    $username = "your-username";
+    $password = "password";
+    $database_name = "your.database.name"; ?>
+
+@@@ normal_usage.php:
+<?php
+    require '../app_config.php'; 
+    ...
+?>
+[ ---  end  ---- ]
+
+=== [ topic ][ constant ] ===
+[ --- start ---- ]
+
+@@@ app_config.php:
+<?php
+    define("DATABASE_HOST", "your.database.host");
+    define("DATABASE_USERNAME", "your-username");
+    define("DATABASE_PASSWORD","password");
+    define("DATABASE_NAME", "your.database.name"; ?>
+
+@@@ normal_usage.php:
+<?php
+    require '../app_config.php'; 
+    
+    echo "connect to mysql, using database = ". DATABASE_NAME
+?>
 [ ---  end  ---- ]

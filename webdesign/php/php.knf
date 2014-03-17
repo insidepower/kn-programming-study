@@ -209,6 +209,12 @@ Name: <input type="text" name="fname">
 $name = $_REQUEST['fname']; 
 echo $name; 
 ?>
+
+Example 2:
+<?php
+    foreach($_REQUEST as $key => $value) {
+        echo "<p>For ". $key.", the value is ". $value."</p>";
+    }
 [ ---  end  ---- ]
 
 === [ topic ][ var ][ superglobal ][ $_POST ][ form ] ===
@@ -1009,6 +1015,7 @@ echo "5 + 10 = " . sum(5,10) . "<br>";
 - include/require are identical except upon failure
   include: produce warning (E_WARNING) and continue script
   require: produce fatal error (E_COMPILE_ERROR) and stop script
+- use require than include as can immediately know if something is wrong
 
 Example: <menu.php>
 echo '<a href="/default.php">Home</a>

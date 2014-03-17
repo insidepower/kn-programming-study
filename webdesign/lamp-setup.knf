@@ -129,6 +129,36 @@ $ sudo ntfs-3g /dev/sda3 /media/DriveD
 
 [ ---  end  ---- ]
 
+=== [ topic ][ apache ][ .htaccess ] ===
+[ --- start ---- ]
+- provide additional level of security to the folder it is in
+- the directives in an .htaccess file also apply to any subfolder below the
+  folder they are places in
+
+advantage:
+- adding authorization/authentication
+    == can use .htaccess file to password-protect files and folders, often in
+    conjunction with another file call .htpasswd, which store the valid login
+    details
+    == blocking users via IP addr or domain name
+    == control directory listing
+        *** default user browsers display a list of files within that folder
+    == rewriting URLs. 
+        *** .htaccess file can make new index that enables users to use a
+        shortened versino of the file path that the server can understand 
+        *** useful in redirect incoming links to old filenames to the new
+        filenames
+
+disadvantage:
+- .htaccess file are read with every http request and, with each request, the
+  server must look in every folder above the current folder in the f=directory
+  tree for .htaccess files, which may have commands that override the .htaccess
+  file in the current folder. 
+- resulted in mmore file reads and disk searches for every web page that is
+  viewed, slowing down the whole system
+- if has access to httpd server config file, maybe faster
+[ ---  end  ---- ]
+
 === [ topic ][ apache ][ mounting ] ===
 [ --- start ---- ]
 sudo mount -t ntfs -o rw,auto,user,fmask=0022,dmask=0000 /dev/whatever
@@ -836,4 +866,10 @@ following it will only listen on the loopback interface, which means that
 connections can only originate from that machine.
 inet_interfaces = loopback-only
 
+[ ---  end  ---- ]
+
+=== [ topic ][ web tutorial ] ===
+[ --- start ---- ]
+webhostingtutorial.com
+w3cshools.com/hosting
 [ ---  end  ---- ]
