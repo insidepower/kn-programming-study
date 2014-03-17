@@ -2003,3 +2003,11 @@ solution: change to 127.0.0.1
 setcookie('username', $_POST['username'], time()+60*60*24, "/php", "127.0.0.1");
 
 [ ---  end  ---- ]
+
+=== [ topic ][ problem ][ mistmatch header and library ] ===
+[ --- start ---- ]
+- check php version and mysql version
+$ php -i | grep version
+1. Switch to using the mysqlnd driver in PHP (Recommended solution).
+$ sudo apt-get install php5-mysqlnd
+[ ---  end  ---- ]

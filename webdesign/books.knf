@@ -37,11 +37,24 @@ The Rails view : creating a beautiful and maintainable user experience / John At
 === [ topic ][ mobile ] ===
 [ --- start ---- ]
 Mobilizing web sites : develop and design
+  ==
+
+head first movile web
+  == English 004.65 GAR
 [ ---  end  ---- ]
 
 === [ topic ][ Linux ] ===
 [ --- start ---- ]
 Linux system administration
+[ ---  end  ---- ]
+
+=== [ topic ][ web designer index ] ===
+[ --- start ---- ]
+Web Designer Idea
+  == 006.7 MAC
+
+Web Designer Index 9
+  == 006.7 WBI
 [ ---  end  ---- ]
 
 === [ topic ][ web ] ===
@@ -58,5 +71,19 @@ Learning Node.js : a hands-on guide to building Web applications in JavaScript /
 Search engine optimization : your visual blueprint for effective Internet
 marketing
     == { Jurong }
+
+Web Host Manager (WHM)
+    == 005.276 { Woodlands }
+
+CPanel 
+    == 005.276 PED
+
+Website CookBook
+    == 005.276 ADD
 [ ---  end  ---- ]
 
+=== [ topic ][ Keep In View ] ===
+[ --- start ---- ]
+Heroku Programming
+  == 006.78 KEM
+[ ---  end  ---- ]

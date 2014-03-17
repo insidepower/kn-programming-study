@@ -6,6 +6,41 @@ mysql -u root -p
 quit
 [ ---  end  ---- ]
 
+=== [ topic ][ database ][ design ][ normalizing ] ===
+[ --- start ---- ]
+- use the smallest possible column types
+- avoid storing null values as much as possible
+- use numeric coluns as much as possible
+- use fixed-length columns when you can
+- provide default values for columns, if applicable
+[ ---  end  ---- ]
+
+=== [ topic ][ database ][ performance ][ indexing ] ===
+[ --- start ---- ]
+- index columns that will be involved in where and order by clauses
+- avoid indexing columns that allow null values
+- apply length restriction to indexes on variable-length columns, such as
+  indexing only the first 10 characterrs of a person's last name
+- use EXPLAIN queries to confirm that indexes are being used
+- revisit your indexes after some period of site activity to ensure they're
+  still appropriate
+[ ---  end  ---- ]
+
+=== [ topic ][ performance ][ admin ] ===
+[ --- start ---- ]
+- back_log
+- key_buffer_size
+- max_connections
+- thread_cache_size
+[ ---  end  ---- ]
+
+=== [ topic ][ storage engine ] ===
+[ --- start ---- ]
+InnoDB and MyISAM
+- InnoDB is perferred and default for MySQL, excellent fail-safe in sensitive
+situations
+[ ---  end  ---- ]
+
 === [ topic ][ databases ][ switching table ] ===
 [ --- start ---- ]
 mysql
@@ -289,6 +324,13 @@ assessmentid | q1 | q2 | q3 | q4 | q5 | q6
 alter table product_catalogue modify category char(20) not null
 [ ---  end  ---- ]
 
+=== [ topic ][ procedure ][ import ] ===
+[ --- start ---- ]
+syntax: mysql -u <user> -p<password> databasename < sql-procedure.sql
+$ mysql -u tester2 -p"temp123" test_ecommerce2 < ~/sql.sql
+MySQL> call stored_procedure_name();
+[ ---  end  ---- ]
+
 === [ topic ][ primary key ] ===
 [ --- start ---- ]
 MySQL unique keys can be NULL whereas primary keys cannot be
@@ -463,4 +505,65 @@ SELECT 1+1, NOW();
     
     echo "connect to mysql, using database = ". DATABASE_NAME
 ?>
+[ ---  end  ---- ]
+
+=== [ topic ][ text type ] ===
+[ --- start ---- ]
+ Type | Maximum length
+-----------+-------------------------------------
+  TINYTEXT |           255 (2 8−1) bytes
+      TEXT |        65,535 (216−1) bytes = 64 KiB
+MEDIUMTEXT |    16,777,215 (224−1) bytes = 16 MiB
+  LONGTEXT | 4,294,967,295 (232−1) bytes =  4 GiB
+[ ---  end  ---- ]
+
+=== [ topic ][ prepared statement ][ prevent sql injection ] ===
+[ --- start ---- ]
+- performance benefit as database can cache the preparation of query, making
+subsequent use of the same prepared statement faster
+- able to prevent SQL injection as it is strongly typed data
+- don't quote placeholders, even if their values will be strings
+
+Example :
+$q = 'SELECT id, username, type, pass, IF(date_expires >= NOW(), true, false))
+    AS expired FROM users WHERE email=?';
+$dbc = mysqli_connect (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+$stmt = mysqli_prepare($dbc, $q);
+if (!$stmt) echo mysqli_stmt_error($stmt);
+mysqli_stmt_bind_param($stmt, 's', $email);
+$email = $_POST['email'];
+mysqli_stmt_execute($stmt);
+/// for UPDATE and INSERT, can confirm a record was affected using
+if (mysqli_stmt_affected_rows($stmt) === 1)
+/// for SELECT queries, to count the number of returned rows, do this
+mysqli_stmt_store_result($stmt);
+if(mysqli_stmt_num_rows($stmt) >= 1)
+/// release resource
+mysqli_stmt_close($stmt);
+
+/// can assign value to variables
+mysqli_stmt_store_result($stmt);
+if(mysqli_stmt_num_rows($stmt) === 1 ) {
+  mysqli_stmt_bind_result($stmt, $id, $username, $type, $pass, $expired);
+  mysqli_stmt_fetch($stmt);
+}
+
+Example :
+$query= "SELECT user_id FROM users WHERE username=? and password=?";	//query definition
+	$preparedStatement=$database_connection()->prepare($query);				//prepare the statement
+	mysqli_stmt_bind_param($preparedStatement, 'ss', $field1, $field2);		//prepare to bind two Strings (the ss)
+	$field1 = $_POST['user'];			//you may want to do more input checking here!
+	$field2 = $_POST['pass'];			//you may want to do more input c
+[ ---  end  ---- ]
+
+=== [ topic ][ security ] ===
+[ --- start ---- ]
+Title: Privileges
+non-login user: 
+  == SELECT
+login user:
+  == carts, wish-list
+    *** SELECT, INSERT, UPDATE, DELETE
+
+- test with wrong user password, see if everything thrown up
 [ ---  end  ---- ]

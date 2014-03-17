@@ -1,3 +1,9 @@
+=== [ topic ][ safe practice ] ===
+[ --- start ---- ]
+- put a blank index.html file in folder which not supposed to be accessed
+  so server will not list the directory content to all
+[ ---  end  ---- ]
+
 === [ topic ][ setup ] ===
 [ --- start ---- ]
 sudo apt-get install tasksel
@@ -159,6 +165,23 @@ disadvantage:
 - if has access to httpd server config file, maybe faster
 [ ---  end  ---- ]
 
+=== [ topic ][ apache ][ htaccess ][ disable access ] ===
+[ --- start ---- ]
+- make entire directory unavailable for access
+
+# Disable indexing:
+Options All -Indexes
+
+#Ignore every file:
+IndexIgnore *
+
+# Prevent access to any file:
+<Filematch "^.*$">
+Order Allow, Deny
+Deny from all
+</FilesMatch>
+[ ---  end  ---- ]
+
 === [ topic ][ apache ][ mounting ] ===
 [ --- start ---- ]
 sudo mount -t ntfs -o rw,auto,user,fmask=0022,dmask=0000 /dev/whatever
@@ -262,6 +285,143 @@ $ sudo blkid
 
 default permission:
 /dev/sda6 on /media/knxy/musics type fuseblk (rw,nosuid,nodev,allow_other,default_permissions,blksize=4096)
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ mod_rewrite ][ check ] ===
+[ --- start ---- ]
+check with phpinfo()
+  == see loaded modules inside apache2handler, if mod_rewrite is loaded
+  == if not there, enable it with a2enmod
+$ sudo a2enmod rewrite
+$ vim /etc/apache2/sites-available/<mysite>
+  == change AllowOverride None to AllowOverride All
+$ sudo service apache2 restart
+
+Example : testing
+1. create .htaccess file at the webroot directory
+add the following:
+<IfModule mod_rewrite.c>
+RewriteEngine on
+
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+
+RewriteRule ^/?test.html$ /test.php [L]
+
+</IfModule>
+2. http://localhost/test
+should refer to localhost/test.php
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ mode_rewrite ][ subdirectory ] ===
+[ --- start ---- ]
+folder in subdirectory of web root
+e.g. /public_html/ex2/html
+
+@@@ public_html/ex2/html/.htaccess:
+RewriteBase /ex2/html/
+
+# For the primary categories:
+RewriteRule ^shop/(coffee|goodies)/?$ /ex2/html/shop.php?type=$1
+
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ mode_rewrite ][ condition ] ===
+[ --- start ---- ]
+/// check if HTTPS is not in used
+RewriteCond %{HTTPS} off 
+/// what need to check if HTTPS is off
+RewriteRule ^(checkout\.php|billing\.php|final\.php|admin/(.*))$
+                  https://%{HTTP_HOST}/$1 [R=301,L]
+- %{ENVIRONMENT_VARIABLE}
+- if rule is match, then URL is rewritten to https://hostname/$1
+- R=301,L indicate this should be a permanent redirection type, associated with
+server code 301, and that this should be the last rule evaluated
+  == this ensure server won't allow the browser to load any of those pages over
+  a nonsecure connection. 
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ mod_rewrite ][ example ] ===
+[ --- start ---- ]
+mod_rewrite Examples
+
+# [L] == last flag
+RewriteRule ^/?test2.html$ index.html [L]
+
+#Specify a default home page (index page)
+DirectoryIndex home.html
+
+#Allow only specified IPs to access your site
+deny from all
+allow from 64.95.219.140
+allow from 210.23.45.67
+
+# Redirect all pages from olddomain.com newdomain.com
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^www.olddomain.com$ [OR]
+RewriteCond %{HTTP_HOST} ^olddomain.com$
+RewriteRule ^(.*)$ http://www.newdomain.com/$1 [R=301,L]
+
+#Prevent subfolder loading. This goes
+# in htaccess for the primary domain
+RewriteCond %{HTTP_HOST} ^primary\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.primary\.com$
+RewriteRule ^addon\.com\/?(.*)$ "http\:\/\/www\.addon\.com\/$1" [R=301,L]
+
+#Prevent subdomain name loading.
+#This goes in htaccess for the primary domain
+RewriteCond %{HTTP_HOST} ^subname\.primary\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.subname\.primary\.com$
+RewriteRule ^(.*)$ "http\:\/\/www\.addon\.com\/$1" [R=301,L]
+
+# Never use www in the domain
+
+# Replace 'example.com' with your domain name
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^www\.(([a-z0-9_]+\.)?example\.com)$ [NC]
+RewriteRule .? http://%1%{REQUEST_URI} [R=301,L]
+
+# Always use www in the domain
+# Replace 'example.com' with your domain name
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^([a-z.]+)?example\.com$ [NC]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule .? http://www.%1example.com%{REQUEST_URI} [R=301,L]
+
+# Set a default home directory, (this subfolder always loads)
+# Replace 'folder' with your subfolder name
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^$ /folder/ [R=301,L]
+</IfModule>
+
+# Rename a directory and force visitors to the new name
+# Replace 'old' with your old folder name
+# Replace 'new' with your new folder name
+RewriteEngine on
+RewriteRule ^/?old([a-z/.]*)$ /new$1 [R=301,L]
+
+# Always use https for secure connections
+# Replace 'www.example.com' with your domain name
+# (as it appears on your SSL certificate)
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.example.com/$1 [R=301,L]
+
+# Block traffic from multiple referrers
+RewriteEngine on
+Options +FollowSymlinks
+RewriteCond %{HTTP_REFERER} badsite\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} badforum\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} badsearchengine\.com [NC]
+RewriteRule .* - [F]
+
+#Do not allow these file types to be called
+RewriteEngine on
+RewriteRule .*\.(jpg|jpeg|gif|png|bmp|exe|swf)$ - [F,NC]
 [ ---  end  ---- ]
 
 === [ topic ][ permission ][ uid and gid ] ===
