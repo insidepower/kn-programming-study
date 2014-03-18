@@ -175,6 +175,10 @@ create table MyTable
 === [ topic ][ insert ] ===
 [ --- start ---- ]
 insert into customrs values ("Ken", "Ng", 30);
+
+- multiple insert
+insert into `table_name` (`column1`, `column2`) values
+(val1, val2), (pair2-val1, pair2-val2), (pair3-val1, pair3-val2)
 [ ---  end  ---- ]
 
 === [ topic ][ select ] === 
@@ -226,6 +230,245 @@ a.teamid=b.teamid;
 
 SELECT a.playerid,a.pla_lname,pla_fname,b.teamname FROM players a INNER JOIN
 teams b ON a.teamid=b.teamid;
+[ ---  end  ---- ]
+
+=== [ topic ][ select ][ union ] ===
+[ --- start ---- ]
+- mysql don't have full join, can be simulate with union
+
+Example :
+SELECT CONCAT("G", ncp.id) AS sku, sa.price AS sale_price, ncc.category,
+       ncp.image, ncp.name, ncp.price AS price, ncp.stock, ncp.description
+FROM sales AS sa
+  INNER JOIN non_coffee_products AS ncp ON sa.product_id=ncp.id
+  INNER JOIN non_coffee_categories AS ncc ON ncc.id=ncp.non_coffee_category_id
+    WHERE sa.product_type="goodies" AND
+    ((NOW() BETWEEN sa.start_date AND sa.end_date) OR
+    (NOW() > sa.start_date AND sa.end_date IS NULL))
+
+UNION
+SELECT CONCAT("C", sc.id), sa.price, gc.category, gc.image, CONCAT_WS("-",
+       s.size, sc.caf_decaf, sc.ground_whole), sc.price, sc.stock, 
+       gc.description 
+FROM sales AS sa
+  INNER JOIN specific_coffees AS sc ON sa.product_id=sc.id
+  INNER JOIN sizes AS s ON s.id=sc.size_id
+  INNER JOIN general_coffees AS gc ON gc.id=sc.general_coffee_id
+    WHERE sa.product_type="coffee" AND
+    ((NOW() BETWEEN sa.start_date AND sa.end_date) OR
+    (NOW() > sa.start_date AND sa.end_date IS NULL));
+ 
+
+Example : simulate full outer join with union
+DROP TABLE IF EXISTS `example`.`table1`;
+CREATE TABLE  `example`.`table1` (
+  `id` int(10) unsigned NOT NULL default '0',
+  `value` varchar(45) NOT NULL default ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO table1 VALUES (1, 'a'), (2, 'c'), (3, 'e');
+
+DROP TABLE IF EXISTS `example`.`table2`;
+CREATE TABLE  `example`.`table2` (
+  `id` int(10) unsigned NOT NULL default '0',
+  `value2` varchar(45) NOT NULL default ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO table2 VALUES (1, 'b'), (3, 'd'), (4, 'f');
+
+SELECT t1.id,
+           t1.value,
+           t2.value2 
+      FROM table1 t1
+ LEFT JOIN table2 t2 ON t2.id = t1.id
+UNION
+    SELECT t2.id,
+           t1.value,
+           t2.value2
+      FROM TABLE1 t1
+RIGHT JOIN TABLE2 t2 ON t2.id = t1.id;
+[ ---  end  ---- ]
+
+=== [ topic ][ select ][ limit ] ===
+[ --- start ---- ]
+Example :
+SELECT CONCAT("G", ncp.id) AS sku, sa.price AS sale_price, ncc.category,
+       ncp.image, ncp.name, ncp.price AS price, ncp.stock, ncp.description
+FROM sales AS sa
+  INNER JOIN non_coffee_products AS ncp ON sa.product_id=ncp.id
+  INNER JOIN non_coffee_categories AS ncc ON ncc.id=ncp.non_coffee_category_id
+    WHERE sa.product_type="goodies" AND
+    ((NOW() BETWEEN sa.start_date AND sa.end_date) OR
+    (NOW() > sa.start_date AND sa.end_date IS NULL))
+  ORDER BY RAND() LIMIT 2
+
+UNION
+SELECT CONCAT("C", sc.id), sa.price, gc.category, gc.image, CONCAT_WS("-",
+       s.size, sc.caf_decaf, sc.ground_whole), sc.price, sc.stock, 
+       gc.description 
+FROM sales AS sa
+  INNER JOIN specific_coffees AS sc ON sa.product_id=sc.id
+  INNER JOIN sizes AS s ON s.id=sc.size_id
+  INNER JOIN general_coffees AS gc ON gc.id=sc.general_coffee_id
+    WHERE sa.product_type="coffee" AND
+    ((NOW() BETWEEN sa.start_date AND sa.end_date) OR
+    (NOW() > sa.start_date AND sa.end_date IS NULL))
+  ORDER BY RAND() LIMIT 2;
+[ ---  end  ---- ]
+
+=== [ topic ][ sql ][ join ] ===
+[ --- start ---- ]
+- join has higher precedence than comma (,)
+  == e.g. t1, t2 join t3 ==> (t1, (t2 join t3))
+  thus this statement will throw error on unknown column of t1.i1
+  select * from t1, t2 join t3 on (t1.i1 = t3.i3);
+- correct join usage
+  select * from (t1, t2) join t3 on (t1.i1 = t3.i3);
+  - or -
+  select * from t1 oin t2 join t3 on (t1.i1 = t3.i3);
+
+Example :
+select gc.description, gc.image, CONCAT("C", sc.id) AS sku,
+  CONCAT_WS(" - ", s.size, sc.caf_decaf, sc.ground_whole, 
+  CONCAT("$", FORMAT(sc.price/100, 2))) AS name, sc.stock
+    FROM
+  specific_coffees AS sc 
+  INNER JOIN sizes AS s ON s.id=sc.size_id
+  INNER JOIN general_coffees AS gc ON gc.id=sc.general_coffee_id
+    WHERE
+  general_coffee_id=3 AND stock > 0
+    ORDER by name ASC;
+Example : to check for sales price as well
+select gc.description, gc.image, CONCAT("C", sc.id) AS sku,
+  CONCAT_WS(" - ", s.size, sc.caf_decaf, sc.ground_whole, 
+  CONCAT("$", FORMAT(sc.price/100, 2))) AS name, sc.stock
+  sc.price, sales.price AS sale_price
+FROM specific_coffees AS sc 
+  INNER JOIN sizes AS s ON s.id=sc.size_id
+  INNER JOIN general_coffees AS gc ON gc.id=sc.general_coffee_id
+  /// if there is not sales price, the sales.price will be null
+  LEFT OUTER JOIN sales ON 
+    (sales.product_id=sc.id AND sales.product_type='coffee' AND 
+      ((NOW() BETWEEN sales.start_date AND sales.end_date) OR
+        (NOW() > sales.start_date AND sales.end_date IS NULL)
+      )
+    )
+    WHERE general_coffee_id=3 AND stock > 0
+    ORDER by name ASC;
+
+Example :
+CREATE TABLE t1 (i1 INT, j1 INT);
+CREATE TABLE t2 (i2 INT, j2 INT);
+CREATE TABLE t3 (i3 INT, j3 INT);
+INSERT INTO t1 VALUES(1,1);
+INSERT INTO t2 VALUES(1,1);
+INSERT INTO t3 VALUES(1,1);
+SELECT * FROM t1, t2 JOIN t3 ON (t1.i1 = t3.i3);
+
+Previously, the SELECT was legal due to the implicit grouping of t1,t2 as
+(t1,t2). Now the JOIN takes precedence, so the operands for the ON clause are t2
+and t3. Because t1.i1 is not a column in either of the operands, the result is
+an Unknown column 't1.i1' in 'on clause' error. To allow the join to be
+processed, group the first two tables explicitly with parentheses so that the
+operands for the ON clause are (t1,t2) and t3:
+
+Example :
+create table a (id int);
+create table b (type int);
+insert into a (id) values (1), (2), (3), (4);
+insert into b (type) values (3), (4), (5), (6);
+
+// inner join = intersect of a and b
+select * from a inner join b on a.id=b.type;
++------+------+
+| id   | type |
++------+------+
+|    3 |    3 |
+|    4 |    4 |
++------+------+
+
+/// everything of left and intersect of a and b
+select * from a left outer join b on (a.id=b.type);
++------+------+
+| id   | type |
++------+------+
+|    3 |    3 |
+|    4 |    4 |
+|    1 | NULL |
+|    2 | NULL |
++------+------+
+
+select * from a right outer join b on (a.id=b.type);
++------+------+
+| id   | type |
++------+------+
+|    3 |    3 |
+|    4 |    4 |
+| NULL |    5 |
+| NULL |    6 |
++------+------+
+
+select * from a join b;
++------+------+
+| id   | type |
++------+------+
+|    1 |    3 |
+|    2 |    3 |
+|    3 |    3 |
+|    4 |    3 |
+|    1 |    4 |
+|    2 |    4 |
+|    3 |    4 |
+|    4 |    4 |
+|    1 |    5 |
+|    2 |    5 |
+|    3 |    5 |
+|    4 |    5 |
+|    1 |    6 |
+|    2 |    6 |
+|    3 |    6 |
+|    4 |    6 |
++------+------+
+[ ---  end  ---- ]
+
+=== [ topic ][ SQL ][ concat ] ===
+[ --- start ---- ]
+- CONCAT(str1,str2,...)
+  == concatenate all string together
+     e.g. SELECT CONCAT('My', 'S', 'QL');   -> 'MySQL'
+select CONCAT("C", sc.id) AS sku 
+  FROM table_name AS sc;
+
+- CONCAT_WS(separator,str1,str2,...)
+  == concatenate all str1, str2... with separator
+     e.g. SELECT CONCAT_WS(',','First name','Second name','Last Name');
+      -> 'First name,Second name,Last Name'
+     e.g. SELECT CONCAT_WS(',','First name',NULL,'Last Name');
+        -> 'First name,Last Name'
+  == CONCAT_WS() does not skip empty strings. However, it does skip any NULL
+  values after the separator argument.
+  
+[ ---  end  ---- ]
+
+=== [ topic ][ SQL ][ FORMAT ] ===
+[ --- start ---- ]
+mysql> SELECT FORMAT(12332.123456, 4);
+        -> '12,332.1235'
+mysql> SELECT FORMAT(12332.1,4);
+        -> '12,332.1000'
+mysql> SELECT FORMAT(12332.2,0);
+        -> '12,332'
+[ ---  end  ---- ]
+
+=== [ topic ][ order by ] ===
+[ --- start ---- ]
+ORDER by name ASC;
+ORDER by date_created DESC;
+[ ---  end  ---- ]
+
+=== [ topic ][ limit ] ===
+[ --- start ---- ]
+ORDER BY RAND() LIMIT 2;
 [ ---  end  ---- ]
 
 === [ topic ][ delete ] ===
@@ -297,6 +540,23 @@ GRANT ALL ON databaseName.* TO 'your_mysql_name'@'your_client_host';
 flush privileges;
 [ ---  end  ---- ]
 
+=== [ topic ][ table ][ create ] ===
+[ --- start ---- ]
+CREATE TABLE aTable ( ...
+) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8;
+
+- or - is same
+
+CREATE TABLE aTable ( ...
+) ENGINE=InnoDB CHARACTER SET=utf8;
+
+syntax:
+table_option:
+    ENGINE [=] engine_name
+  ... other options ...
+  | [DEFAULT] CHARACTER SET [=] charset_name
+[ ---  end  ---- ]
+
 === [ topic ][ table ][ show all ] ===
 [ --- start ---- ]
 > show tables;
@@ -322,13 +582,6 @@ assessmentid | q1 | q2 | q3 | q4 | q5 | q6
 === [ topic ][ table ][ alter ][ modify ] ===
 [ --- start ---- ]
 alter table product_catalogue modify category char(20) not null
-[ ---  end  ---- ]
-
-=== [ topic ][ procedure ][ import ] ===
-[ --- start ---- ]
-syntax: mysql -u <user> -p<password> databasename < sql-procedure.sql
-$ mysql -u tester2 -p"temp123" test_ecommerce2 < ~/sql.sql
-MySQL> call stored_procedure_name();
 [ ---  end  ---- ]
 
 === [ topic ][ primary key ] ===
@@ -436,6 +689,7 @@ SELECT 1+1;
 SELECT NOW();  // show time
 SELECT 1+1, NOW();
 [ ---  end  ---- ]
+
 === [ topic ][ php ][ connect ] ===
 [ --- start ---- ]
 <?php
@@ -507,7 +761,7 @@ SELECT 1+1, NOW();
 ?>
 [ ---  end  ---- ]
 
-=== [ topic ][ text type ] ===
+=== [ topic ][ datatype ][ text type ][ length ] ===
 [ --- start ---- ]
  Type | Maximum length
 -----------+-------------------------------------
@@ -515,6 +769,157 @@ SELECT 1+1, NOW();
       TEXT |        65,535 (216−1) bytes = 64 KiB
 MEDIUMTEXT |    16,777,215 (224−1) bytes = 16 MiB
   LONGTEXT | 4,294,967,295 (232−1) bytes =  4 GiB
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ][ length ] ===
+[ --- start ---- ]
+- INT(x), x is the "display width" 
+    ==  display width does not constrain [or expand] the range of 
+        values that can be stored in the column.
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ][ zerofilled ] ===
+[ --- start ---- ]
+- ZEROFILL pads the displayed value of the field with zeros up to the display
+  width specified in the column definition.
+- Values longer than the display width are not truncated. not affect the size.
+- ZEROFILL also implies UNSIGNED.
+
+Example :
+CREATE TABLE yourtable (x INT(8) ZEROFILL NOT NULL, y INT(8) NOT NULL);
+INSERT INTO yourtable (x,y) VALUES
+(1, 1),
+(12, 12),
+(123, 123),
+(123456789, 123456789);
+
+SELECT x, y FROM yourtable;
+        x          y
+ 00000001          1
+ 00000012         12
+ 00000123        123
+123456789  123456789
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ][ char ][ length ] ===
+[ --- start ---- ]
+- CHAR length: 0-255
+  == trailing spaces are removed
+
+- VARCHAR length: 0 - 65,535 (max up to). 
+  == 65,535 is max row size and is shared by all columns
+  == prefix with 1-2 bytes which indicates the length of string
+    *** 1 byte if length is less than 255
+    *** 2 bytes prefix is used when length is more than 255
+  == trailing spaces are not removed
+
+=============================================================================
+Value      CHAR(4) "Storage Required" VARCHAR(4) "Storage Required"
+=============================================================================
+''         '    '  "4 bytes"          ''         "1 byte"
+'ab'       'ab  '  "4 bytes"          'ab'       "3 bytes"
+'abcd'     'abcd'  "4 bytes"          'abcd'     "5 bytes"
+'abcdefgh' 'abcd'  "4 bytes"          'abcd'     "5 bytes"
+-----------------------------------------------------------------------------
+
+Example : trailing space demo of CHAR and VARCHAR
+mysql> CREATE TABLE vc (v VARCHAR(4), c CHAR(4));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO vc VALUES ('ab  ', 'ab  ');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT CONCAT('(', v, ')'), CONCAT('(', c, ')') FROM vc;
++---------------------+---------------------+
+| CONCAT('(', v, ')') | CONCAT('(', c, ')') |
++---------------------+---------------------+
+| (ab  )              | (ab)                |
++---------------------+---------------------+
+
+Example : CHAR comparison
+mysql> CREATE TABLE names (myname CHAR(10));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO names VALUES ('Monty');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT myname = 'Monty', myname = 'Monty  ' FROM names;
++------------------+--------------------+
+| myname = 'Monty' | myname = 'Monty  ' |
++------------------+--------------------+
+|                1 |                  1 |
++------------------+--------------------+
+1 row in set (0.00 sec)
+
+/// for like, trailing space is significant
+mysql> SELECT myname LIKE 'Monty', myname LIKE 'Monty  ' FROM names;
++---------------------+-----------------------+
+| myname LIKE 'Monty' | myname LIKE 'Monty  ' |
++---------------------+-----------------------+
+|                   1 |                     0 |
++---------------------+-----------------------+
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ][ int ][ length ] ===
+[ --- start ---- ]
+tinyint: 1 byte, 
+  == -128 to +127 / 0 to 255 (unsigned)
+smallint: 2 bytes, 
+  == -32,768 to +32,767 / 0 to 65,535 (unsigned)
+mediumint: 3 bytes, 
+  == -8,388,608 to 8,388,607 / 0 to 16,777,215 (unsigned)
+int/integer: 4 bytes, 
+  == -2,147,483,648 to +2,147,483,647 / 0 to 4,294,967,295 (unsigned)
+bigint: 8 bytes, 
+  == -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 / 
+     0 to 18,446,744,073,709,551,615 (unsigned)
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ][ char vs text ] ===
+[ --- start ---- ]
+TEXT and BLOB is stored off the table with the table just having a pointer to
+the location of the actual storage.
+
+VARCHAR is stored inline with the table. VARCHAR is faster when the size is
+reasonable, the tradeoff of which would be faster depends upon your data and
+your hardware, you'd want to benchmark a realworld scenario with your data.
+
+However, for a large volume of data that is not normally retrieved (that is, not
+referenced by any query), then it may be better to not have the data stored
+inline. There is an upper limit on the row size, for data stored inline
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ][ bool ] ===
+[ --- start ---- ]
+BOOL, BOOLEAN
+- These types are synonyms for TINYINT(1). 
+- A value of zero is considered false.
+- Nonzero values are considered true:
+- the values TRUE and FALSE are merely aliases for 1 and 0
+[ ---  end  ---- ]
+
+=== [ topic ][ control flow function ] ===
+[ --- start ---- ]
+Title: If
+IF(expr1,expr2,expr3)
+- if expr1 true then return expr2 else return expr3
+
+mysql> SELECT IF(0 = FALSE, 'true', 'false');
++--------------------------------+
+| IF(0 = FALSE, 'true', 'false') |
++--------------------------------+
+| true                           |
++--------------------------------+
+
+Title: case
+mysql> SELECT CASE 1 WHEN 1 THEN 'one'
+    ->     WHEN 2 THEN 'two' ELSE 'more' END;
+        -> 'one'
+mysql> SELECT CASE WHEN 1>0 THEN 'true' ELSE 'false' END;
+        -> 'true'
+mysql> SELECT CASE BINARY 'B'
+    ->     WHEN 'a' THEN 1 WHEN 'b' THEN 2 END;
+        -> NULL
 [ ---  end  ---- ]
 
 === [ topic ][ prepared statement ][ prevent sql injection ] ===
@@ -554,6 +959,162 @@ $query= "SELECT user_id FROM users WHERE username=? and password=?";	//query def
 	mysqli_stmt_bind_param($preparedStatement, 'ss', $field1, $field2);		//prepare to bind two Strings (the ss)
 	$field1 = $_POST['user'];			//you may want to do more input checking here!
 	$field2 = $_POST['pass'];			//you may want to do more input c
+[ ---  end  ---- ]
+
+=== [ topic ][ stored procedures ] ===
+[ --- start ---- ]
+Title: Benefits
+- improved security
+- better performance
+    == require less data to be sent to database, just value
+    == stored procedures can be cached and managed
+- cleaner model-controller separation
+    == interface won't need to know what tables and columns exist
+    == more logic go into database, removing sql from php code
+- increased application portability
+
+- MySQL user need to have permission to CREATE routine, ALTER, and EXECUTE 
+  permissions
+- no need to tell not null, unsigned etc
+- MySQL, by default, uses semicolon to terminate SQL commands
+- any use of a semicolon within the procedure's definition will terminate the
+  definition itself, the workaround is to change the delimiter prior definition
+- to execute, use CALL procedure_name(arguments)
+
+Example :
+  $r = mysqli_query("CALL get_product($id)");
+  then use mysqli_fetch_array() to get the result
+
+
+Example :
+DELIMITER $$
+CREATE PROCEDURE name(arguments datatype, ... )
+BEGIN
+  CODE
+END $$
+DELIMITER ;
+[ ---  end  ---- ]
+
+=== [ topic ][ stored procedures ][ comment header ] ===
+[ --- start ---- ]
+Example :
+-- =============================================
+-- Author:  	Name
+-- Create date: 
+-- Description: 
+-- =============================================
+
+Example 2:
+/*<br>
+##########################################################################<br>
+-- Name : Template.sql<br>
+-- Date             : (sysdate) <br>
+-- Author           :   
+-- Company          :   
+-- Purpose          :   <br>
+-- Usage        <br>
+-- Impact   :<br>
+-- Required grants  :   sel on A, upd on B, drop on C<br>
+-- Called by        :   some other process<br
+##########################################################################<br>
+-- ver  user    date        change  <br>
+-- 1.0  DDZ 20110622    initial<br>
+##########################################################################<br>
+*/<br>
+[ ---  end  ---- ]
+
+=== [ topic ][ stored procedures ][ comment inner ] ===
+[ --- start ---- ]
+CREATE TABLE IF NOT EXISTS `pre_authassignment` (
+  `itemname` varchar(64) NOT NULL COMMENT '项名称',
+  `userid` varchar(64) NOT NULL COMMENT '用户id',
+  `bizrule` text COMMENT '业务规则',
+  `data` text COMMENT '数据',
+  PRIMARY KEY (`itemname`,`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='授权表';
+[ ---  end  ---- ]
+
+=== [ topic ][ procedure ][ import ] ===
+[ --- start ---- ]
+syntax: mysql -u <user> -p<password> databasename < sql-procedure.sql
+$ mysql -u tester2 -p"temp123" test_ecommerce2 < ~/sql.sql
+MySQL> call stored_procedure_name();
+[ ---  end  ---- ]
+
+=== [ topic ][ procedure ] ===
+[ --- start ---- ]
+DELIMITER $$
+CREATE PROCEDURE select_categories (type VARCHAR(7))
+BEGIN
+  IF type = 'coffee' THEN
+    SELECT * FROM general_coffees ORDER by category;
+  ELSEIF type = 'goodies' THEN
+    SELECT * FROM non_coffee_categories ORDER by category;
+  END IF;
+END $$
+DELIMITER ;
+
+testing:
+CALL select_categories('coffee');
+CALL select_categories('goodies');
+[ ---  end  ---- ]
+
+=== [ topic ][ mysqli_fetch ][ MYSQLI_ASSOC ] ===
+[ --- start ---- ]
+- MYSQLI_ASSOC
+   == give relational array
+    e.g. :  name => Synook,
+	          group => Members
+- MYSQL_NUM
+   == give numbered array
+    e.g. :  1 => Synook,
+	          2 => Members
+
+Example : object oriented style
+$query = "SELECT Name, CountryCode FROM City ORDER by ID LIMIT 3";
+$result = $mysqli->query($query);
+
+/* numeric array */
+$row = $result->fetch_array(MYSQLI_NUM);
+printf ("%s (%s)\n", $row[0], $row[1]);
+
+/* associative array */
+$row = $result->fetch_array(MYSQLI_ASSOC);
+printf ("%s (%s)\n", $row["Name"], $row["CountryCode"]);
+
+/* associative and numeric array */
+$row = $result->fetch_array(MYSQLI_BOTH);
+printf ("%s (%s)\n", $row[0], $row["CountryCode"]);
+
+/* free result set */
+$result->free();
+
+/* close connection */
+$mysqli->close();
+
+Example : procedural style
+$query = "SELECT Name, CountryCode FROM City ORDER by ID LIMIT 3";
+$result = mysqli_query($link, $query);
+
+/* numeric array */
+$row = mysqli_fetch_array($result, MYSQLI_NUM);
+printf ("%s (%s)\n", $row[0], $row[1]);
+
+/* associative array */
+$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+printf ("%s (%s)\n", $row["Name"], $row["CountryCode"]);
+
+/* associative and numeric array */
+$row = mysqli_fetch_array($result, MYSQLI_BOTH);
+printf ("%s (%s)\n", $row[0], $row["CountryCode"]);
+
+/* free result set */
+mysqli_free_result($result);
+
+/* close connection */
+mysqli_close($link);
+
+
 [ ---  end  ---- ]
 
 === [ topic ][ security ] ===

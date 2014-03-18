@@ -441,6 +441,21 @@ wooooooo
 ooooord.
 [ ---  end  ---- ]
 
+=== [ topic ][ string ][ ucfirst ] ===
+[ --- start ---- ]
+ucfirst — Make a string's first character uppercase
+
+Example :
+$foo = 'hello world!';
+$foo = ucfirst($foo);             // Hello world!
+
+$bar = 'HELLO WORLD!';
+$bar = ucfirst($bar);             // HELLO WORLD!
+
+check:
+lcfirst() - Make a string's first character lowercase
+[ ---  end  ---- ]
+
 === [ topic ][ path ] ===
 [ --- start ---- ]
 [ basename ]
@@ -1885,6 +1900,14 @@ Anything in your .html files that starts with <? will now be executed as PHP,
 so if it's in your file for some other reason (an XML tag for example) you will 
 need to echo these lines to prevent errors. For example:
 <?php echo '<?xml version="1.0" encoding="IUTF-8"?>'; ?>
+[ ---  end  ---- ]
+
+=== [ topic ][ terminal ][ interactive php ] ===
+[ --- start ---- ]
+- start php interactive terminal
+$ php -a
+- run php statement on terminal 
+$ php -r 'echo function_exists("foo") ? "yes : "no";'
 [ ---  end  ---- ]
 
 === [ topic ][ debug ][ print_r ] ===
