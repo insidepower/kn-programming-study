@@ -1,0 +1,256 @@
+=== [ topic ][ intro ] ===
+[ --- start ---- ]
+rake = rails make
+[ ---  end  ---- ]
+=== [ topic ][ install ] ===
+[ --- start ---- ]
+sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev
+libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev
+
+cd
+git clone git://github.com/sstephenson/rbenv.git .rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+exec $SHELL
+
+git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
+exec $SHELL
+
+rbenv install 2.0.0-p451
+rbenv global 2.0.0-p451
+ruby -v
+
+- install javascript runtime like NodeJS
+- will be able to use Coffeescript and Asset Pipeline in Rails
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs
+
+gem install rails
+rbenv rehash
+rails -v
+
+Title: Database (MySQL)
+sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+- or -
+
+Title: PostgreSQL
+sudo sh -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' > /etc/apt/sources.list.d/pgdg.list"
+wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install postgresql-common
+sudo apt-get install postgresql-9.3 libpq-dev
+
+sudo -u postgres createuser chris -s
+
+# If you would like to set a password for the user, you can do the following
+sudo -u postgres psql
+postgres=# \password chris
+[ ---  end  ---- ]
+
+=== [ topic ][ hello Rails ] ===
+[ --- start ---- ]
+rails new myapp
+
+#### If you want to use MySQL
+rails new myapp -d mysql
+
+#### If you want to use Postgres
+# Note that this will expect a postgres user with the same username
+# as your app, you may need to edit config/database.yml to match the
+# user you created earlier
+rails new myapp -d postgresql
+
+# Move into the application directory
+cd myapp
+
+# If you setup MySQL or Postgres with a username/password, modify the
+# config/database.yml file to contain the username/password that you specified
+
+# Create the database
+rake db:create
+
+rails server
+visit http://localhost:3000 to view your new website
+
+If you received an error that said Access denied for user 'root'@'localhost' (using password: NO) then you need to update your config/database.yml file to match the database username and password.
+[ ---  end  ---- ]
+
+=== [ topic ][ hello Rails 2 ][ coursera ] ===
+[ --- start ---- ]
+rails new my_app
+cd my_app
+ls
+
+app/    -- models, views and controllers code
+bin/    -- helper
+config/ -- app, database, & route config
+db/     -- database schema and migrations
+Gemfile -- specify the required gems
+lib/    -- 
+log/    -- applications logging directory
+public/ -- webroot of the application
+test/   -- tests, agile development
+tmp/
+vendor/
+
+Example :
+$ rails new blog
+$ rails generate scaffold post title:string body:text
+$ rails generate scaffold comment post_id:integer body:text
+// file generated:
+#	app/assets/javascripts/comments.js.coffee
+#	app/assets/stylesheets/comments.css.scss
+#	app/controllers/comments_controller.rb
+#	app/helpers/comments_helper.rb
+#	app/models/comment.rb
+#	app/views/comments/
+#	db/migrate/20140405084420_create_comments.rb
+#	test/controllers/comments_controller_test.rb
+#	test/fixtures/comments.yml
+#	test/helpers/comments_helper_test.rb
+#	test/models/comment_test.rb
+$ rake db:migrate
+(//db/schema.rb is created too)
+== 20140405084340 CreatePosts: migrating ======================
+-- create_table(:posts)
+   -> 0.0020s
+== 20140405084340 CreatePosts: migrated (0.0021s) ===============
+
+== 20140405084420 CreateComments: migrating ===================
+-- create_table(:comments)
+   -> 0.0010s
+== 20140405084420 CreateComments: migrated (0.0011s) =========
+
+$ rake routes
+// see url associates with this application
+      Prefix Verb   URI Pattern                  Controller#Action
+    comments GET    /comments(.:format)          comments#index
+             POST   /comments(.:format)          comments#create
+ new_comment GET    /comments/new(.:format)      comments#new
+edit_comment GET    /comments/:id/edit(.:format) comments#edit
+     comment GET    /comments/:id(.:format)      comments#show
+             PATCH  /comments/:id(.:format)      comments#update
+             PUT    /comments/:id(.:format)      comments#update
+             DELETE /comments/:id(.:format)      comments#destroy
+       posts GET    /posts(.:format)             posts#index
+             POST   /posts(.:format)             posts#create
+    new_post GET    /posts/new(.:format)         posts#new
+   edit_post GET    /posts/:id/edit(.:format)    posts#edit
+        post GET    /posts/:id(.:format)         posts#show
+             PATCH  /posts/:id(.:format)         posts#update
+             PUT    /posts/:id(.:format)         posts#update
+             DELETE /posts/:id(.:format)         posts#destroy
+$ rails server
+[ ---  end  ---- ]
+
+=== [ topic ][ philosophy ] ===
+[ --- start ---- ]
+Title: Convention over configuration
+  - use the common configuration provided
+  - rails code generators follow specific naming convention
+    == scaffold (MVC) generator when create a e.g. Post object, 
+      --- a class called "Post" will be created for the model
+      --- a database called "posts" will be created
+      --- a RESTful controller called "posts_controller" will be created
+      --- a HTML "posts" view will be created
+      --- test fixtures, along with unit, functional, integration and
+      performance test suites are automatically created
+
+Title: Dont Repeat Yourself - DRY
+  - every piece of info should have a single, unambiguous representation
+  - duplication of code fragments throughout an application is diff to
+  maintain
+  - with ActiveRecords, once a model is specified, the database column name
+  will be determined automatically
+  - a modification to system element propagete the changes uniformly
+  - this makes it easier to use code generators and auto build system
+  - DRY code is typicalled created by data transformations and code gen
+  - this save the developer from copy and paste operations
+  - DRY make it easy to maintain
+
+Title: Agile Development
+  - small incremental
+  - always working (immediately)
+  - code evolve with minimal planning through self-organizing,
+  cross-functional teams
+  - in dev mode, no recompile, deploy, restart server
+  - Extreme programming is an agile approach that centers around 
+    == test-driven development
+      *** define test, then develop to satisfy the test
+    == behaviour-driven development
+      *** define behaviour
+      *** tools: RSpec, Cucumber
+[ ---  end  ---- ]
+
+=== [ topic ][ Deploying ][ Hosting ] ===
+[ --- start ---- ]
+Deployment
+If you wish to run your own servers, you can deploy a Rails application using Capistrano deployment scripts. However, unless system administration is a personal passion, it is much easier to deploy your application with a “platform as a service” provider such as Heroku.
+
+Hosting
+For easy deployment, use a “platform as a service” provider such as:
+Heroku
+CloudFoundry
+EngineYard
+OpenShift
+
+For deployment on Heroku, see the article:
+Rails on Heroku
+http://railsapps.github.io/rails-heroku-tutorial.html
+[ ---  end  ---- ]
+
+=== [ topic ][ version ] ===
+[ --- start ---- ]
+> ruby --version
+> rails --version
+[ ---  end  ---- ]
+
+=== [ topic ][ rbenv ] ===
+[ --- start ---- ]
+git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+
+// list ruby version
+$ rbenv install -l
+// install ruby version
+$ rbenv install 2.0.0-p195
+// set ruby version to use
+$ rbenv global 1.8.7-p352
+// list all ruby version known to rbenv
+$ rbenv versions
+// run this after install new ruby (rbenv install -v)
+$ rbenv rehash
+// display full path to the executable that rbenv will invoke
+$ rbenv which irb
+// list all ruby versions with the given command installed
+$ rbenv whence rackup
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ File not found: lib ] ===
+[ --- start ---- ]
+Installing ri documentation for rails-3.0.0.beta3...
+File not found: lib
+Solution:
+sudo gem install rdoc
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ Address in use ] ===
+[ --- start ---- ]
+Desc:
+  TCPServer Error: Address already in use - bind(2)
+Solution:
+  lsof | grep 3000 and then kill -9 <number of process>
+  - or -
+  // use another port
+$ rails server -p 3001
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ Could not find railties ] ===
+[ --- start ---- ]
+solution:
+// gem install will try to fix the missing dependency
+gem install rails
+gem install bundle
+[ ---  end  ---- ]

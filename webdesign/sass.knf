@@ -1,0 +1,793 @@
+=== [ topic ][ first test ] ===
+[ --- start ---- ]
+- create a file test.scss. Put following:
+.test{
+  color: blue;
+  .link {
+    background: gold;
+  }
+}
+
+- then compile it using sass
+$ sass test.scss
+.test {
+  color: blue; }
+  .test .link {
+    background: gold; }
+
+- can save the output to css
+$ sass test.scss > test.css
+[ ---  end  ---- ]
+
+=== [ topic ][ watch ] ===
+[ --- start ---- ]
+- to monitor changes in sass(e.g. in sass folder) and convert it to css 
+  (e.g.  in css folder) automatically
+
+syntax: 
+sass --watch path/sass-directory:path/css-directory  
+
+$ sass --watch stylesheets/sass:stylesheets/css
+[ ---  end  ---- ]
+
+=== [ topic ][ convert ][ css to sass ] ===
+[ --- start ---- ]
+$ sass convert test.css test.scss
+[ ---  end  ---- ]
+
+=== [ topic ][ output ][ style ] ===
+[ --- start ---- ]
+sass --style:nested
+sass --style:expanded
+sass --style:compact
+sass --style:compressed
+[ ---  end  ---- ]
+
+=== [ topic ][ rails ][ sass ] ===
+[ --- start ---- ]
+- Add line to Gemfile (Rails 3.0)
+gem 'sass'
+$ bundle install
+- then create scss file @ public/stylesheets/sass/application.scss
+- css output will be compiled to /public/stylesheets folder 
+- for Rails 3.1+, sass is included by default
+[ ---  end  ---- ]
+
+=== [ topic ][ interactive ] ===
+[ --- start ---- ]
+$ sass -i
+>> #777 + #777
+#eeeeee
+[ ---  end  ---- ]
+
+=== [ topic ][ @import ] ===
+[ --- start ---- ]
+- all imported scss and sass file will be merged into single file
+- sass look for 
+  == sass files in current directory
+  == sass file directory under racks, rails or merb
+- additional search directories can be specified using :load_paths or
+  --load-path on command line
+- @import "foo.scss" == @import "foo";
+- for filename start with underscore _filename.scss,
+  it will not compile into _filename.css
+
+Example : not compile into css directly, but use css @import instead
+@import "foo.css";
+@import "foo" screen;
+@import "http://foo.com/bar";
+@import url(foo);
+Output:
+@import "foo.css";
+@import "foo" screen;
+@import "http://foo.com/bar";
+@import url(foo);
+
+Example : #{} interpolation
+$family: unquote("Droid+Sans");
+@import url("http://fonts.googleapis.com/css?family=#{$family}");
+Output:
+@import url("http://fonts.googleapis.com/css?family=Droid+Sans");
+
+Example :
+@@@ example.scss:
+.example {
+  color: red;
+}
+#main { @import "example"; }
+Output:
+#main .example { color: red; }
+[ ---  end  ---- ]
+
+=== [ topic ][ comment ] ===
+[ --- start ---- ]
+/* comment will appear in css */
+// comment will not appear in css
+[ ---  end  ---- ]
+
+=== [ topic ][ operation ] ===
+[ --- start ---- ]
+Example :
+li {  
+    width: $width/5 - 10px;  
+}  
+
+Example :
+p { width: 1in + 8pt; }
+Output:
+p { width: 1.111in; }
+
+Example :
+p {
+  font: 10px/8px;             // Plain CSS, no division
+  $width: 1000px;
+  width: $width/2;            // Uses a variable, does division
+  width: round(1.5)/2;        // Uses a function, does division
+  height: (500px/2);          // Uses parentheses, does division
+  margin-left: 5px + 8px/2px; // Uses +, does division
+}
+Output:
+p {
+  font: 10px/8px;
+  width: 500px;
+  height: 250px;
+  margin-left: 9px; }
+
+Example : use variable along with css
+p {
+  $font-size: 12px;
+  $line-height: 30px;
+  font: #{$font-size}/#{$line-height};
+}
+Output:
+p { font: 12px/30px; }
+
+[ ---  end  ---- ]
+
+=== [ topic ][ color ] ===
+[ --- start ---- ]
+- adjust alpha with [ opacify = ++ ] and [ transparentize = -- ]
+- use  ie_hex_str to convert color form to #AABBCCDD used by IE filters
+Example : color
+p { color: #010203 + #040506; }
+Output:
+p { color: #050709; }
+
+Example :
+p { color: #010203 * 2; }
+p { color: rgba(255, 0, 0, 0.75) + rgba(0, 255, 0, 0.75); }
+Output:
+p { color: #020406; }
+p { color: rgba(255, 255, 0, 0.75); }
+
+Example :
+$translucent-red: rgba(255, 0, 0, 0.5);
+p {
+  color: opacify($translucent-red, 0.3);
+  background-color: transparentize($translucent-red, 0.25);
+}
+Output:
+p {
+  color: rgba(255, 0, 0, 0.8);
+  background-color: rgba(255, 0, 0, 0.25); }
+
+Example : IE filters require all colors include the alpha layer, in #AABBCCDD
+$translucent-red: rgba(255, 0, 0, 0.5);
+$green: #00ff00;
+div {
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled='false', startColorstr='#{ie-hex-str($green)}', endColorstr='#{ie-hex-str($translucent-red)}');
+}
+Output:
+div {
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled='false', startColorstr=#FF00FF00, endColorstr=#80FF0000);
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ color ][ lighten ][ saturation ] ===
+[ --- start ---- ]
+- hue use degree
+- desature(color, 100%) == grayscale(color)
+
+Example :
+$main_color: #336699;
+#page { color: lighten(#336699, 20%); }
+#page a{ color: saturate($main_color, 30%); }
+#page pre{ color: adjust-hue($main_color, 180); }
+#page p.desature{ color: desaturate($main_color, 10%); }
+#page p.gray1{ color: desaturate($main_color, 100%); }
+#page p.gray2{ color: grayscale($main_color); }
+#page p.mix{ color: mix($main_color, #992233); }
+Output:
+#page { color: #6699cc; }
+#page a { color: #1466b8; }
+#page pre { color: #996633; }
+#page p.desature { color: #3d668f; }
+#page p.gray1 { color: #666666; }
+#page p.gray2 { color: #666666; }
+#page p.mix { color: #664466; }
+
+[ ---  end  ---- ]
+
+=== [ topic ][ string ] ===
+[ --- start ---- ]
+- [ concatenate ] use +
+Example :
+p { cursor: e + -resize; }
+Output:
+p { cursor: e-resize; }
+
+Example :
+p:before {
+  content: "Foo " + Bar;
+  font-family: sans- + "serif";
+}
+Output:
+p:before {
+  content: "Foo Bar";
+  font-family: sans-serif; }
+
+Example :
+p { margin: 3px + 4px auto; }
+Output:
+p { margin: 7px auto; }
+
+Example :
+p:before { content: "I ate #{5 + 10} pies!"; }
+Output:
+p:before { content: "I ate 15 pies!"; }
+[ ---  end  ---- ]
+
+=== [ topic ][ boolean ] ===
+[ --- start ---- ]
+SassScript supports and, or, and not operators for boolean values.
+[ ---  end  ---- ]
+
+=== [ topic ][ variable ] ===
+[ --- start ---- ]
+Example :
+$mycolor: #aabbcc;
+$width: 50px;
+$red: #F00;
+
+.red {
+   color: $red;
+}
+
+Example :
+p { color: hsl($hue: 0, $saturation: 100%, $lightness: 50%); }
+Output:
+// p { color: hsl(0, 100%, 50%); }
+p { color: #ff0000; }
+[ ---  end  ---- ]
+
+=== [ topic ][ variable ][ default ] ===
+[ --- start ---- ]
+- when use !default after an assignment, if the variable has been declared 
+  earlier, the previous declaration will be used
+- Variables with null values are treated as unassigned by !default:
+
+Example :
+$content: "First content";
+$content: "Second content?" !default;
+$new_content: "First time reference" !default;
+
+#main {
+  content: $content;
+  new-content: $new_content;
+}
+Output:
+#main {
+  content: "First content";
+  new-content: "First time reference"; }
+[ ---  end  ---- ]
+
+=== [ topic ][ variable ][ interpolation ][ #{} ] ===
+[ --- start ---- ]
+- use #{$var} to expand
+- interpolating = put it here
+
+Example :
+@mixin car_make($car_make, $car_color) {
+  .car.#{$car_make}_make {
+    color: $car_color;
+    .image {
+      background: url("images/#{$car_make}/#{$car_color}.png");
+    }
+  }
+}
+
+usage:
+@include car_make("volvo", "silver");
+@include car_make("bmv", "black");
+
+Output:
+.car.volvo_make {
+  color: "silver"; }
+  .car.volvo_make .image {
+    background: url("images/volvo/silver.png"); }
+
+.car.bmv_make {
+  color: "black"; }
+  .car.bmv_make .image {
+    background: url("images/bmv/black.png"); }
+
+
+Example : 
+$path: "http://cdn.css-tricks.com/images/";
+
+body {             /* Bad! No! */
+   background: url($path/texture.jpg);
+}
+
+body {   /* correct */
+   background: url(#{$path}/texture.jpg);
+}
+
+[ ---  end  ---- ]
+
+=== [ topic ][ scoping ][ parent selector ] ===
+[ --- start ---- ]
+- can select parent with &
+
+Example :
+a {
+  font-weight: bold;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+  body.firefox & { font-weight: normal; }
+}
+
+Output:
+a {
+  font-weight: bold;
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+  body.firefox a {
+    font-weight: normal; }
+
+Example :
+#main {
+  color: black;
+  a {
+    font-weight: bold;
+    &:hover { color: red; }
+  }
+}
+
+Output:
+#main {
+  color: black; }
+  #main a {
+    font-weight: bold; }
+    #main a:hover {
+      color: red; }
+
+Example :
+#main {
+  color: black;
+  &-sidebar { border: 1px solid; }
+}
+
+Output:
+#main {
+  color: black; }
+  #main-sidebar {
+    border: 1px solid; }
+[ ---  end  ---- ]
+
+=== [ topic ][ scoping ][ direct ancestor ] ===
+[ --- start ---- ]
+
+Example :
+.infobox > 
+{
+  .message 
+  {
+    border: 1px solid red;
+    > .title 
+    {
+      color: red; 
+    }
+  }
+  .user {
+    border: 1px solid black;
+    > .ttiel {
+      color: black;
+    }
+  }
+}
+
+Output:
+.infobox > .message {
+  border: 1px solid red; }
+  .infobox > .message > .title {
+    color: red; }
+.infobox > .user {
+  border: 1px solid black; }
+  .infobox > .user > .ttiel {
+    color: black; }
+[ ---  end  ---- ]
+
+=== [ topic ][ nested rule ] ===
+[ --- start ---- ]
+
+Example :
+.funky {
+  font: 2px/3px {
+    family: fantasy;
+    size: 30em;
+    weight: bold;
+  }
+}
+
+Output:
+.funky {
+  font: 2px/3px;
+    font-family: fantasy;
+    font-size: 30em;
+    font-weight: bold; }
+
+[ ---  end  ---- ]
+
+=== [ topic ][ conditional statement ][ @if ] ===
+[ --- start ---- ]
+@if lightness($color-base) >= 51% {  
+    background-color: #333333;  
+} @else {  
+    background-color: #ffffff;  
+}  
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ @for ] ===
+[ --- start ---- ]
+Example :
+@for $i from 1 through 3 {
+  .item-#{$i} { width: 2em * $i; }
+}
+Output:
+.item-1 { width: 2em; }
+.item-2 { width: 4em; }
+.item-3 { width: 6em; }
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ @each ] ===
+[ --- start ---- ]
+Example :
+@each $animal in puma, sea-slug, egret, salamander {
+  .#{$animal}-icon {
+    background-image: url('/images/#{$animal}.png');
+  }
+}
+Output:
+.puma-icon { background-image: url('/images/puma.png'); }
+.sea-slug-icon { background-image: url('/images/sea-slug.png'); }
+.egret-icon { background-image: url('/images/egret.png'); }
+.salamander-icon { background-image: url('/images/salamander.png'); }
+
+Example :
+@each $animal, $color, $cursor in (puma, black, default),
+                                  (sea-slug, blue, pointer),
+                                  (egret, white, move) {
+  .#{$animal}-icon {
+    background-image: url('/images/#{$animal}.png');
+    border: 2px solid $color;
+    cursor: $cursor;
+  }
+}
+
+Example :
+@each $header, $size in (h1: 2em, h2: 1.5em, h3: 1.2em) {
+  #{$header} {
+    font-size: $size; } }
+Output:
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.2em; }
+[ ---  end  ---- ]
+
+=== [ topic ][ loop ][ @while ] ===
+[ --- start ---- ]
+Example :
+$i: 6;
+@while $i > 0 {
+  .item-#{$i} { width: 2em * $i; }
+  $i: $i - 2;
+}
+Output:
+.item-6 { width: 12em; }
+.item-4 { width: 8em; }
+.item-2 { width: 4em; }
+[ ---  end  ---- ]
+
+=== [ topic ][ mixins ] ===
+[ --- start ---- ]
+- @content refer to caller's content
+
+Example :
+@mixin border-radius($radius) {  
+  -moz-border-radius: $radius;  
+  -webkit-border-radius: $radius;  
+  -ms-border-radius: $radius;  
+  border-radius: $radius;  
+}  
+
+.myclass {
+  @include border-radius();
+}
+
+.myclass-specific-border {
+  @include border-radius(5);
+}
+
+Example : variable arguments
+@mixin wrapped-stylish-mixin($args...) {
+  font-weight: bold;
+  @include stylish-mixin($args...);
+}
+
+.stylish {
+  // The $width argument will get passed on to "stylish-mixin" as a keyword
+  @include wrapped-stylish-mixin(#00ff00, $width: 100px);
+}
+
+Example : passing content to mixin
+@mixin apply-to-ie6-only {
+  * html {
+    /// refer to content passed in by caller
+    @content;
+  }
+}
+@include apply-to-ie6-only {
+  #logo {
+    background-image: url(/logo.gif);
+  }
+}
+Output:
+* html #logo {
+  background-image: url(/logo.gif);
+}
+
+Example :
+$color: white;
+@mixin colors($color: blue) {
+  background-color: $color;
+  @content;
+  border-color: $color;
+}
+.colors {
+  @include colors { color: $color; }
+}
+Output:
+.colors {
+  background-color: blue;
+  color: white;
+  border-color: blue;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ mixins ][ example ] ===
+[ --- start ---- ]
+Example :
+@mixin drop-shadow ($x: 1px, $y: 1px, $blur: 2px, $spread: 0, $alpha: 0.25) {
+  -webkit-box-shadow: $x $y $blur $spread rgba(0, 0, 0, $alpha);
+  -moz-box-shadow:    $x $y $blur $spread rgba(0, 0, 0, $alpha);
+  box-shadow:         $x $y $blur $spread rgba(0, 0, 0, $alpha);
+}
+
+Example : more generic 
+@mixin box-shadow ($string) {
+  -webkit-box-shadow: $string;
+  -moz-box-shadow:    $string;
+  box-shadow:         $string;
+}
+
+- use parenthesiss to surround the parameter
+.stack {
+   @include box-shadow(
+        (1px 1px   0 rgba(0,   0,   0,   0.100)),
+        (3px 3px   0 rgba(255, 255, 255, 1.0)),
+        (4px 4px   0 rgba(0,   0,   0,   0.125))
+   );
+}
+
+[ ---  end  ---- ]
+
+=== [ topic ][ function ] ===
+[ --- start ---- ]
+Example :
+$grid-width: 40px;
+$gutter-width: 10px;
+
+@function grid-width($n) {
+  @return $n * $grid-width + ($n - 1) * $gutter-width;
+}
+#sidebar { width: grid-width(5); }
+Output:
+#sidebar { width: 240px; }
+[ ---  end  ---- ]
+
+=== [ topic ][ @media ] ===
+[ --- start ---- ]
+Example :
+.sidebar {
+  width: 300px;
+  @media screen and (orientation: landscape) {
+    width: 500px;
+  }
+}
+Output:
+.sidebar {
+  width: 300px; }
+  @media screen and (orientation: landscape) {
+    .sidebar {
+      width: 500px; } }
+
+Example :
+@media screen {
+  .sidebar {
+    @media (orientation: landscape) {
+      width: 500px;
+    }
+  }
+}
+Output:
+@media screen and (orientation: landscape) {
+  .sidebar {
+    width: 500px; } }
+
+Example :
+$media: screen;
+$feature: -webkit-min-device-pixel-ratio;
+$value: 1.5;
+
+@media #{$media} and ($feature: $value) {
+  .sidebar {
+    width: 500px;
+  }
+}
+Output:
+@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+  .sidebar {
+    width: 500px; } }
+[ ---  end  ---- ]
+
+=== [ topic ][ @extend ] ===
+[ --- start ---- ]
+- can extend any selector with only a single element .xxx, a:hover, 
+  a.user[href^="http://"]
+- styles defined later in the document take precedence
+
+Example :
+.error {
+  border: 1px #f00;
+  background-color: #fdd;
+}
+.seriousError {
+  @extend .error;
+  border-width: 3px;
+}
+Output:
+.error, .seriousError {
+  border: 1px #f00;
+  background-color: #fdd;
+}
+
+.seriousError {
+  border-width: 3px;
+}
+
+Example :
+.error {
+  border: 1px #f00;
+  background-color: #fdd;
+}
+.error.intrusion {
+  background-image: url("/image/hacked.png");
+}
+.seriousError {
+  @extend .error;
+  border-width: 3px;
+}
+Output:
+.error, .seriousError {
+  border: 1px #f00;
+  background-color: #fdd; }
+
+.error.intrusion, .seriousError.intrusion {
+  background-image: url("/image/hacked.png"); }
+
+.seriousError {
+  border-width: 3px; }
+
+Example :
+.hoverlink {
+  @extend a:hover;
+}
+a:hover {
+  text-decoration: underline;
+}
+Output:
+a:hover, .hoverlink {
+  text-decoration: underline; }
+
+Example : multiple extension
+.error {
+  border: 1px #f00;
+  background-color: #fdd;
+}
+.attention {
+  font-size: 3em;
+  background-color: #ff0;
+}
+.seriousError {
+  @extend .error;
+  @extend .attention;
+  border-width: 3px;
+}
+Output:
+.error, .seriousError {
+  border: 1px #f00;
+  background-color: #fdd; }
+
+.attention, .seriousError {
+  font-size: 3em;
+  background-color: #ff0; }
+
+.seriousError {
+  border-width: 3px; }
+Example : selector sequence
+#fake-links .link {
+  @extend a;
+}
+
+a {
+  color: blue;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+Output:
+a, #fake-links .link {
+  color: blue; }
+  a:hover, #fake-links .link:hover {
+    text-decoration: underline; }
+[ ---  end  ---- ]
+
+=== [ topic ][ @extend ][ placeholder ] ===
+[ --- start ---- ]
+- only can be used in @extend, but will not be generated as a class style
+- %var
+
+Example :
+// This ruleset won't be rendered on its own.
+#context a%extreme {
+  color: blue;
+  font-weight: bold;
+  font-size: 2em;
+}
+.notice {
+  @extend %extreme;
+}
+Output:
+#context a.notice {
+  color: blue;
+  font-weight: bold;
+  font-size: 2em; }
+[ ---  end  ---- ]
+
+=== [ topic ][ @debug ] ===
+[ --- start ---- ]
+- print to standard error output stream
+$debug 10em+12em;
+- @warn
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ NoMethodError ] ===
+[ --- start ---- ]
+sudo gem update sass
+- check if have newer version of listen gem
+$ gem list
+- if have listen v2.7.0 and v2.4.1, remove 2.7.0
+$ gem uninstall listen --version '2.7.0'
+[ ---  end  ---- ]

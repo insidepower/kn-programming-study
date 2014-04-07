@@ -414,6 +414,7 @@ $( "div.child" ).closest( "div" );
 [ --- start ---- ]
 - .children() operates on direct child nodes
 - .find() can traverse recursively into children, children of children, and so on
+- to get all children including text and comment nodes, use .contents().
 Example 1:
 @@@ html:
 <div class="grandparent">
@@ -592,6 +593,13 @@ $( "form :submit" );
 // type="text" is implied
 $( "form :text" );
 
+[ ---  end  ---- ]
+
+=== [ topic ][ submit ][ .submit ] ===
+[ --- start ---- ]
+- .submit() is shorthand for .on( "submit", handler )
+- .submit() is shorthand for .trigger( "submit" )
+- can only be attached to <form> elements.
 [ ---  end  ---- ]
 
 === [ topic ][ selection ][ saving ] ===
@@ -948,6 +956,11 @@ myArray.sort( descending ); // [ 6, 4, 3, 1 ]
 
 [ ---  end  ---- ]
 
+=== [ topic ][ string ][ operation ] ===
+[ --- start ---- ]
+$.trim() - remove space
+[ ---  end  ---- ]
+
 === [ topic ][ web font ][ topic ] ===
 [ --- start ---- ]
 - to prevent web font slow down rendering time, use following
@@ -1097,6 +1110,81 @@ dblclick       keydown           change        resize
 mouseenter     keyup             focus         scroll
 mouseleave     blur              unload
 --------------------------------------------------------------------------------
+[ ---  end  ---- ]
+
+=== [ topic ][ event ][ on ][ attach to new injected ][ ajax ] ===
+[ --- start ---- ]
+.on( events [, selector ] [, data ], handler(eventObject) )
+- To remove events bound with .on(), see .off()
+- Returning false from an event handler will automatically call
+event.stopPropagation() and event.preventDefault(). 
+Example :
+$( "a.disabled" ).on( "click", false );
+
+Title: Passing data to the handler
+- if data argument is provided, and is not null or undefined, it is passed to
+the handler in the event.data property
+Example :
+function greet( event ) {
+  alert( "Hello " + event.data.name );
+}
+$( "button" ).on( "click", {
+  name: "Karl"
+}, greet );
+$( "button" ).on( "click", {
+  name: "Addy"
+}, greet );
+
+
+Example :
+function notify() {
+  alert( "clicked" );
+}
+$( "button" ).on( "click", notify );
+
+Example :
+- attach event to select "cl"
+$(document).on({ 
+  mouseenter: function(){
+    $(this).addClass('active');
+    $(this).parents(".catalog-header")
+                    //.find("img :not(.active)");
+                    .find(".cl")
+                    .not(".active")
+                    .addClass('not-active');
+    }, 
+  mouseleave: function(){
+        //console.log(this);
+        $(".cl").removeClass('active not-active');
+    }
+}, 
+".cl"
+);
+
+
+@@@ ajax:
+$.ajax({
+  type: "POST",
+  url: "/cl-wedding-gowns.php",
+  data: "price="+ element.attr("value"),
+  success: function(content){
+    $("#cl-wedding-gowns").html(content);
+    initMultiSelect();
+  });
+
+Example : custom event
+$( "p" ).on( "myCustomEvent", function( event, myName ) {
+  $( this ).text( myName + ", hi there!" );
+  $( "span" )
+    .stop()
+    .css( "opacity", 1 )
+    .text( "myName = " + myName )
+    .fadeIn( 30 )
+    .fadeOut( 1000 );
+});
+$( "button" ).click(function () {
+  $( "p" ).trigger( "myCustomEvent", [ "John" ] );
+});
 [ ---  end  ---- ]
 
 === [ topic ][ animate ] ===
@@ -1259,6 +1347,23 @@ $(document).ready(function(){
 });
 [ ---  end  ---- ]
 
+=== [ topic ][ navigate to ] ===
+[ --- start ---- ]
+Example :
+<a href="ajax.htm?foo=32" onClick="navigate('ajax.html#foo=32'); return
+false">foo 32</a>
+
+Example :
+function scrollToAnchor(aid){
+    var aTag = $("a[name='"+ aid +"']");
+    $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+}
+
+$("#link").click(function() {
+   scrollToAnchor('id3');
+});
+[ ---  end  ---- ]
+
 === [ topic ][ callback ] ===
 [ --- start ---- ]
 - no callback, the alert perform immediately before element completely hidden
@@ -1311,6 +1416,15 @@ elem.addEventListener(
 );
 Then, return false doesn't prevent the default action.
 
+[ ---  end  ---- ]
+
+=== [ topic ][ disable ][ key ] ===
+[ --- start ---- ]
+function disableF5(e) {
+    if ((e.which || e.keyCode) == 116) e.preventDefault();
+};   
+
+$(document).bind("keydown", disableF5);
 [ ---  end  ---- ]
 
 === [ topic ][ problem ] ===

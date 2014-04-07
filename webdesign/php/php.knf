@@ -156,6 +156,10 @@ Example: <vars.php>
 [ --- start ---- ]
 $x=true;
 $y=false;
+
+-1 is true 
+0 is false 
+1 is true
 [ ---  end  ---- ]
 
 === [ topic ][ var ][ superglobal ] ===
@@ -215,6 +219,28 @@ Example 2:
     foreach($_REQUEST as $key => $value) {
         echo "<p>For ". $key.", the value is ". $value."</p>";
     }
+
+Example 3:
+<?php
+ print_r($_GET);
+ if($_GET["a"] === "") echo "a is an empty string\n";
+ if($_GET["a"] === false) echo "a is false\n";
+ if($_GET["a"] === null) echo "a is null\n";
+ if(isset($_GET["a"])) echo "a is set\n";
+ if(!empty($_GET["a"])) echo "a is not empty";
+?>
+
+http://path/to/script.php?a
+Output:
+a is an empty string
+a is set
+
+http://path/to/script.php
+Output:
+Array
+(
+)
+a is null
 [ ---  end  ---- ]
 
 === [ topic ][ var ][ superglobal ][ $_POST ][ form ] ===
@@ -943,6 +969,23 @@ xor	Xor	$x xor $y	 True if either $x or $y is true, but not both
 !	Not	!$x	 True if $x is not true
 [ ---  end  ---- ]
 
+=== [ topic ][ conditional ][ switch ] ===
+[ --- start ---- ]
+switch ($i) {
+    case "apple":
+        echo "i is apple";
+        break;
+    case "bar":
+        echo "i is bar";
+        break;
+    case "cake":
+        echo "i is cake";
+        break;
+    default:
+        echo "i is not equal to 0, 1 or 2";
+}
+[ ---  end  ---- ]
+
 === [ topic ][ concatenation ] ===
 [ --- start ---- ]
 /// below will produce "Hello world!"
@@ -976,6 +1019,8 @@ foreach (get_object_vars($obj) as $myProp => $myVal){
 
 === [ topic ][ class ] ===
 [ --- start ---- ]
+
+Example :
 <?php
 
 class myPlant{
@@ -1010,6 +1055,466 @@ $unknown_flower = new myPlant();
 printProperty($unknown_flower);
 ?>
 
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ __construct ] ===
+[ --- start ---- ]
+- using __construct() is recommended, than using classname as constructor(),
+  as php5 first look for __construct() function, if can't find then will look
+  for the old-style constructor function, by the name of the class.
+- to call parent constructor
+parent::__construct()
+- Parent constructors are not called implicitly if the child class
+  defines a constructor
+- Like constructors, parent destructors will not be called implicitly
+- The destructor will be called even if script execution is stopped using
+exit(). Calling exit() in a destructor will prevent the remaining shutdown
+routines from executing.
+
+Example :
+<?php
+class BaseClass {
+   function __construct() {
+       print "In BaseClass constructor\n";
+   }
+}
+
+class SubClass extends BaseClass {
+   function __construct() {
+       parent::__construct();
+       print "In SubClass constructor\n";
+   }
+
+   function __destruct() {
+       print "Destroying " . $this->name . "\n";
+   }
+}
+
+class OtherSubClass extends BaseClass {
+    // inherits BaseClass's constructor
+}
+
+// In BaseClass constructor
+$obj = new BaseClass();
+
+// In BaseClass constructor
+// In SubClass constructor
+$obj = new SubClass();
+
+// In BaseClass constructor
+$obj = new OtherSubClass();
+
+Example :
+namespace Foo;
+class Bar {
+    public function Bar() {
+        // treated as constructor in PHP 5.3.0-5.3.2
+        // treated as regular method as of PHP 5.3.3
+    }
+}
+
+Example :
+namespace Foo;
+class Test {
+  var $a = 3;
+
+  function Test($a) {
+    $this->a = $a;
+  }
+
+  function getA() {
+    return $this->a;
+  }
+}
+
+$test = new Test(4);
+echo $test->getA(); // 3, Test is not a constructor, just ordinary function
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ this ] ===
+[ --- start ---- ]
+<?php
+class A
+{
+    function foo()
+    {
+        if (isset($this)) {
+            echo '$this is defined (';
+            echo get_class($this);
+            echo ")\n";
+        } else {
+            echo "\$this is not defined.\n";
+        }
+    }
+}
+
+class B
+{
+    function bar()
+    {
+        // Note: the next line will issue a warning if E_STRICT is enabled.
+        A::foo();
+    }
+}
+
+$a = new A();
+$a->foo(); // $this is defined (A)
+
+// Note: the next line will issue a warning if E_STRICT is enabled.
+A::foo(); // $this is not defined.
+$b = new B();
+$b->bar(); // $this is defined (B)
+
+// Note: the next line will issue a warning if E_STRICT is enabled.
+B::bar(); // $this is not defined.
+?>
+
+output:
+$this is defined (A)
+$this is not defined.
+$this is defined (B)
+$this is not defined.
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ new ][ reference & ] ===
+[ --- start ---- ]
+Example :
+<?php
+$instance = new SimpleClass();
+
+// This can also be done with a variable:
+$className = 'Foo';
+$instance = new $className(); // Foo()
+?>
+
+Example :
+$instance = new SimpleClass();
+
+$assigned   =  $instance;
+$reference  =& $instance;
+
+$instance->var = '$assigned will have this value';
+
+$instance = null; // $instance and $reference become null
+
+var_dump($instance);
+var_dump($reference);
+var_dump($assigned);
+
+output:
+NULL
+NULL
+object(SimpleClass)#1 (1) {
+   ["var"]=>
+     string(30) "$assigned will have this value"
+}
+
+Example :
+class Test
+{
+    static public function getNew()
+    {
+        return new static;
+    }
+}
+
+class Child extends Test
+{}
+
+$obj1 = new Test();
+$obj2 = new $obj1;
+var_dump($obj1 !== $obj2);
+
+$obj3 = Test::getNew();
+var_dump($obj3 instanceof Test);
+
+$obj4 = Child::getNew();
+var_dump($obj4 instanceof Child);
+
+Output:
+bool(true)
+bool(true)
+bool(true)
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ extend ] ===
+[ --- start ---- ]
+Example :
+class ExtendClass extends SimpleClass
+{
+    // Redefine the parent method
+    function displayVar()
+    {
+        echo "Extending class\n";
+        parent::displayVar();
+    }
+}
+
+$extended = new ExtendClass();
+$extended->displayVar();
+
+Output:
+Extending class
+a default value
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ ::class ] ===
+[ --- start ---- ]
+namespace NS {
+    class ClassName {
+    }
+    
+    echo ClassName::class; // NS\ClassName
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ property ] ===
+[ --- start ---- ]
+class SimpleClass
+{
+   // invalid property declarations:
+   public $var1 = 'hello ' . 'world';
+   public $var2 = <<<EOD
+hello world
+EOD;
+   public $var3 = 1+2;
+   public $var4 = self::myStaticMethod();
+   public $var5 = $myVar;
+
+   // valid property declarations:
+   public $var6 = myConstant;
+   public $var7 = array(true, false);
+
+   // This is allowed only in PHP 5.3.0 and later.
+   public $var8 = <<<'EOD'
+hello world
+EOD;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ constant ] ===
+[ --- start ---- ]
+class MyClass
+{
+    const CONSTANT = 'constant value';
+
+    function showConstant() {
+        echo  self::CONSTANT . "\n";
+    }
+}
+
+echo MyClass::CONSTANT . "\n";
+
+$classname = "MyClass";
+echo $classname::CONSTANT . "\n"; // As of PHP 5.3.0
+
+$class = new MyClass();
+$class->showConstant();
+
+echo $class::CONSTANT."\n"; // As of PHP 5.3.0
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ visibility ] ===
+[ --- start ---- ]
+Example :
+class MyClass
+{
+    public $public = 'Public';
+    protected $protected = 'Protected';
+    private $private = 'Private';
+
+    function printHello()
+    {
+        echo $this->public;
+        echo $this->protected;
+        echo $this->private;
+    }
+}
+
+$obj = new MyClass();
+echo $obj->public; // Works
+echo $obj->protected; // Fatal Error
+echo $obj->private; // Fatal Error
+$obj->printHello(); // Shows Public, Protected and Private
+
+class MyClass2 extends MyClass
+{
+    // We can redeclare the public and protected method, but not private
+    protected $protected = 'Protected2';
+
+    function printHello()
+    {
+        echo $this->public;
+        echo $this->protected;
+        echo $this->private;
+    }
+}
+
+$obj2 = new MyClass2();
+echo $obj2->public; // Works
+echo $obj2->protected; // Fatal Error
+echo $obj2->private; // Undefined
+$obj2->printHello(); // Shows Public, Protected2, Undefined
+
+Example : Accessing private members of the same object type
+class Test
+{
+    private $foo;
+
+    public function __construct($foo)
+    {
+        $this->foo = $foo;
+    }
+
+    private function bar()
+    {
+        echo 'Accessed the private method.';
+    }
+
+    public function baz(Test $other)
+    {
+        // We can change the private property:
+        $other->foo = 'hello';
+        var_dump($other->foo);
+
+        // We can also call the private method:
+        $other->bar();
+    }
+}
+$test = new Test('test');
+$test->baz(new Test('other'));
+
+Output:
+string(5) "hello"
+Accessed the private method.
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ abstract ] ===
+[ --- start ---- ]
+- these methods must be defined with the same (or a less restricted)
+visibility. For example, if the abstract method is defined as protected, the
+function implementation must be defined as either protected or public, but not
+
+private. 
+abstract class AbstractClass
+{
+    // Force Extending class to define this method
+    abstract protected function getValue();
+    abstract protected function prefixValue($prefix);
+
+    // Common method
+    public function printOut() {
+        print $this->getValue() . "\n";
+    }
+}
+
+class ConcreteClass1 extends AbstractClass
+{
+    protected function getValue() {
+        return "ConcreteClass1";
+    }
+
+    public function prefixValue($prefix) {
+        return "{$prefix}ConcreteClass1";
+    }
+}
+
+class ConcreteClass2 extends AbstractClass
+{
+    public function getValue() {
+        return "ConcreteClass2";
+    }
+
+    public function prefixValue($prefix) {
+        return "{$prefix}ConcreteClass2";
+    }
+}
+
+$class1 = new ConcreteClass1;
+$class1->printOut();
+echo $class1->prefixValue('FOO_') ."\n";
+
+$class2 = new ConcreteClass2;
+$class2->printOut();
+echo $class2->prefixValue('FOO_') ."\n";
+Output:
+ConcreteClass1
+FOO_ConcreteClass1
+ConcreteClass2
+FOO_ConcreteClass2
+
+Example :
+abstract class AbstractClass
+{
+    // Our abstract method only needs to define the required arguments
+    abstract protected function prefixName($name);
+
+}
+
+class ConcreteClass extends AbstractClass
+{
+
+    // Our child class may define optional arguments not in the parent's signature
+    public function prefixName($name, $separator = ".") {
+        if ($name == "Pacman") {
+            $prefix = "Mr";
+        } elseif ($name == "Pacwoman") {
+            $prefix = "Mrs";
+        } else {
+            $prefix = "";
+        }
+        return "{$prefix}{$separator} {$name}";
+    }
+}
+
+$class = new ConcreteClass;
+echo $class->prefixName("Pacman"), "\n";
+echo $class->prefixName("Pacwoman"), "\n";
+
+Output:
+Mr. Pacman
+Mrs. Pacwoman
+[ ---  end  ---- ]
+
+=== [ topic ][ class ][ static ] ===
+[ --- start ---- ]
+- can access static properties or methods without instantiation
+- $this is not available within static methods
+- cann't be accessed through object's ->
+- static methods and properties must be initiliazed with constant, 
+  expression are not allowed
+
+Example :
+class Foo
+{
+    public static $my_static = 'foo';
+
+    public function staticValue() {
+        return self::$my_static;
+    }
+}
+
+class Bar extends Foo
+{
+    public function fooStatic() {
+        return parent::$my_static;
+    }
+}
+
+
+print Foo::$my_static . "\n";
+
+$foo = new Foo();
+print $foo->staticValue() . "\n";
+print $foo->my_static . "\n";      // Undefined "Property" my_static 
+
+print $foo::$my_static . "\n";
+$classname = 'Foo';
+print $classname::$my_static . "\n"; // As of PHP 5.3.0
+
+print Bar::$my_static . "\n";
+$bar = new Bar();
+print $bar->fooStatic() . "\n";
 [ ---  end  ---- ]
 
 === [ topic ][ function ][ default argument value ] ===
@@ -1366,12 +1871,66 @@ echo exec('whoami');
 
 === [ topic ][ security ][ escape user input ] ===
 [ --- start ---- ]
+- Two Things!:
+Filter input
+  == verify that the content is in a format expected, instead of assuming. 
+  == For example, apply a regular expression, or use a data type coercion like
+  the intval() function.
+Escape output
+
 system('ls '.escapeshellarg($dir));
 
 Example 2:
 $command = './configure '.$_POST['configure_options'];
 $escaped_command = escapeshellcmd($command);
 system($escaped_command);
+
+Example :
+$password = $_POST['password'];
+$id = $_POST['id'];
+$sql = "UPDATE Accounts SET PASSWORD = '$password' WHERE account_id = $id";
+
+user input:
+password=xyzzy" and "id=account_id"
+/// I expected $id to be an integer, the attacker chose a string that
+// is the name of the column. 
+/// become always true, and all account password become xyzzy, thus gain access
+UPDATE Accounts SET PASSWORD = 'xyzzy' WHERE account_id = account_id;
+
+Example :
+mysql_query("SELECT * FROM posts WHERE postid=$postid");
+$postid is set to the string 10; DROP TABLE posts --;
+/// this will delete the table...
+mysql_query("SELECT * FROM posts WHERE postid=10; DROP TABLE posts --");
+
+$statement = $db->prepare('SELECT * FROM posts WHERE postid = :postid');
+$statement->bindValue(':postid', $postid);
+$statement->execute();
+[ ---  end  ---- ]
+
+=== [ topic ][ variable handling function ][ intval ] ===
+[ --- start ---- ]
+intval — Get the integer value of a variable
+
+Example :
+echo intval(42);                      // 42
+echo intval(4.2);                     // 4
+echo intval('42');                    // 42
+echo intval('+42');                   // 42
+echo intval('-42');                   // -42
+echo intval(042);                     // 34
+echo intval('042');                   // 42
+echo intval(1e10);                    // 1410065408
+echo intval('1e10');                  // 1
+echo intval(0x1A);                    // 26
+echo intval(42000000);                // 42000000
+echo intval(420000000000000000000);   // 0
+echo intval('420000000000000000000'); // 2147483647
+echo intval(42, 8);                   // 42
+echo intval('42', 8);                 // 34
+echo intval(array());                 // 0
+echo intval(array('foo', 'bar'));     // 1
+
 [ ---  end  ---- ]
 
 === [ topic ][ cookies ] ===
@@ -1657,6 +2216,156 @@ output:
 
 Example 2:
 echo rawurldecode('foo%20bar%40baz'); // foo bar@baz
+[ ---  end  ---- ]
+
+=== [ topic ][ prepared statement ][ bind ] ===
+[ --- start ---- ]
+Example :
+$mysqli = new mysqli("example.com", "user", "password", "database");
+if ($mysqli->connect_errno) {
+    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " 
+            . $mysqli->connect_error;
+}
+
+/* Non-prepared statement */
+if (!$mysqli->query("DROP TABLE IF EXISTS test") || 
+        !$mysqli->query("CREATE TABLE test(id INT)")) {
+    echo "Table creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+/* Prepared statement, stage 1: prepare */
+if (!($stmt = $mysqli->prepare("INSERT INTO test(id) VALUES (?)"))) {
+    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+$id = 1;
+if (!$stmt->bind_param("i", $id)) {
+    echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+}
+
+if (!$stmt->execute()) {
+    echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+}
+
+Example : INSERT prepared once, executed multiple times
+$mysqli = new mysqli("example.com", "user", "password", "database");
+if ($mysqli->connect_errno) {
+    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " 
+          . $mysqli->connect_error;
+}
+
+/* Non-prepared statement */
+if (!$mysqli->query("DROP TABLE IF EXISTS test") || 
+      !$mysqli->query("CREATE TABLE test(id INT)")) {
+    echo "Table creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+/* Prepared statement, stage 1: prepare */
+if (!($stmt = $mysqli->prepare("INSERT INTO test(id) VALUES (?)"))) {
+     echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+/* Prepared statement, stage 2: bind and execute */
+$id = 1;
+if (!$stmt->bind_param("i", $id)) {
+    echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+}
+
+if (!$stmt->execute()) {
+    echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+}
+
+/* Prepared statement: repeated execution, only data transferred from client to server */
+for ($id = 2; $id < 5; $id++) {
+    if (!$stmt->execute()) {
+        echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+    }
+}
+
+/* explicit close recommended */
+$stmt->close();
+
+/* Non-prepared statement */
+$res = $mysqli->query("SELECT id FROM test");
+var_dump($res->fetch_all());
+[ ---  end  ---- ]
+
+=== [ topic ][ url ][ parse ] ===
+[ --- start ---- ]
+Example :
+$url = 'http://username:password@hostname/path?arg=value#anchor';
+print_r(parse_url($url));
+echo parse_url($url, PHP_URL_PATH);
+
+Output:
+Array
+(
+    [scheme] => http
+    [host] => hostname
+    [user] => username
+    [pass] => password
+    [path] => /path
+    [query] => arg=value
+    [fragment] => anchor
+)
+/path
+
+Example :
+$url = '//www.example.com/path?googleguy=googley';
+// Prior to 5.4.7 this would show the path as "//www.example.com/path"
+var_dump(parse_url($url));
+
+Output:
+array(3) {
+  ["host"]=>
+  string(15) "www.example.com"
+  ["path"]=>
+  string(5) "/path"
+  ["query"]=>
+  string(17) "googleguy=googley"
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ query string ][ array ] ===
+[ --- start ---- ]
+Example :
+$str = "first=value&arr[]=foo+bar&arr[]=baz";
+parse_str($str);
+echo $first;  // value
+echo $arr[0]; // foo bar
+echo $arr[1]; // baz
+
+parse_str($str, $output);
+echo $output['first'];  // value
+echo $output['arr'][0]; // foo bar
+echo $output['arr'][1]; // baz
+[ ---  end  ---- ]
+
+=== [ topic ][ query ][ POST ][ debug ] ===
+[ --- start ---- ]
+print_r($_POST);
+foreach ($_POST as $key => $value) {
+  echo "$key => $value";
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ ajax ] ===
+[ --- start ---- ]
+$('.multiselect').multiselect({
+  onChange: function(element, checked) {
+      if ("" != element.attr("value")){
+        $.ajax({
+          type: "POST",
+          url: "/cl-wedding-gowns.php",
+          data: "price="+ element.attr("value"),
+          success: function(content){
+            $("#cl-wedding-gowns").html(content);
+            initMultiSelect();
+          }
+        });
+      }
+    }
+});
 [ ---  end  ---- ]
 
 === [ topic ][ error handling ] ===
@@ -1980,6 +2689,12 @@ error_reporting(-1);
 
 // Same as error_reporting(E_ALL);
 ini_set('error_reporting', E_ALL);
+
+Example : inside php file
+  ini_set('display_startup_errors',1);
+  ini_set('display_errors',1);
+  error_reporting(-1);
+
 [ ---  end  ---- ]
 
 === [ topic ][ problem ] ===
@@ -2034,3 +2749,5 @@ $ php -i | grep version
 1. Switch to using the mysqlnd driver in PHP (Recommended solution).
 $ sudo apt-get install php5-mysqlnd
 [ ---  end  ---- ]
+
+/* vim: set ft=knf: */

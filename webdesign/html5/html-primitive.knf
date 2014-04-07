@@ -426,6 +426,11 @@ Example 1:
 value="value-submit-to-server-and-not-shown-to-user">value-show-to-user</button>
 [ ---  end  ---- ]
 
+=== [ topic ][ input ][ hidden ] ===
+[ --- start ---- ]
+<input type="hidden" name="Language" value="English">
+[ ---  end  ---- ]
+
 === [ topic ][ first topic ][ topic ] ===
 [ --- start ---- ]
 

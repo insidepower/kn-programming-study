@@ -167,6 +167,7 @@ disadvantage:
 
 === [ topic ][ apache ][ htaccess ][ disable access ] ===
 [ --- start ---- ]
+- visitor will be displayed '403 Forbidden'
 - make entire directory unavailable for access
 
 # Disable indexing:
@@ -180,6 +181,337 @@ IndexIgnore *
 Order Allow, Deny
 Deny from all
 </FilesMatch>
+
+Title: Deny by IP
+order allow,deny
+deny from 255.0.0.0
+// ### any IP matching the first 3 sets of digits will be blocked
+deny from 123.45.6.
+allow from all
+
+Title: deny all but from
+order allow,deny
+allow from 255.0.0.0
+deny from all
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess ][ deny by referer ] ===
+[ --- start ---- ]
+- deny access based on where they come from
+- increate in traffic, yet not increases in actual file requests
+  == probably someone pinching content (such as CSS files)
+  == or someone attempting to hack web sites (try to find non public content)
+- blocked user will be shown 403 Forbidden error
+- use [NC, OR] multiple domain blocked 
+- uncomment Options +FollowSymlinks if server return '500 Internal Server'
+  == it is due to server isn't configured with FollowSymLinks in apache.conf
+
+Example : 
+// block traffic from the URL 'otherdomain.com', 'otherdomain.com',
+'OTHERDOMAIN.COM'
+RewriteEngine on
+# Options +FollowSymlinks
+RewriteCond %{HTTP_REFERER} otherdomain\.com [NC]
+RewriteRule .* - [F]
+
+Example : block traffic from otherdomain.com, anotherdomain.com [NC, OR]
+RewriteEngine on
+# Options +FollowSymlinks
+RewriteCond %{HTTP_REFERER} otherdomain\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} anotherdomain\.com
+RewriteRule .* - [F]
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess ][ hot link prevention ] ===
+[ --- start ---- ]
+- hot link prevention = 
+    stop web site not your own from displaying your content 
+- most commonly used to prevent other web sites from displaying your images
+  == can be used to prevent people from using javascript and css files
+- hot linking uses your bandwidth
+- can prevent other web site from sourcing your content
+- and even display different content
+
+Example : hot link prevention for '.gif', '.jpg', '.css'
+RewriteEngine on
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http://(www\.)?yourdomain.com/.*$ [NC]
+RewriteRule \.(gif|jpg|css)$ - [F]
+
+Example : hot link prevention for gif, jpg and display alternate content
+RewriteEngine on
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http://(www\.)?yourdomain.com/.*$ [NC]
+RewriteRule \.(gif|jpg)$ http://www.yourdomain.com/angryman.jpg [R,L]
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ block bad bots and offline browser ] ===
+[ --- start ---- ]
+RewriteEngine On 
+RewriteCond %{HTTP_USER_AGENT} ^BlackWidow [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Bot\ mailto:craftbot@yahoo.com [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ChinaClaw [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Custo [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^DISCo [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Download\ Demon [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^eCatch [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EirGrabber [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EmailSiphon [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EmailWolf [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Express\ WebPictures [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ExtractorPro [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EyeNetIE [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^FlashGet [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^GetRight [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^GetWeb! [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Go!Zilla [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Go-Ahead-Got-It [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^GrabNet [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Grafula [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^HMView [OR] 
+RewriteCond %{HTTP_USER_AGENT} HTTrack [NC,OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Image\ Stripper [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Image\ Sucker [OR] 
+RewriteCond %{HTTP_USER_AGENT} Indy\ Library [NC,OR] 
+RewriteCond %{HTTP_USER_AGENT} ^InterGET [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Internet\ Ninja [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^JetCar [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^JOC\ Web\ Spider [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^larbin [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^LeechFTP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mass\ Downloader [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^MIDown\ tool [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mister\ PiX [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Navroad [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NearSite [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NetAnts [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NetSpider [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Net\ Vampire [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NetZIP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Octopus [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Offline\ Explorer [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Offline\ Navigator [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^PageGrabber [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Papa\ Foto [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^pavuk [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^pcBrowser [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^RealDownload [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ReGet [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SiteSnagger [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SmartDownload [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SuperBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SuperHTTP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Surfbot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^tAkeOut [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Teleport\ Pro [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^VoidEYE [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Web\ Image\ Collector [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Web\ Sucker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebAuto [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebCopier [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebFetch [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebGo\ IS [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebLeacher [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebReaper [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebSauger [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Website\ eXtractor [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Website\ Quester [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebStripper [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebWhacker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebZIP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Wget [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Widow [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WWWOFFLE [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Xaldon\ WebSpider [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Zeus 
+RewriteRule ^.* - [F,L]
+[ ---  end  ---- ]
+
+=== [ topic ][ htaccess ][ RewriteCond ] ===
+[ --- start ---- ]
+- dir/file.php?name=something/3 would be dir/file.php?name=something&page=3
+
+[R]	Redirect you can add an =301 or =302 to change the type.
+[F]	Forces the url to be forbidden. 403 header
+[G]	Forces the url to be gone 401 header
+[L]	Last rule. (You should use this on all your rules that don't link together)
+[N]	Next round. Rerun the rules again from the start
+[C]	Chains a rewrite rule together with the next rule.
+[T]	use T=MIME-type to force the file to be a mime type
+[NS]	Use if no sub request is requested
+[NC]	Makes the rule case INsensitive
+[QSA]	Query String Append use to add to an existing query string
+[NE]	Turns of normal escapes that are default in the rewriterule
+[PT]	Pass through to the handler (together with mod alias)
+[S]	Skip the next rule S=3 skips the next 3 rules
+[E]	E=var sets an enviromental variable that can be called by other rules
+
+
+Example :
+RewriteCond %{QUERY_STRING} (.*)/([0-9]+)$
+RewriteRule ^(.+)$ /$1?%1&page=%2 [L]
+
+Example :
+/// check if HTTPS is not in used
+RewriteCond %{HTTPS} off 
+/// what need to check if HTTPS is off
+RewriteRule ^(checkout\.php|billing\.php|final\.php|admin/(.*))$
+                  https://%{HTTP_HOST}/$1 [R=301,L]
+- %{ENVIRONMENT_VARIABLE}
+- if rule is match, then URL is rewritten to https://hostname/$1
+- R=301,L indicate this should be a permanent redirection type, associated with
+server code 301, and that this should be the last rule evaluated
+  == this ensure server won't allow the browser to load any of those pages over
+  a nonsecure connection. 
+[ ---  end  ---- ]
+
+=== [ topic ][ htaccess ][ query string ] ===
+[ --- start ---- ]
+- keep existing query string, and append new query string to the end
+
+Example : ^/page?query=val1 --> ^/page?query=val1&var=var
+RewriteRule ^/page /page?var=val [QSA]
+
+Example :
+- Rewrite URLs like http://example.com/page1?var=val to 
+  http://example.com/page2?var=val 
+- but don't rewrite if val isn't present.
+RewriteCond %{QUERY_STRING} val
+RewriteRule ^/page1 /page2
+
+Example : /path/testval22=98 --> /path/testother_val22=98
+RewriteCond %{QUERY_STRING} ^(.*)val(.*)$
+RewriteRule /path /path?%1other_val%2
+
+Example : strict
+RewriteCond %{QUERY_STRING} (.*(?:^|&))key=val((?:&|$).*)
+RewriteRule /path /path?%1other_val%2
+
+Example : http://example.com/path?var=val --> http://example.com/path/var/val
+- will work only for a single var=val pair containing only letters, numbers,
+and the underscore character.
+RewriteCond %{QUERY_STRING} ^(\w+)=(\w+)$
+RewriteRule ^/path /path/%1/%2?
+
+Example : discard original query
+- If you want to discard the original query string you must append an empty
+question mark at the end of the rule. Let's call it the query string not
+append or query string discard flag
+RewriteCond %{QUERY_STRING} ^id=([0-9]*)$
+RewriteRule ^page\.php$ http://mydomain.site/page/%1.php? [R=302,L]
+
+Example : summary
+Keep original query (default behavior)
+RewriteRule ^page\.php$ /target.php [L]
+# from http://example.com/page.php?foo=bar
+# to   http://example.com/target.php?foo=bar
+
+Discard original query
+RewriteRule ^page\.php$ /target.php? [L]
+# from http://example.com/page.php?foo=bar
+# to   http://example.com/target.php
+
+Replace original query
+RewriteRule ^page\.php$ /target.php?bar=baz [L]
+# from http://example.com/page.php?foo=bar
+# to   http://example.com/target.php?bar=baz
+
+Append new query to original query
+RewriteRule ^page\.php$ /target.php?bar=baz [QSA,L]
+# from http://example.com/page.php?foo=bar
+# to   http://example.com/target.php?foo=bar&bar=baz
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess ][ password ] ===
+[ --- start ---- ]
+- some server require .htpasswd to be stored in the same directory
+- specify user
+  == require user adminuser
+    *** only user adminuser can log in
+  == require valid-user
+
+- change to root user
+$ mkdir /var/www/html/testfolder
+$ cd /var/www/html/testfolder
+$ vim .htaccess
+AuthUserFile /var/www/html/testfolder/.htpasswd
+AuthGroupFile /www.null
+AuthName "Authorization Required"
+AuthType Basic
+require valid-user
+
+## change the USER_NAME
+require user USER_NAME
+$ htpasswd -c /var/www/html/testfolder/.htpasswd USER_NAME
+New password:
+ Re-type new password:
+Adding password for user USER_NAME
+$ vi /etc/apache2/apache2.conf
+#FOR MY TEST FOLDER
+ <Directory "/var/www/html/testfolder">
+ AllowOverride AuthConfig
+ </Directory>
+$ service httpd restart
+
+
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess ] ===
+[ --- start ---- ]
+- upload in ASCII mode
+- make htaccess executable (0755)
+- use CGI script instead of static 404.html to record error
+  ==  CGI Resource Index and HotScripts.com
+Example :
+AuthName "Member's Area Name"
+AuthUserFile /path/to/password/file/.htpasswd
+AuthType Basic
+require valid-user
+ErrorDocument 401 /error_pages/401.html
+AddHandler server-parsed .html
+Redirect /old_dir/ http://www.yourdomain.com/new_dir/index.html
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess ][ default homepage ] ===
+[ --- start ---- ]
+DirectoryIndex home.php
+[ ---  end  ---- ]
+
+=== [ topic ][ htaccess ][ redirect ] ===
+[ --- start ---- ]
+- 301 - redirect
+- R default is 302 (temporary redirect)
+- 302 means a temporary redirect. It implies that the page we are redirecting
+  to is temporarly suppose to take the place of the file that you are
+  redirected from.
+
+Example :
+RewriteRule ^blue-widgets\.html$ awesome-blue-widgets.html [R=301,L]
+
+Example : new domain
+RewriteBase /
+RewriteRule ^(.*)$ http://www.newdomain.com/$1 [R=301,L]
+
+Example :
+RewriteRule ^employment\.html$ no-vacancies.html [R,L]
+
+Explain:
+Google will use the cache of no-vacancies.html in employment.html if you check
+it. It will also enherit any rankings, backlinks, titles etc that
+no-vacancies.html has. Be very careful with this. The last thing you want is
+to set up a 302 redirect to your index page and hijack the rankings of that
+page!
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ ErrorDocument ] ===
+[ --- start ---- ]
+http://httpd.apache.org/docs/2.0/mod/core.html#errordocument
+URLs can begin with a slash (/) for local web-paths (relative to the
+DocumentRoot), or be a full URL which the client can resolve. Alternatively, a
+message can be provided to be displayed by the browser.
+
+ErrorDocument 401 /subscription_info.html
+ErrorDocument 403 "Sorry can't allow you access today"
 [ ---  end  ---- ]
 
 === [ topic ][ apache ][ mounting ] ===
@@ -328,19 +660,28 @@ RewriteRule ^shop/(coffee|goodies)/?$ /ex2/html/shop.php?type=$1
 
 [ ---  end  ---- ]
 
-=== [ topic ][ apache ][ mode_rewrite ][ condition ] ===
+=== [ topic ][ htaccess ][ RewriteBase ] ===
 [ --- start ---- ]
-/// check if HTTPS is not in used
-RewriteCond %{HTTPS} off 
-/// what need to check if HTTPS is off
-RewriteRule ^(checkout\.php|billing\.php|final\.php|admin/(.*))$
-                  https://%{HTTP_HOST}/$1 [R=301,L]
-- %{ENVIRONMENT_VARIABLE}
-- if rule is match, then URL is rewritten to https://hostname/$1
-- R=301,L indicate this should be a permanent redirection type, associated with
-server code 301, and that this should be the last rule evaluated
-  == this ensure server won't allow the browser to load any of those pages over
-  a nonsecure connection. 
+RewriteBase /dir/
+RewriteRule ^somefile-([0-9]+)\.htm$ index.php?id=$1 [L]
+-- same as --
+RewriteRule ^somefile-([0-9]+)\.htm$ /dir/index.php?id=$1 [L]
+[ ---  end  ---- ]
+
+=== [ topic ][ htaccess ][ regular expression ] ===
+[ --- start ---- ]
+Char.	Definition
+\	Use before any of the following characters to escape or null the meaning or it. \* \. \$ \+ \[ \]
+^	Start matching at this point
+$	End point of the match
+.	Any character
+[]	Starts a class
+|	Starts alternative match this|that would mean match this or that
+()	starts a back reference point
+?	match 0 or 1 time Quantifier
++	match atleast 1 or more times Quantifier
+*	match 0 to infinite times Quantifier
+{}	match minimum to maximum Quantifier {0,3} match up to 3 times
 [ ---  end  ---- ]
 
 === [ topic ][ apache ][ mod_rewrite ][ example ] ===
@@ -422,6 +763,283 @@ RewriteRule .* - [F]
 #Do not allow these file types to be called
 RewriteEngine on
 RewriteRule .*\.(jpg|jpeg|gif|png|bmp|exe|swf)$ - [F,NC]
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess ][ rewrite ][ prevent access php inc ] ===
+[ --- start ---- ]
+- to prevent direct access to php includes folder
+
+Example :
+## Enable Mod Rewrite, this is only required once in each .htaccess file
+RewriteEngine On 
+RewriteBase / 
+## Test for access to includes directory
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /includes/ .*$ [NC] 
+## Test that file requested has php extension 
+RewriteCond %{REQUEST_FILENAME} ^.+\.php$ 
+## Forbid Access 
+RewriteRule .* - [F,NS,L]
+
+Example : deny access to php.ini or php.cgi file
+<FilesMatch "^php5?\.(ini|cgi)$">
+Order Deny,Allow 
+Deny from All 
+Allow from env=REDIRECT_STATUS 
+</FilesMatch>
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ DirectoryIndex ] ===
+[ --- start ---- ]
+- display the desired file when a visitor requests a directory on web site
+- display order is in the sequence it specified
+ 
+Example : display index.html if directory is requested, else index.cgi..
+DirectoryIndex index.html index.cgi index.php
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ disable Directory Listing ] ===
+[ --- start ---- ]
+- to prevent directory listings, create a .htaccess with
+IndexIgnore *
+  == above will not show directory listing within directory containing
+  .htaccess
+- to prevent only certain file type from listed
+IndexIgnore *.zip *.jpg *.gif
+- to override IndexIgnore, put minus sign before Indexes
+Options +Indexes
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ MIME type ] ===
+[ --- start ---- ]
+- common issue with MP3 or SWF files not playing can be resolved with :
+AddType application/x-shockwave-flash swf
+
+Example :
+AddType text/html .html .htm 
+AddType text/plain .txt 
+AddType text/richtext .rtx 
+AddType text/tab-separated-values .tsv 
+AddType text/x-setext .etx 
+AddType text/x-server-parsed-html .shtml .sht 
+AddType application/macbinhex-40 .hqx 
+AddType application/netalivelink .nel 
+AddType application/netalive .net 
+AddType application/news-message-id 
+AddType application/news-transmission 
+AddType application/octet-stream .bin .exe 
+AddType application/oda .oda 
+AddType application/pdf .pdf 
+AddType application/postscript .ai .eps .ps 
+AddType application/remote-printing 
+AddType application/rtf .rtf 
+AddType application/slate 
+AddType application/zip .zip 
+AddType application/x-mif .mif 
+AddType application/wita 
+AddType application/wordperfect5.1 
+AddType application/x-csh .csh 
+AddType application/x-dvi .dvi 
+AddType application/x-hdf .hdf 
+AddType application/x-latex .latex 
+AddType application/x-netcdf .nc .cdf 
+AddType application/x-sh .sh 
+AddType application/x-tcl .tcl 
+AddType application/x-tex .tex 
+AddType application/x-texinfo .texinfo .texi 
+AddType application/x-troff .t .tr .roff 
+AddType application/x-troff-man .man 
+AddType application/x-troff-me .me 
+AddType application/x-troff-ms .ms 
+AddType application/x-wais-source .src 
+AddType application/x-bcpio .bcpio 
+AddType application/x-cpio .cpio 
+AddType application/x-gtar .gtar 
+AddType application/x-shar .shar 
+AddType application/x-sv4cpio .sv4cpio 
+AddType application/x-sv4crc .sv4crc 
+AddType application/x-tar .tar 
+AddType application/x-ustar .ustar 
+AddType application/x-director .dcr 
+AddType application/x-director .dir 
+AddType application/x-director .dxr 
+AddType application/x-onlive .sds 
+AddType application/x-httpd-cgi .cgi 
+AddType image/gif .gif .GIF 
+AddType image/ief .ief 
+AddType image/jpeg .jpeg .jpg .jpe .JPG 
+AddType image/tiff .tiff .tif 
+AddType image/x-cmu-raster .ras 
+AddType image/x-portable-anymap .pnm 
+AddType image/x-portable-bitmap .pbm 
+AddType image/x-portable-graymap .pgm 
+AddType image/x-portable-pixmap .ppm 
+AddType image/x-rgb .rgb 
+AddType image/x-xbitmap .xbm 
+AddType image/x-xpixmap .xpm 
+AddType image/x-xwindowdump .xwd 
+AddType audio/basic .au .snd 
+AddType audio/x-aiff .aif .aiff .aifc 
+AddType audio/x-wav .wav 
+AddType audio/x-pn-realaudio .ram 
+AddType audio/x-midi .mid 
+AddType video/mpeg .mpeg .mpg .mpe 
+AddType video/quicktime .qt .mov 
+AddType video/x-msvideo .avi 
+AddType video/x-sgi-movie .movie 
+AddType message/external-body 
+AddType message/news 
+AddType message/partial 
+AddType message/rfc822 
+AddType multipart/alternative 
+AddType multipart/appledouble 
+AddType multipart/digest 
+AddType multipart/mixed 
+AddType multipart/parallel 
+AddType x-world/x-vrml .wrl
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ SSI ] ===
+[ --- start ---- ]
+- SSI = Server Side Includes
+- use relative path
+- server load the specified when encountered the following tag
+/// place the cgi-bin/script.cgi
+<!--#exec cgi="/cgi-bin/script.cgi"-->
+<!--#include virtual="/files/document.html"-->
+
+Example :
+AddHandler server-parsed .html
+AddHandler server-parsed .shtml
+AddHandler server-parsed .htm
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ download instead of played ] ===
+[ --- start ---- ]
+- ensure any media file are treated as download
+AddType application/octet-stream .zip .mp3 .mp4
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ set up assoc for encoded files ] ===
+[ --- start ---- ]
+-  tells the Apache Web Server to treat .gz and .tgz files as encoded by
+x-gzip, and .Z files as encoded by x-compress.
+AddEncoding x-gzip .gz .tgz 
+AddEncoding x-compress .Z
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess vs apache2.conf ] ===
+[ --- start ---- ]
+@@@@.htaccess file in /www/htdocs/example:
+AddType text/example .exm
+
+@@@ apache2.conf:
+<Directory /www/htdocs/example>
+AddType text/example .exm
+</Directory>
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ options ] ===
+[ --- start ---- ]
++ add to options
+- remove the options
+
+- Multiviews sometimes conflict with Rewrite Rules
+  == MultiViews try to map the request to a siminar existing file before
+  passing the request to mod_rewrite
+  == disable Multiviews:
+      Options -MultiViews
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ htaccess ][ recommended ] ===
+[ --- start ---- ]
+http://httpd.apache.org/docs/1.3/mod/core.html#options
+Options -MultiViews -Indexes
+- disable multiviews and directory index listing
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ RewriteCond ] ===
+[ --- start ---- ]
+http://httpd.apache.org/docs/2.2/mod/mod_rewrite.html#rewritecond
+
+RewriteCond TestString CondPattern [flags]
+
+%{ENV:variable} - getenv() from the Apache server process
+%{SSL:variable}
+%{HTTP:header}
+
+Title: CondPattern
+'<CondPattern' (lexicographically precedes)
+'>CondPattern' (lexicographically follows)
+'=CondPattern' (lexicographically equal)
+'-d' (is directory)
+'-f' (is regular file)
+'-s' (is regular file, with size)
+'-l' (is symbolic link)
+'-x' (has executable permissions)
+'-F' (is existing file, via subrequest)
+'-U' (is existing URL, via subrequest)  
+
+Title: Flags
+'nocase|NC' (no case) -  test case-insensitive
+'ornext|OR' (or next condition)
+'novary|NV' (no vary)
+
+Example :
+RewriteCond %{REMOTE_HOST}  =host1  [OR]
+RewriteCond %{REMOTE_HOST}  =host2  [OR]
+RewriteCond %{REMOTE_HOST}  =host3
+RewriteRule ...some special stuff for any of these hosts...
+[ ---  end  ---- ]
+
+=== [ topic ][ apache ][ caching ] ===
+[ --- start ---- ]
+##################
+## Optional caching improvements
+## Requires mod_header and mod_deflate to be enabled within Apache
+##################
+<IfModule mod_headers.c>
+  Header unset Pragma
+  FileETag None
+  Header unset ETag
+  <FilesMatch ".*\.(ico|jpe?g|JPE?G|gif|GIF|webp|png|swf|flv)$">
+    Header set Cache-control "max-age=864000, public, must-revalidate"
+    Header unset Last-Modified
+  </FilesMatch>
+  <FilesMatch ".*\.(html|htm|xml|txt|xsl)$">
+    Header set Cache-control "max-age=7200, must-revalidate"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_deflate.c>
+  <FilesMatch "\.(js|css)$">
+    SetOutputFilter DEFLATE
+  </FilesMatch>
+</IfModule>
+
+##################
+## Optional improvements
+## Requires mod_expires to be enabled within Apache
+## enabled by sudo a2enmod expires
+##################
+<ifmodule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault A300
+  ExpiresByType application/x-javascript A3600
+  ExpiresByType text/css A3600
+  ExpiresByType image/gif A604800
+  ExpiresByType video/x-flv A604800
+  ExpiresByType application/pdf A604800
+  ExpiresByType text/html A300
+  ExpiresByType image/x-icon A86400
+  ExpiresByType image/jpeg A2592000 
+  ExpiresByType image/png A2592000 
+</ifmodule>
+[ ---  end  ---- ]
+
+=== [ topic ][ page ][ fault ] ===
+[ --- start ---- ]
+ '401 Unauthorised', 
+ '403 Forbidden', and 
+ '500 Internal Server' 
 [ ---  end  ---- ]
 
 === [ topic ][ permission ][ uid and gid ] ===
@@ -1032,4 +1650,11 @@ inet_interfaces = loopback-only
 [ --- start ---- ]
 webhostingtutorial.com
 w3cshools.com/hosting
+[ ---  end  ---- ]
+
+=== [ topic ][ apache2 ][ htaccess ][ problem ] ===
+[ --- start ---- ]
+- ErrorDocument redirection in .htaccess never works
+Solution: remove AllowOverride None from /etc/apache2/apache2.conf
+$ sudo service apache2 reload
 [ ---  end  ---- ]

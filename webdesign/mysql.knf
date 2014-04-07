@@ -74,6 +74,11 @@ SELECT version()
 - to check currently used database
 > select database();
 
+- whoami in mysql
+> select current_user();
+> select USER();
+mysql> \s
+
 - to use table not currently in used, then need to use fully qualified name of
 the table, e.g. database3.table2
 [ ---  end  ---- ]
@@ -172,6 +177,11 @@ create table MyTable
 ( name string check(name = "car" or name = "bike" or name = "van"));
 [ ---  end  ---- ]
 
+=== [ topic ][ table ][ rename ] ===
+[ --- start ---- ]
+RENAME TABLE  `database-name`.`table-name` TO  `database-name`.`new-table-name`;
+[ ---  end  ---- ]
+
 === [ topic ][ insert ] ===
 [ --- start ---- ]
 insert into customrs values ("Ken", "Ng", 30);
@@ -179,6 +189,12 @@ insert into customrs values ("Ken", "Ng", 30);
 - multiple insert
 insert into `table_name` (`column1`, `column2`) values
 (val1, val2), (pair2-val1, pair2-val2), (pair3-val1, pair3-val2)
+[ ---  end  ---- ]
+
+=== [ topic ][ insert ][ date ] ===
+[ --- start ---- ]
+insert_time=now()
+INSERT INTO debugger (time_now, query_comment) VALUES (now(), @query);
 [ ---  end  ---- ]
 
 === [ topic ][ select ] === 
@@ -314,6 +330,43 @@ FROM sales AS sa
     ((NOW() BETWEEN sa.start_date AND sa.end_date) OR
     (NOW() > sa.start_date AND sa.end_date IS NULL))
   ORDER BY RAND() LIMIT 2;
+[ ---  end  ---- ]
+
+=== [ topic ][ select ][ distinct ][ unique ] ===
+[ --- start ---- ]
+SELECT DISTINCT(Date) AS Date FROM buy ORDER BY Date DESC;
+[ ---  end  ---- ]
+
+=== [ topic ][ update ] ===
+[ --- start ---- ]
+-- Increase the price by 10% for all products
+mysql> UPDATE products SET price = price * 1.1;
+
+-- You can modify more than one values
+UPDATE products 
+  SET quantity = quantity + 50, price = 1.23 WHERE name = 'Pen Red';
+
+Example : value from another table
+update cl_wedding_gown t1 
+    ->   inner join sizes t2
+    -> set t1.size=t2.id
+    -> where t1.size_old=t2.size;
+
+Example :
+UPDATE tableB t1 
+        INNER JOIN tableA t2 
+             ON t1.name = t2.name
+SET t1.value = IF(t2.value > 0, t2.value, t1.value)
+WHERE t2.name = 'Joe'
+[ ---  end  ---- ]
+
+=== [ topic ][ delete ] ===
+[ --- start ---- ]
+DELETE FROM products WHERE name LIKE 'Pencil%';
+
+-- Use this with extreme care, as the deleted records are irrecoverable!
+mysql> DELETE FROM products;
+delete from debugger where 1=1;
 [ ---  end  ---- ]
 
 === [ topic ][ sql ][ join ] ===
@@ -462,13 +515,201 @@ mysql> SELECT FORMAT(12332.2,0);
 
 === [ topic ][ order by ] ===
 [ --- start ---- ]
+SELECT ... FROM tableName
+WHERE criteria
+ORDER BY columnA ASC|DESC, columnB ASC|DESC, ...
+
+Example :
 ORDER by name ASC;
 ORDER by date_created DESC;
+
+Example :
+SELECT * FROM products ORDER BY RAND();
 [ ---  end  ---- ]
 
 === [ topic ][ limit ] ===
 [ --- start ---- ]
 ORDER BY RAND() LIMIT 2;
+
+Example :
+-- Display the first two rows
+mysql> SELECT * FROM products ORDER BY price LIMIT 2;
+
+-- Skip the first two rows and display the next 1 row
+mysql> SELECT * FROM products ORDER BY price LIMIT 2, 1;
+[ ---  end  ---- ]
+
+=== [ topic ][ clause ][ AS ] ===
+[ --- start ---- ]
+AS - Alias
+- The alias will be used in displaying the name. 
+- It can also be used as reference
+
+Example :
+SELECT productID AS ID, productCode AS Code, name AS Description, 
+  price AS `Unit Price` FROM products ORDER BY ID;
+[ ---  end  ---- ]
+
+=== [ topic ][ clause ][ DISTINCT ] ===
+[ --- start ---- ]
+- A column may have duplicate values, DISTINCT select only distinct values
+
+Example :
+mysql> SELECT DISTINCT price AS `Distinct Price` FROM products;
++----------------+
+| Distinct Price |
++----------------+
+|           1.23 |
+|           1.25 |
+|           0.48 |
+|           0.49 |
++----------------+
+
+Example :
+-- DISTINCT combination of price and name
+mysql> SELECT DISTINCT price, name FROM products;
++-------+-----------+
+| price | name      |
++-------+-----------+
+|  1.23 | Pen Red   |
+|  1.25 | Pen Blue  |
+|  1.25 | Pen Black |
+|  0.48 | Pencil 2B |
+|  0.49 | Pencil 2H |
++-------+-----------+
+[ ---  end  ---- ]
+
+=== [ topic ][ clause ][ group by ] ===
+[ --- start ---- ]
+GROUP BY Clause
+- allows you to collapse multiple records with a common value into groups
+- GROUP BY by itself is not meaningful. It is used together with GROUP BY
+aggregate functions (such as COUNT(), AVG(), SUM()) to produce group summary.
+
+Example :
+mysql> SELECT * FROM products ORDER BY productCode, productID;
++-----------+-------------+-----------+----------+-------+
+| productID | productCode | name      | quantity | price |
++-----------+-------------+-----------+----------+-------+
+|      1004 | PEC         | Pencil 2B |    10000 |  0.48 |
+|      1005 | PEC         | Pencil 2H |     8000 |  0.49 |
+|      1001 | PEN         | Pen Red   |     5000 |  1.23 |
+|      1002 | PEN         | Pen Blue  |     8000 |  1.25 |
+|      1003 | PEN         | Pen Black |     2000 |  1.25 |
++-----------+-------------+-----------+----------+-------+
+ 
+mysql> SELECT * FROM products GROUP BY productCode;
+       -- Only first record in each group is shown
++-----------+-------------+-----------+----------+-------+
+| productID | productCode | name      | quantity | price |
++-----------+-------------+-----------+----------+-------+
+|      1004 | PEC         | Pencil 2B |    10000 |  0.48 |
+|      1001 | PEN         | Pen Red   |     5000 |  1.23 |
++-----------+-------------+-----------+----------+-------+
+[ ---  end  ---- ]
+
+=== [ topic ][ clause ][ group by ][ aggregate function ] ===
+[ --- start ---- ]
+GROUP BY Aggregate Functions: COUNT, MAX, MIN, AVG, SUM, STD, GROUP_CONCAT
+- The function COUNT(*) returns the rows selected; 
+- COUNT(columnName) counts only the non-NULL values of the given colum
+
+Example :
+-- Function COUNT(*) returns the number of rows selected
+mysql> SELECT COUNT(*) AS `Count` FROM products;
+       -- All rows without GROUP BY clause
++-------+
+| Count |
++-------+
+|     5 |
++-------+
+   
+mysql> SELECT productCode, COUNT(*) FROM products GROUP BY productCode;
++-------------+----------+
+| productCode | COUNT(*) |
++-------------+----------+
+| PEC         |        2 |
+| PEN         |        3 |
++-------------+----------+
+
+Example :
+mysql> SELECT MAX(price), MIN(price), AVG(price), STD(price), SUM(quantity)
+       FROM products;
+       -- Without GROUP BY - All rows
++------------+------------+------------+------------+---------------+
+| MAX(price) | MIN(price) | AVG(price) | STD(price) | SUM(quantity) |
++------------+------------+------------+------------+---------------+
+|       1.25 |       0.48 |   0.940000 |   0.371591 |         33000 |
++------------+------------+------------+------------+---------------+
+ 
+mysql> SELECT productCode, MAX(price) AS `Highest Price`, MIN(price) AS `Lowest Price`
+       FROM products
+       GROUP BY productCode;
++-------------+---------------+--------------+
+| productCode | Highest Price | Lowest Price |
++-------------+---------------+--------------+
+| PEC         |          0.49 |         0.48 |
+| PEN         |          1.25 |         1.23 |
++-------------+---------------+--------------+
+ 
+mysql> SELECT productCode, MAX(price), MIN(price),
+              CAST(AVG(price) AS DECIMAL(7,2)) AS `Average`,
+              CAST(STD(price) AS DECIMAL(7,2)) AS `Std Dev`,
+              SUM(quantity)
+       FROM products
+       GROUP BY productCode;
+       -- Use CAST(... AS ...) function to format floating-point numbers
++-------------+------------+------------+---------+---------+---------------+
+| productCode | MAX(price) | MIN(price) | Average | Std Dev | SUM(quantity) |
++-------------+------------+------------+---------+---------+---------------+
+| PEC         |       0.49 |       0.48 |    0.49 |    0.01 |         18000 |
+| PEN         |       1.25 |       1.23 |    1.24 |    0.01 |         15000 |
++-------------+------------+------------+---------+---------+---------------+
+[ ---  end  ---- ]
+
+=== [ topic ][ clause ][ HAVING ] ===
+[ --- start ---- ]
+- HAVING is similar to WHERE, 
+- but HAVING can operate on the GROUP BY aggregate functions; 
+- whereas WHERE operates only on columns.
+
+Example :
+mysql> SELECT
+          productCode AS `Product Code`,
+          COUNT(*) AS `Count`,
+          CAST(AVG(price) AS DECIMAL(7,2)) AS `Average`
+       FROM products 
+       GROUP BY productCode
+       HAVING Count >=3;
+          -- CANNOT use WHERE count >= 3
++--------------+-------+---------+
+| Product Code | Count | Average |
++--------------+-------+---------+
+| PEN          |     3 |    1.24 |
++--------------+-------+---------+
+[ ---  end  ---- ]
+
+=== [ topic ][ clause [ WITH ROLLUP ] ===
+[ --- start ---- ]
+The WITH ROLLUP clause shows the summary of group summary, e.g.,
+
+Example :
+mysql> SELECT 
+          productCode, 
+          MAX(price), 
+          MIN(price), 
+          CAST(AVG(price) AS DECIMAL(7,2)) AS `Average`,
+          SUM(quantity)
+       FROM products
+       GROUP BY productCode
+       WITH ROLLUP;        -- Apply aggregate functions to all groups
++-------------+------------+------------+---------+---------------+
+| productCode | MAX(price) | MIN(price) | Average | SUM(quantity) |
++-------------+------------+------------+---------+---------------+
+| PEC         |       0.49 |       0.48 |    0.49 |         18000 |
+| PEN         |       1.25 |       1.23 |    1.24 |         15000 |
+| NULL        |       1.25 |       0.48 |    0.94 |         33000 |
++-------------+------------+------------+---------+---------------+
 [ ---  end  ---- ]
 
 === [ topic ][ delete ] ===
@@ -540,6 +781,24 @@ GRANT ALL ON databaseName.* TO 'your_mysql_name'@'your_client_host';
 flush privileges;
 [ ---  end  ---- ]
 
+=== [ topic ][ grant ][ topic ] ===
+[ --- start ---- ]
+- existing privileges is not removed until a revoke is called
+-  "USAGE" privilege means "no privileges," 
+- GRANT USAGE ON *.* TO 'jeffrey'@'localhost' WITH MAX_QUERIES_PER_HOUR 90;
+
+CREATE ROLE role_name
+GRANT SELECT ON table_name TO role_name
+SHOW GRANTS FOR my_user@"hostname";
+GRANT EXECUTE ON PROCEDURE uangelic.catalogue_wedding_gowns TO web_user@'%';
+
+Example : 
+GRANT SELECT ON my_database.* TO my_user@"%" IDENTIFIED BY 'my_password';
+REVOKE ALL PRIVILEGES ON my_database.* FROM my_user@"%";
+GRANT SELECT, UPDATE ON my_database.* TO my_user@"%" IDENTIFIED BY
+'my_password';
+[ ---  end  ---- ]
+
 === [ topic ][ table ][ create ] ===
 [ --- start ---- ]
 CREATE TABLE aTable ( ...
@@ -565,8 +824,50 @@ table_option:
 === [ topic ][ table ][ describe ] ===
 [ --- start ---- ]
 - show the table information, like type, null, primary key etc
+- DESCRIBE <table>;  == SHOW COLUMNS FROM <table>;
+- MUL key allows nonunique index (multiple occurrences)
+- Key display order: PRI, UNI, MUL
 
 > describe mytable;
+> SHOW FULL COLUMS FROM tbl_name LIKE 'col_name';
+
+PRI=> primary key
+UNI=> unique key
+MUL = index that is not primary or unique
+
+
+[ ---  end  ---- ]
+
+=== [ topic ][ table ][ show ] ===
+[ --- start ---- ]
+syntax:
+SHOW [FULL] COLUMNS {FROM | IN} tbl_name [{FROM | IN} db_name]
+    [LIKE 'pattern' | WHERE expr]
+
+- "full" : include collation and comments, as well as the privileges 
+- displays information about the columns in a given table
+> show full columns from prdt_cl_wedding_gown;
+
+Example : drop foreign key
+> SHOW CREATE TABLE products \G
+
+Create Table: CREATE TABLE `products` (
+  `productID`   int(10) unsigned  NOT NULL AUTO_INCREMENT,
+  `productCode` char(3)           NOT NULL DEFAULT '',
+  `name`        varchar(30)       NOT NULL DEFAULT '',
+  `quantity`    int(10) unsigned  NOT NULL DEFAULT '0',
+  `price`       decimal(7,2)      NOT NULL DEFAULT '99999.99',
+  `supplierID`  int(10) unsigned   NOT NULL DEFAULT '501',
+  PRIMARY KEY (`productID`),
+  KEY `supplierID` (`supplierID`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`supplierID`) 
+     REFERENCES `suppliers` (`supplierID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=latin1
+
+mysql> ALTER TABLE products DROP FOREIGN KEY products_ibfk_1;
+
+Title: PhpMyAdmin
+use export function to see the "SHOW CREATE TABLE xxx"
 [ ---  end  ---- ]
 
 === [ topic ][ table ][ alter ][ add column ] ===
@@ -584,9 +885,21 @@ assessmentid | q1 | q2 | q3 | q4 | q5 | q6
 alter table product_catalogue modify category char(20) not null
 [ ---  end  ---- ]
 
+=== [ topic ][ explain vs describe ] ===
+[ --- start ---- ]
+- explain : give information about query, so it can be optimized
+- describe : give info about a table
+- when use explain on table, it behaves like describe
+[ ---  end  ---- ]
+
 === [ topic ][ primary key ] ===
 [ --- start ---- ]
 MySQL unique keys can be NULL whereas primary keys cannot be
+- A primary key is called a simple key if it is a single column
+- it is called a composite key if it is made up of several columns
+- Most RDBMSs build an index on the primary key to facilitate fast search. 
+- The primary key is often used to relate to other tables.
+
 [ ---  end  ---- ]
 
 === [ topic ][ foreign key ] ===
@@ -594,7 +907,35 @@ MySQL unique keys can be NULL whereas primary keys cannot be
 - foreign key ("column name") references "referenced-table-name"
 ("column-name-in-reference table")
 - on delete cascade, delete this column when referenced-table id got deleted?
+- Foreign key constraint imposed to ensure sreferential integrity
+- values in the child table must be valid values in the parent table.
+- MySQL require indexes on foreign keys and referenced keys
+  == so that foreign key can be checked fast and not require a 
+     table scan
 
+syntax:
+ALTER TABLE tableName ADD FOREIGN KEY (columnNmae) 
+    REFERENCES tableName (columnNmae);
+
+-- Child table definition
+CREATE TABLE tableName (
+   ......
+   ......
+   CONSTRAINT constraintName FOREIGN KEY (columName) REFERENCES parentTableName (columnName)
+     [ON DELETE RESTRICT | CASCADE | SET NULL | NO ACTION]   -- On DELETE reference action
+     [ON UPDATE RESTRICT | CASCADE | SET NULL | NO ACTION]   -- On UPDATE reference action
+)
+
+RESTRICT (default):   
+  == disallow DELETE or UPDATE of the parent's row
+CASCADE: 
+  == cascade the DELETE or UPDATE action to the matching rows in the child table.
+SET NULL: 
+  == set the foreign key value in the child table to NULL (if NULL is allowed).
+NO ACTION: 
+  == a SQL term which means no action on the parent's row. Same as RESTRICT in MySQL, which disallows DELETE or UPDATE (do nothing).
+
+Example :
 CREATE TABLE IF NOT EXISTS `feeds` (
   `Feed_ID` int(11) NOT NULL,
   `Feed_Name` varchar(32) NOT NULL,
@@ -613,6 +954,123 @@ CREATE TABLE IF NOT EXISTS `feeditems` (
   FOREIGN KEY (`Feed_ID`) REFERENCES `feeds`(`Feed_ID`)
                       ON DELETE CASCADE
 )
+
+Example 2:
+- for foreign key, the datatype need to be exactly the same
+ 
+CREATE TABLE prdt (
+  prdt_category varchar(5) NOT NULL COMMENT "WG, WGC-",
+  prdt_code smallint(4) ZEROFILL NOT NULL UNIQUE,
+
+  PRIMARY KEY (prdt_category, prdt_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+Create Table: CREATE TABLE `prdt_admin` (
+  `fk_prdt_category` varchar(5) NOT NULL DEFAULT '',
+  `fk_prdt_code` smallint(4) unsigned zerofill NOT NULL,
+  `url` text,
+  PRIMARY KEY (`fk_prdt_category`,`fk_prdt_code`),
+  UNIQUE KEY `fk_prdt_code` (`fk_prdt_code`),
+  FOREIGN KEY (`fk_prdt_category`,
+    `fk_prdt_code`) REFERENCES `prdt` (`prdt_category`, `prdt_code`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+[ ---  end  ---- ]
+
+=== [ topic ][ optimization ][ index ] ===
+[ --- start ---- ]
+- Indexes (or Keys) can be created on selected column to facilitate fast search. 
+- Without index, a "SELECT * FROM products WHERE productID=x" needs to match
+with the productID column of all the records in the products table. If
+productID column is indexed (e.g., using a binary tree), the matching can be
+greatly improved (via the binary tree search).
+- index columns which are frequently used in the WHERE clause; and as JOIN
+columns.
+- the drawback about indexing is cost and space
+- Building and maintaining indexes require computations and memory spaces
+- Indexes facilitate fast search but deplete the performance on modifying the
+table (INSERT/UPDATE/DELETE)
+- in MySQL, the keyword KEY is synonym to INDEX
+- in MySQL, indexes can be built on:
+  == a single column (column-index)
+  == a set of columns (concatenated-index)
+  == on unique-value column (UNIQUE INDEX or UNIQUE KEY)
+  == on a prefix of column for strings (VARCHAR or CHAR)
+    *** e.g. first 5 char.
+- can be more than one indexes in a table.
+- Index are automatically built on the primary-key column(s)
+
+Title: 3 way to create index
+1)
+CREATE TABLE tableName (
+   ......
+   [UNIQUE] INDEX|KEY indexName (columnName, ...),
+      -- The optional keyword UNIQUE ensures column are distinct
+      -- KEY is synonym to INDEX
+   ......
+   PRIMAY KEY (columnName, ...) 
+);
+
+2) 
+CREATE [UNIQUE] INDEX indexName ON tableName(columnName, ...);
+
+3)
+ALTER TABLE tableName ADD UNIQUE|INDEX|PRIMARY KEY indexName (columnName, ...)
+ 
+> SHOW INDEX FROM tableName;
+
+Example :
+CREATE TABLE departments (
+         dept_no    CHAR(4)      NOT NULL,
+         dept_name  VARCHAR(40)  NOT NULL,
+         PRIMARY KEY  (dept_no),   -- Index 
+         UNIQUE INDEX (dept_name)  -- Build INDEX on this unique-value column
+       );
+
+[ ---  end  ---- ]
+
+=== [ topic ][ optimization ][ index ][ multiple-column index ][ composite
+indexes ] ===
+[ --- start ---- ]
+- composite indexes = indexes on multiple columns
+- can be up to 16 columns
+- the order of composite is import
+  e.g. index (col1, col2, col3)
+  then will have indexed search capabilities on 
+  (col1), 
+  (col1, col2), and
+  (col1, col2, col3).
+- MySQL cannot use the index to perform lookups if the columns do not form a
+leftmost prefix of the index. 
+
+Example :
+CREATE TABLE test (
+    id         INT NOT NULL,
+    last_name  CHAR(30) NOT NULL,
+    first_name CHAR(30) NOT NULL,
+    PRIMARY KEY (id),
+    INDEX name (last_name,first_name)
+);
+
+the index will apply to following queries:
+... where last_name = "xxx";
+... where last_name = "xxx" AND first_name ="yyy";
+... where last_name = "xxx" AND (first_name="yyy" OR first_name="zzz");
+... where last_name = "xxx" AND first_name >='M' AND first_name < 'N'
+
+but not apply to following:
+... where fist_name = "yyy";
+... where last_name = "xxx" OR first_name="yyy";
+
+Title: Alternative method, use "hashed column"
+- If this column is short, reasonably unique, and indexed, it might be faster
+than a “wide” index on many columns.
+
+Example :
+SELECT * FROM tbl_name
+  WHERE hash_col=MD5(CONCAT(val1,val2))
+  AND col1=val1 AND col2=val2;
 [ ---  end  ---- ]
 
 === [ topic ][ table ][ unique ] ===
@@ -620,6 +1078,7 @@ CREATE TABLE IF NOT EXISTS `feeditems` (
 - NULL is treated as a unique value — which is why you cannot use comparisons
 such as value = NULL and need to use value IS NULL
 - ensure no two records have the same country, area, number and extension
+
 DROP TABLE IF EXISTS `phone`;
  
 CREATE TABLE `phone` (
@@ -812,6 +1271,8 @@ SELECT x, y FROM yourtable;
     *** 1 byte if length is less than 255
     *** 2 bytes prefix is used when length is more than 255
   == trailing spaces are not removed
+  == VARCHAR(255) takes around 700+ char leng in memory
+  == thus it's recommended to declare what's needed, e.g. VARCHAR(10)
 
 =============================================================================
 Value      CHAR(4) "Storage Required" VARCHAR(4) "Storage Required"
@@ -858,6 +1319,38 @@ mysql> SELECT myname LIKE 'Monty', myname LIKE 'Monty  ' FROM names;
 +---------------------+-----------------------+
 |                   1 |                     0 |
 +---------------------+-----------------------+
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ][ varchar ] ===
+[ --- start ---- ]
+- VARCHAR(255) is smart enough to store only the length you need
+- unlike CHAR(255) which would always store 255 characters.
+
+- as rows are copied from the storage engine layer to the SQL layer, VARCHAR
+fields are converted to CHAR to gain the advantage of working with fixed-width
+rows. So the strings in memory become padded out to the maximum length of your
+declared VARCHAR column.
+
+- When your query implicitly generates a temporary table, for instance while
+sorting or GROUP BY, this can use a lot of memory. If you use a lot of
+VARCHAR(255) fields for data that doesn't need to be that long, this can make
+the temporary table very large.
+
+- "padding out" behavior means that a string declared with the utf8 character
+  set pads out to three bytes per character even for strings you store with
+  single-byte content (e.g. ascii or latin1 characters). And likewise utf8mb4
+  character set causes the string to pad out to four bytes per character in
+  memory.
+
+- So a VARCHAR(255) in utf8 storing a short string like "No opinion" takes 11
+bytes on disk (ten lower-charset characters, plus one byte for length) but it
+takes 765 bytes in memory, and thus in temp tables or sorted results.
+
+- It's hard to know what the longest postal address is, of course, which is why
+many people choose a long VARCHAR that is certainly longer than any address. And
+255 is customary because it is the maximum length of a VARCHAR for which the
+length can be encoded with one byte. It was also the maximum VARCHAR length in
+MySQL older than 5.0.
 [ ---  end  ---- ]
 
 === [ topic ][ datatype ][ int ][ length ] ===
@@ -961,6 +1454,26 @@ $query= "SELECT user_id FROM users WHERE username=? and password=?";	//query def
 	$field2 = $_POST['pass'];			//you may want to do more input c
 [ ---  end  ---- ]
 
+=== [ topic ][ prepare statement ][ topic ] ===
+[ --- start ---- ]
+Example :
+CREATE PROCEDURE test(IN offset INT, IN limit INT)
+SET @query = "SELECT * FROM cl_wedding_gowns WHERE publish=1 LIMIT ?, ? ";
+SET @a = offset;
+SET @b = limit;
+
+PREPARE stmt FROM @query;
+EXECUTE stmt USING @a, @b;
+DEALLOCATE PREPARE stmt;
+
+Example :
+mysql> SET @s = 'SELECT SQRT(POW(?,2) + POW(?,2)) AS hypotenuse';
+mysql> PREPARE stmt2 FROM @s;
+mysql> SET @a = 6;
+mysql> SET @b = 8;
+mysql> EXECUTE stmt2 USING @a, @b;
+[ ---  end  ---- ]
+
 === [ topic ][ stored procedures ] ===
 [ --- start ---- ]
 Title: Benefits
@@ -1039,6 +1552,11 @@ CREATE TABLE IF NOT EXISTS `pre_authassignment` (
 syntax: mysql -u <user> -p<password> databasename < sql-procedure.sql
 $ mysql -u tester2 -p"temp123" test_ecommerce2 < ~/sql.sql
 MySQL> call stored_procedure_name();
+
+Example :
+mysql> source d:/myproject/load_products.sql
+
+DROP PROCEDURE IF EXISTS procedureName;
 [ ---  end  ---- ]
 
 === [ topic ][ procedure ] ===
@@ -1059,8 +1577,112 @@ CALL select_categories('coffee');
 CALL select_categories('goodies');
 [ ---  end  ---- ]
 
+=== [ topic ][ procedure ][ use parameter ] ===
+[ --- start ---- ]
+- An SP cannot be optimized with a dynamic table name, so many DBs, MySQL
+included, don't allow table names to be specified dynamically.
+- use EXECUTE IMMEDIATE
+- or use EXECUTE
+
+Example :
+CREATE PROCEDURE test_proc(IN serviceName VARCHAR(10), IN newsInfoTable VARCHAR(100))
+BEGIN                  
+    EXECUTE IMMEDIATE CONCAT('SELECT COUNT(*) FROM ',newsInfoTable,' WHERE newsServiceName=''', serviceName, ''''); 
+END
+
+Example :
+CREATE DEFINER=`root`@`localhost` PROCEDURE `test_proc`(IN serviceName VARCHAR(10),IN newsInfoTable VARCHAR(100))
+BEGIN                  
+    SET @sql = CONCAT('SELECT COUNT(*) FROM ',newsInfoTable,' WHERE newsServiceName=?;'); 
+    PREPARE s1 from @sql;
+    SET @paramA = serviceName;
+    EXECUTE s1 USING @paramA;
+    DEALLOCATE PREPARE sl;
+END$$
+[ ---  end  ---- ]
+
+=== [ topic ][ procedure ][ show ] ===
+[ --- start ---- ]
+HOW PROCEDURE STATUS;
+SHOW FUNCTION STATUS;
+
+show create procedure MY_PROC;
+help SHOW;
+
+select name from mysql.proc;
+
+SHOW PROCEDURE STATUS 
+WHERE Db = DATABASE() AND Type = 'PROCEDURE'
+
+SELECT * FROM INFORMATION_SCHEMA.ROUTINES
+[ ---  end  ---- ]
+
+=== [ topic ][ case ][ topic ] ===
+[ --- start ---- ]
+Syntax:
+13.6.5.1 CASE Syntax
+CASE case_value
+    WHEN when_value THEN statement_list
+    [WHEN when_value THEN statement_list] ...
+    [ELSE statement_list]
+END CASE
+Or:
+
+CASE
+    WHEN search_condition THEN statement_list
+    [WHEN search_condition THEN statement_list] ...
+    [ELSE statement_list]
+END CASE
+
+Example :
+begin
+    select *,
+        case _id
+        when 0 then 0
+        else 1
+        end as id
+    from table
+end
+- or - 
+begin
+    select *, _id != 0 as id
+    from table
+end
+
+Example :
+CREATE PROCEDURE p()
+  BEGIN
+    DECLARE v INT DEFAULT 1;
+
+    CASE v
+      WHEN 2 THEN SELECT v;
+      WHEN 3 THEN SELECT 0;
+      ELSE
+        BEGIN
+        END;
+    END CASE;
+  END;
+
+Example :
+set time = time(request_time);    
+
+case  
+when time < '09:15:00' && time > '08:15:00' then      
+set user_session_id = 1; 
+
+when time < '10:15:00' && time > '11:15:00' then
+set user_session_id = 2;  
+
+else set user_session_id =3;
+
+end case; 
+[ ---  end  ---- ]
+
 === [ topic ][ mysqli_fetch ][ MYSQLI_ASSOC ] ===
 [ --- start ---- ]
+- MYSQLI_ASSOC constant this function will behave identically to the
+mysqli_fetch_assoc()
+
 - MYSQLI_ASSOC
    == give relational array
     e.g. :  name => Synook,
@@ -1114,6 +1736,233 @@ mysqli_free_result($result);
 /* close connection */
 mysqli_close($link);
 
+
+[ ---  end  ---- ]
+
+=== [ topic ][ operator ] ===
+[ --- start ---- ]
+Title: Compare Number
+'=' (equal to), 
+'<>' or '!=' (not equal to), 
+'>' (greater than), 
+'<' (less than), 
+'>=' (greater than or equal to), 
+'<=' (less than or equal to), to compare
+CAUTION: Do not compare FLOATs (real numbers) , as they are not precise
+
+Title: String (RegEx)
+'abc%'  matches strings beginning with 'abc';
+'%xyz'  matches strings ending with 'xyz';
+'%aaa%' matches strings containing 'aaa';
+'___'   matches strings containing exactly three characters; and
+'a_b%'  matches strings beginning with 'a', followed by any single character,
+          followed by 'b', followed by zero or more characters.
+
+Title: Arithmetic
++	Addition
+-	Subtraction
+*	Multiplication
+/	Division
+DIV	Integer Division
+%	Modulus (Remainder)
+
+Title: Logical Operators
+AND, OR, NOT, XOR
+IN, NOT IN (clearer than AND-OR)
+BETWEEN, NOT BETWEEN
+IS NULL, IS NOT NULL
+
+- EDIT: IN and NOT IN operators are known to be much faster than the JOIN
+operators, as well as much easier to construct, and repeat.
+Example :
+SELECT * FROM products WHERE name IN ('Pen Red', 'Pen Black');
+SELECT * FROM products 
+      WHERE (price BETWEEN 1.0 AND 2.0) AND (quantity BETWEEN 1000 AND 2000);
+SELECT column FROM table WHERE column NOT IN 
+      (SELECT intended_foreign_key FROM another_table);
+[ ---  end  ---- ]
+
+=== [ topic ][ language ] ===
+[ --- start ---- ]
+- use utf8
+SET NAMES 'utf8mb4';
+INSERT INTO new_table VALUES (1, _utf8mb4'𩾦');
+
+mysql> charset utf8
+Charset changed
+[ ---  end  ---- ]
+
+=== [ topic ][ raw data ][ load ] ===
+[ --- start ---- ]
+- The default line delimiteris '\n' (Unix-style). 
+  file is prepared in Windows: '\r\n'. 
+  For Mac, use LINES TERMINATED BY '\r'.
+- The default column delimiter is "tab" 
+  (in a so-called TSV file - Tab-Separated Values). 
+  If you use another delimiter, e.g. ',', include COLUMNS TERMINATED BY ','.
+- You must use \N (back-slash + uppercase 'N') for NULL.
+
+Example :
+@@@ product_in.csv:
+\N,PEC,Pencil 3B,500,0.52
+\N,PEC,Pencil 4B,200,0.62
+\N,PEC,Pencil 5B,100,0.73
+\N,PEC,Pencil 6B,500,0.47
+
+mysql> LOAD DATA LOCAL INFILE 'd:/path-to/products_in.csv' INTO TABLE products
+         COLUMNS TERMINATED BY ','
+         LINES TERMINATED BY '\r\n';
+
+Example :
+-- Syntax
+> mysqlimport -u username -p --local databaseName tableName.tsv
+   -- The raw data must be kept in a TSV file of filename the same as tablename
+> mysqlimport --help
+ 
+-- Example
+> mysqlimport -u username -p --local southwind d:/myproject/products_in.tsv
+
+[ ---  end  ---- ]
+
+=== [ topic ][ raw data ][ export ] ===
+[ --- start ---- ]
+SELECT ... INTO OUTFILE fileName FROM tableName 
+  - to export data from a table to a text file. 
+
+Example :
+mysql> SELECT * FROM products INTO OUTFILE 'd:/path-to/products_out.csv' 
+         COLUMNS TERMINATED BY ','
+         LINES TERMINATED BY '\r\n';
+[ ---  end  ---- ]
+
+=== [ topic ][ autocommit ][ transaction ] ===
+[ --- start ---- ]
+- autocommit variable is local to a single session
+
+Example :
+set autocommit=0;
+update xxx;
+commit;
+set autocommit=1;
+
+Example :
+start transaction
+update xx
+commit; /// actual commit take places
+[ ---  end  ---- ]
+
+=== [ topic ][ to learn ] ===
+[ --- start ---- ]
+EXPLAIN PARTITIONS SELECT * FROM statistics WHERE user_id = 1\G
+UPDATE column which is FOREIGN KEY
+FOREIGN KEY vs KEY
+[ ---  end  ---- ]
+
+=== [ topic ][ datatype ] ===
+[ --- start ---- ]
+DATE  - displays DATE values in 'YYYY-MM-DD' format.
+DATETIME - displays DATETIME values in 'YYYY-MM-DD HH:MM:SS' format
+         - range: '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.
+TIMESTAMP - range of '1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC.
+          - converts values from the current time zone to UTC for storage 
+          - converts back from UTC to the current time zone for retrieval
+          - This does not occur for other types such as DATETIME.
+[ ---  end  ---- ]
+
+=== [ topic ][ help ][  ] ===
+[ --- start ---- ]
+> ?
+> help
+> help contents
+> help Data Definition
+[ ---  end  ---- ]
+
+=== [ topic ][ phpmyadmin ] ===
+[ --- start ---- ]
+underline : index
+dotted line: column with comment
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ prepared statement ] ===
+[ --- start ---- ]
+SET @table_name = "mytable";
+SET @query = CONCAT("SELECT * from ", @table_name);
+SELECT @query;
+
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ session variable debug ] ===
+[ --- start ---- ]
+SET @counter := 0;
+SET @msg := '';
+
+CREATE FUNCTION debugger() RETURNS INT
+BEGIN
+  SELECT @counter + 1 INTO @counter;
+  SELECT CONCAT('[Debug #',@counter,']') INTO @msg;
+  RETURN 1;
+END;
+$$
+
+SELECT debugger();
+SELECT @msg;
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ temp table ] ===
+[ --- start ---- ]
+SET @counter := 0;
+CREATE TABLE debugger ( 
+  id INT NOT NULL AUTO_INCREMENT,
+  time_now DATETIME,
+  query_comment CHAR(200),
+) 
+ENGINE=MEMORY;
+
+CREATE FUNCTION debugger() RETURNS INT
+BEGIN
+  SELECT @counter + 1 INTO @counter;
+  INSERT INTO debugger VALUES (CONCAT('[Debug #',@counter,']'));
+  RETURN 1;
+END;
+$$
+
+SELECT debugger();
+SELECT debugger();
+SELECT debugger();
+SELECT debug_comment FROM debugger;
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ enable log!! ] ===
+[ --- start ---- ]
+sudo vim /etc/mysql/my.cnf
+uncomment following line
+general_log_file        = /var/log/mysql/mysql.log
+general_log             = 1
+sudo service mysql restart
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ not able to add foreign key ] ===
+[ --- start ---- ]
+- check if any discrepancy
+SELECT column FROM table WHERE column NOT IN 
+(SELECT intended_foreign_key FROM another_table)
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ update value based on another column ] ===
+[ --- start ---- ]
+http://dev.mysql.com/doc/en/data-type-defaults.html
+
+CREATE TRIGGER foo AFTER INSERT ON TSM_TRANSACTION_TBL FOR EACH ROW
+  IF NEW.REMAINING IS NULL THEN
+    SET NEW.REMAINING := NEW.MAX_VALUE - NEW.BOOKED_UNITS;
+  END IF;;
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ Commands out of sync ] ===
+[ --- start ---- ]
+Desc: This error results when you terminate your query with a semicolon
+delimiter inside the application. 
+Solution: 
 
 [ ---  end  ---- ]
 

@@ -1,0 +1,175 @@
+{{{ one to many relation ]
+[ --- start ---- ]
+
+[ ---  end  ---- ]
+=== [ topic ][ chua ][ prepare data ] ===
+[ --- start ---- ]
+create table products (productID int, prodcutCode CHAR(3), name VARCHAR(30),
+quantity INT, price DECIMAL(10, 2), supplierID INT);
+
+insert into products values 
+  (2001,"PEC","Pencil 3B",500,0.52,501),
+  (2002,"PEC","Pencil 4B",200,0.62,501),
+  (2003,"PEC","Pencil 5B",100,0.73,501),
+  (2004,"PEC","Pencil 6B",500,0.47,502);
+
+
+MariaDB [chua]> select * from products;
++-----------+-------------+-----------+----------+-------+------------+
+| productID | prodcutCode | name      | quantity | price | supplierID |
++-----------+-------------+-----------+----------+-------+------------+
+|      2001 | PEC         | Pencil 3B |      500 |  0.52 |        501 |
+|      2002 | PEC         | Pencil 4B |      200 |  0.62 |        501 |
+|      2003 | PEC         | Pencil 5B |      100 |  0.73 |        501 |
+|      2004 | PEC         | Pencil 6B |      500 |  0.47 |        502 |
++-----------+-------------+-----------+----------+-------+------------+
+
+mysql> DROP TABLE IF EXISTS suppliers;
+   
+mysql> CREATE TABLE suppliers (
+         supplierID  INT UNSIGNED  NOT NULL AUTO_INCREMENT, 
+         name        VARCHAR(30)   NOT NULL DEFAULT '', 
+         phone       CHAR(8)       NOT NULL DEFAULT '',
+         PRIMARY KEY (supplierID)
+       );
+   
+mysql> DESCRIBE suppliers;
++------------+------------------+------+-----+---------+----------------+
+| Field      | Type             | Null | Key | Default | Extra          |
++------------+------------------+------+-----+---------+----------------+
+| supplierID | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(30)      | NO   |     |         |                |
+| phone      | char(8)          | NO   |     |         |                |
++------------+------------------+------+-----+---------+----------------+
+   
+mysql> INSERT INTO suppliers VALUE
+          (501, 'ABC Traders', '88881111'), 
+          (502, 'XYZ Company', '88882222'), 
+          (503, 'QQ Corp', '88883333');
+   
+mysql> SELECT * FROM suppliers;
++------------+-------------+----------+
+| supplierID | name        | phone    |
++------------+-------------+----------+
+|        501 | ABC Traders | 88881111 |
+|        502 | XYZ Company | 88882222 |
+|        503 | QQ Corp     | 88883333 |
++------------+-------------+----------+
+
+[ ---  end  ---- ]
+
+=== [ topic ][ chua ][ alter table ] ===
+[ --- start ---- ]
+mysql> ALTER TABLE products
+       ADD COLUMN supplierID INT UNSIGNED NOT NULL;
+   
+mysql> DESCRIBE products;
++-------------+------------------+------+-----+------------+----------------+
+| Field       | Type             | Null | Key | Default    | Extra          |
++-------------+------------------+------+-----+------------+----------------+
+| productID   | int(10) unsigned | NO   | PRI | NULL       | auto_increment |
+| productCode | char(3)          | NO   |     |            |                |
+| name        | varchar(30)      | NO   |     |            |                |
+| quantity    | int(10) unsigned | NO   |     | 0          |                |
+| price       | decimal(10,2)    | NO   |     | 9999999.99 |                |
+| supplierID  | int(10) unsigned | NO   |     | NULL       |                |
++-------------+------------------+------+-----+------------+----------------+
+[ ---  end  ---- ]
+
+=== [ topic ][ foreign key ] ===
+[ --- start ---- ]
+- foreign key constraints ensure integral relationship with parent table
+Next, we shall add a foreign key constraint on the supplierID columns of the
+products child table to the suppliers parent table, to ensure that every
+supplierID in the products table always refers to a valid supplierID in the
+suppliers table - this is called referential integrity.
+
+Before we can add the foreign key, we need to set the supplierID of the
+existing records in the products table to a valid supplierID in the suppliers
+table (say supplierID=501).
+
+-- Set the supplierID of the existing records to a valid supplierID of supplier table
+mysql> UPDATE products SET supplierID = 501;
+ 
+-- Add a foreign key constrain
+mysql> ALTER TABLE products
+       ADD FOREIGN KEY (supplierID) REFERENCES suppliers (supplierID);
+Query OK, 4 rows affected (0.26 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+  
+mysql> DESCRIBE products;
++-------------+------------------+------+-----+------------+----------------+
+| Field       | Type             | Null | Key | Default    | Extra          |
++-------------+------------------+------+-----+------------+----------------+
+  ......
+| supplierID  | int(10) unsigned | NO   | MUL |            |                |
++-------------+------------------+------+-----+------------+----------------+
+ 
+mysql> UPDATE products SET supplierID = 502 WHERE productID  = 2004;
+   
+mysql> SELECT * FROM products;
++-----------+-------------+-----------+----------+-------+------------+
+| productID | productCode | name      | quantity | price | supplierID |
++-----------+-------------+-----------+----------+-------+------------+
+|      2001 | PEC         | Pencil 3B |      500 |  0.52 |        501 |
+|      2002 | PEC         | Pencil 4B |      200 |  0.62 |        501 |
+|      2003 | PEC         | Pencil 5B |      100 |  0.73 |        501 |
+|      2004 | PEC         | Pencil 6B |      500 |  0.47 |        502 |
++-----------+-------------+-----------+----------+-------+------------+
+
+syntax: alter table
+ALTER TABLE tableName
+  {ADD [COLUMN] columnName columnDefinition}
+  {ALTER|MODIFY [COLUMN] columnName columnDefinition
+    {SET DEFAULT columnDefaultValue} | {DROP DEFAULT}}
+  {DROP [COLUMN] columnName [RESTRICT|CASCADE]}
+  {ADD tableConstraint}
+  {DROP tableConstraint [RESTRICT|CASCADE]}
+
+
+/// now can't update the parent supplierID
+> update suppliers set supplierID=509 where phone=88882222;
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`chua`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`supplierID`) REFERENCES `suppliers` (`supplierID`))
+
+[ ---  end  ---- ]
+
+=== [ topic ][ SELECT...JOIN...ON ] ===
+[ --- start ---- ]
+-- ANSI style: JOIN ... ON ...
+mysql> SELECT products.name, price, suppliers.name 
+       FROM products 
+          JOIN suppliers ON products.supplierID = suppliers.supplierID
+       WHERE price < 0.6;
++-----------+-------+-------------+
+| name      | price | name        |
++-----------+-------+-------------+
+| Pencil 3B |  0.52 | ABC Traders |
+| Pencil 6B |  0.47 | XYZ Company |
++-----------+-------+-------------+
+
+Example : not recommended
+-- Join via WHERE clause (lagacy and not recommended)
+mysql> SELECT products.name, price, suppliers.name 
+       FROM products, suppliers 
+       WHERE products.supplierID = suppliers.supplierID
+          AND price < 0.6;
+[ ---  end  ---- ]
+}}} one to many relation - end ] 
+
+[ topic ][ many to many ]
+
+{{{
+=== [ topic ][ intro ] ===
+[ --- start ---- ]
+Suppose that a product has many suppliers; and a supplier supplies many
+products in a so-called many-to-many relationship. The above solution breaks.
+You cannot include the supplierID in the products table, as you cannot
+determine the number of suppliers, and hence, the number of columns needed for
+the supplierIDs. Similarly, you cannot include the productID in the suppliers
+table, as you cannot determine the number of products.
+
+To resolve this problem, you need to create a new table, known as a junction
+table (or joint table), to provide the linkage.
+[ ---  end  ---- ]
+
+}}} [ topic ][ many to many ][ END ]

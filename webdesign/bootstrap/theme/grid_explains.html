@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> </title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/bootstrap-multiselect.css">
+
+  <script src="/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+  <link type="image/png" rel="shortcut icon" href="/img/ua-icon.png"/>
+</head>
+<style type="text/css" media="screen">
+.container {
+  background-color: gold;
+  border: 2px red solid;
+  margin-bottom: 20px;
+}
+
+.row {
+  background-color: rgba(183, 197, 77, 0.52);
+  border: 1px rgb(0, 0, 0) solid;
+}
+
+.col-md-3,
+.col-md-1,
+.col-md-2,
+.col-md-6,
+.col-md-12
+{
+  border: 1px rgb(0, 0, 0) solid;
+}
+
+h4 {
+  padding-left: 30px;
+}
+</style>
+<body>
+<!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> 
+    browser. Please <a href="http://browsehappy.com/">upgrade your 
+    browser</a> to improve your experience.</p>
+<![endif]-->
+
+  <h4>.container and .row</h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="row" style=" ">
+      row has a black border. <br />
+      row has a -15px margin on left and right. <br />
+      This let the row to touch the edge of the border of container. <br />
+      <br />
+    </div>
+
+  </div>
+
+  <h4>.row and .col</h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="row" style=" ">
+      <div class="col-md-12">
+          column has a 15px padding, so it will not touches the edge. <br />
+      </div>
+      <div class="col-md-6 text-right"
+        style="
+          color: white;
+          background-color: rgba(250, 0, 0, 0.8);
+          border: dotted pink 3px;
+        ">
+          column has a 15px padding. <br />
+          where two columns intersect, it create a 30px gutter. <br />
+      </div>
+      <div class="col-md-6"
+        style="
+          color: white;
+          background-color: rgba(0, 0, 255, 0.8);
+          border: solid rgba(0,0,0,0.5) 3px;
+        ">
+          column has a 15px padding. <br />
+          where two columns intersect, it create a 30px gutter. <br />
+      </div>
+    </div>
+
+  </div>
+
+  <h4>.col == .container as a placeholder for .row</h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="row" style=" ">
+      <div class="col-md-12">
+          column has a 15px padding, so it will not touches the edge. <br />
+      </div>
+      <div class="col-md-6 text-right"
+        style="
+          color: white;
+          background-color: rgba(250, 0, 0, 0.8);
+          border: dotted pink 3px;
+        ">
+          column has a 15px padding. <br />
+          where two columns intersect, it create a 30px gutter. <br />
+      </div>
+      <div class="col-md-6"
+        style="
+          color: white;
+          background-color: rgba(0, 0, 255, 0.8);
+          border: solid rgba(0,0,0,0.5) 3px;
+        ">
+          column has a 15px padding. <br />
+          where two columns intersect, it create a 30px gutter. <br />
+          <div class="row"> row inside column no problem! <br />
+            Don't nest container inside another container for a new row!
+          </div>
+          <div class="row"> row inside column no problem!  <br />
+          column here act the same way as container, which has 15px padding.
+          </div>
+          <div class="row">
+              <div class="col-md-3"> col-md-3 </div>
+              <div class="col-md-3"> col-md-3 </div>
+              <div class="col-md-3"> col-md-3 </div>
+              <div class="col-md-3"> col-md-3 </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>.row and offset </h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="row" style=" ">
+      <div class="col-md-2 col-md-offset-1">col-md-2 col-md-offset-1</div>
+      <div class="col-md-3 col-md-offset-4">col-md-3 col-md-offset-4</div>
+      <div class="col-md-2">col-md-2</div>
+    </div>
+  </div>
+
+  <h4>.push and .pull </h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="row" style=" ">
+      <div class="col-md-2 col-md-push-10">left push to right</div>
+      <div class="col-md-10 col-md-pull-2">right pull to left</div>
+    </div>
+  </div>
+
+  <h4>problem: lacking a container, .row -15px goes overflow</h4>
+    <div class="row" style=" ">
+      this content will go overflow
+    </div>
+
+  <h4>problem: lacking a .row, double padding occurs</h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="col-md-6"> the left padding is now 15px
+      <div class="col-md-12">the left padding is now 30px
+        <div class="col-md-12">the left padding is now 45px
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>problem: nested container</h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="row" style=" ">
+      <div class="col-md-6">col-md-6</div>
+      <div class="col-md-6">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              A nested container inside a column. <br />
+              This will cause weird scrolling, double padding, and gutter.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>problem: .push and .pull cause overflow</h4>
+  <div class="container" style=" ">
+    container has 15px padding. <br />
+    container has red border. <br />
+    Never nested one container inside another container. <br />
+    <br />
+    <br />
+    <div class="row" style=" ">
+      <div class="col-md-3 col-md-push-10">left push to right,overflow</div>
+      <div class="col-md-9 col-md-pull-4">right pull to left,overflow</div>
+    </div>
+  </div>
+
+
+
+
+
+<!--<script src="/https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+</script>-->
+<script src="js/vendor/jquery-1.11.0.min.js"></script>
+<script src="js/vendor/bootstrap.min.js"></script>
+<script src="plugin/holder/holder.js"></script>
+</script>
+
+<script type="text/javascript" charset="utf-8">
+
+</script>
+
+</body>
+</html>
+
+
+
+
