@@ -1,0 +1,62 @@
+=== [ topic ][ intro ] ===
+[ --- start ---- ]
+Bundler provides a consistent environment for Ruby projects by tracking and
+installing the exact gems and versions that are needed. 
+[ ---  end  ---- ]
+
+=== [ topic ][ get start ] ===
+[ --- start ---- ]
+1. gem install bundler
+2. create a Gemfile
+source 'https://rubygems.org' 
+gem 'nokogiri' 
+gem 'rack', '~>1.1' 
+gem 'rspec', :require => 'spec'
+3. run bundle install
+> bundle install
+4. git add Gemfile Gemfile.lock
+[ ---  end  ---- ]
+
+=== [ topic ][ update ] ===
+[ --- start ---- ]
+bundle update singularitygs
+[ ---  end  ---- ]
+
+=== [ topic ][ bootstrap ][ Gemfile ] ===
+[ --- start ---- ]
+Example :
+source 'https://rubygems.org'
+ 
+gem 'sass', "3.2.19"
+gem 'compass', "0.12.5"
+gem 'bootstrap-sass', '~> 3.1.1'
+
+
+Example :
+source "https://rubygems.org"
+ 
+gem 'sass', "3.2.9"
+gem 'sass-globbing', ">= 1.1.0"
+gem 'compass', "0.12.2"
+gem 'breakpoint',  "2.0.5"
+gem 'singularitygs', "< 2.0.0"
+[ ---  end  ---- ]
+
+=== [ topic ][ show ][ check the gem location ] ===
+[ --- start ---- ]
+$ bundle show bootstrap-sass
+/home/knxy/.rbenv/versions/2.0.0-p451/lib/ruby/gems/2.0.0/gems/bootstrap-sass-3.1.1.0
+[ ---  end  ---- ]
+
+=== [ topic ][ list ] ===
+[ --- start ---- ]
+// to see a list of gem installed
+gem list
+bundle exec compass watch
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ missing gem ] ===
+[ --- start ---- ]
+Could not find [name-of-gem]-x.x.x in any of the sources
+Run `bundle install` to install missing gems.
+[ ---  end  ---- ]

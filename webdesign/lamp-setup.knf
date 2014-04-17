@@ -516,8 +516,9 @@ ErrorDocument 403 "Sorry can't allow you access today"
 
 === [ topic ][ apache ][ mounting ] ===
 [ --- start ---- ]
-sudo mount -t ntfs -o rw,auto,user,fmask=0022,dmask=0000 /dev/whatever
-/mnt/whatever
+sudo umount /dev/sda6
+sudo mount -t ntfs -o rw,auto,user,uid=1002,gid=1002,fmask=0022,dmask=0000 /dev/sda6 /media/musics
+
 
 - or - 
 
@@ -537,6 +538,9 @@ defaults,permissions,users,uid=1000,utf8  0 0
 - mine - 
 # mount to musics
 UUID="EAC601B4C60181D5" /media/musics                     ntfs-3g defaults,permissions,users,uid=1000,utf8  0 0
+
+UUID="EAC601B4C60181D5" /media/musics                     ntfs-3g
+defaults,permissions,users,uid=1000,utf8,dmask=027,fmask=137  0 0
 [ ---  end  ---- ]
 
 === [ topic ][ apache ][ problem ] ===

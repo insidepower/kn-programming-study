@@ -1,0 +1,115 @@
+=== [ topic ][ media query ] ===
+[ --- start ---- ]
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Sass Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: $screen-sm-min) { ... }
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: $screen-md-min) { ... }
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: $screen-lg-min) { ... }
+
+@media (max-width: $screen-xs-max) { ... }
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) { ... }
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) { ... }
+@media (min-width: $screen-lg-min) { ... }
+[ ---  end  ---- ]
+
+=== [ topic ][ overridin bootstrap ] ===
+[ --- start ---- ]
+Example :
+$bodyBackground: red;
+@import "bootstrap";
+
+Example : if no variable defined
+@import "bootstrap";
+
+/* override anything manually, like rounded buttons */
+.btn {
+  border-radius: 0;
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ text ][ emphasis ] ===
+[ --- start ---- ]
+- <strong>Bold Word With Meaning</strong>
+- <em>italic</em>
+- <b>for bold word without conveying important meaning</b>
+- <i>mostly for voice, technical terms</i>
+[ ---  end  ---- ]
+
+=== [ topic ][ text ][ color ] ===
+[ --- start ---- ]
+<p class="text-muted">...</p>
+<p class="text-primary">...</p>
+<p class="text-success">...</p>
+<p class="text-info">...</p>
+<p class="text-warning">...</p>
+<p class="text-danger">...</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ text ][ alignment ] ===
+[ --- start ---- ]
+<p class="text-left">Left aligned text.</p>
+<p class="text-center">Center aligned text.</p>
+<p class="text-right">Right aligned text.</p>
+[ ---  end  ---- ]
+
+=== [ topic ][ text ][ email ] ===
+[ --- start ---- ]
+<address>
+  <strong>Twitter, Inc.</strong><br>
+  795 Folsom Ave, Suite 600<br>
+  San Francisco, CA 94107<br>
+  <abbr title="Phone">P:</abbr> (123) 456-7890
+</address>
+
+<address>
+  <strong>Full Name</strong><br>
+  <a href="mailto:#">first.last@example.com</a>
+</address>
+[ ---  end  ---- ]
+
+=== [ topic ][ text ][ blockquote ] ===
+[ --- start ---- ]
+- Add <small> tag for identifying the source. 
+- Wrap the name of the source work in <cite>.
+<blockquote>
+  <p>Lorem i Integer posuere erat a ante.</p>
+  <small> by <cite title="Source Title">Source Title</cite></small>
+</blockquote>
+
+Title: pull right
+<blockquote class="pull-right"> ...  </blockquote>
+[ ---  end  ---- ]
+
+=== [ topic ][ text ][ abbreviation ] ===
+[ --- start ---- ]
+<abbr title="attribute">attr</abbr>
+// for slightly smaller font-size
+<abbr title="HyperText Markup Language" class="initialism">HTML</abbr>
+[ ---  end  ---- ]
+
+=== [ topic ][ list ] ===
+[ --- start ---- ]
+<ul class="list-unstyled">
+  <li>...</li>
+</ul>
+
+Title: inline
+<ul class="list-inline">
+  <li>...</li>
+</ul>
+[ ---  end  ---- ]
+
+=== [ topic ][ table ] ===
+[ --- start ---- ]
+<div class="table-responsive">
+  <table class="table">
+    ...
+  </table>
+</div>
+[ ---  end  ---- ]

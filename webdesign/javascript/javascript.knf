@@ -1834,6 +1834,42 @@ var myObjectHello = sayHello.bind( myObject );
 sayHello();      // "Hi! My name is the global object"
 myObjectHello(); // "Hi! My name is Rebecca"
 
+Example :
+function set_cookie() {
+    var secs = parseInt($('#expsecs').val(), 10);
+    if (isNaN(secs)) {
+        secs = 5;
+    }
+    var now = new Date();
+    var exp = new Date(now.getTime() + secs*1000);
+    var status = '';
+    document.cookie = 'ExpirationCookieTest=1; expires='+exp.toUTCString();
+    if (document.cookie && document.cookie.indexOf('ExpirationCookieTest=1') != -1) {
+        status = 'Cookie successfully set. Expiration in '+secs+' seconds';
+    } else {
+        status = 'Cookie NOT set. Please make sure your browser is accepting cookies';
+    }
+
+    $('#cookiestatus').text(status);
+}
+
+function get_cookie() {
+    var status = '';
+    if (document.cookie && document.cookie.indexOf('ExpirationCookieTest=1') != -1) {
+        status = 'Cookie is present';
+    } else {
+        status = 'Cookie is NOT present. It may be expired, or never set';
+    }
+    $('#cookiestatus').text(status);
+}
+
+function init() {
+    $('#setcookie').bind('click', set_cookie);
+    $('#getcookie').bind('click', get_cookie);
+}
+
+$(init);
+
 [ ---  end  ---- ]
 
 === [ topic ][ this ] ===
@@ -1999,6 +2035,43 @@ bim(); // ReferenceError: bim is not defined
 
 === [ topic ][ closures ][ scope ] ===
 [ --- start ---- ]
+- A closure is an inner function that has access to the outer (enclosing)
+function’s variables—scope chain.
+
+Example : problem with closure
+// This example is explained in detail below (just after this code box).
+function celebrityIDCreator (theCelebrities) {
+    var i;
+    var uniqueID = 100;
+    for (i = 0; i < theCelebrities.length; i++) {
+      theCelebrities[i]["id"] = function ()  {
+        return uniqueID + i;
+      }
+    }
+    
+    return theCelebrities;
+}
+
+var actionCelebs = 
+[{name:"Stallone", id:0}, {name:"Cruise", id:0}, {name:"Willis", id:0}];
+
+var createIdForActionCelebs = celebrityIDCreator (actionCelebs);
+
+var stalloneID = createIdForActionCelebs [0];  
+console.log(stalloneID.id()); // 103 for [0], [1], [2]
+console.log(createIdForActionCelebs [1].id());
+console.log(createIdForActionCelebs [2].id());
+
+- to fix use an Immediately Invoked Function Expression (IIFE),
+for (i = 0; i < theCelebrities.length; i++) {
+  theCelebrities[i]["id"] = function (j)  { 
+      return function () {
+          return uniqueID + j; // j is current i, not last i
+            } () // BY adding () at the end of this function, we are executing
+                 // it immediately and returning just the value of uniqueID +
+                 // j, instead of returning a function.
+        } (i); // immediately invoke the function with current i var
+    }
 
 Example 1:
 for ( var i = 0; i < 5; i++ ) {
@@ -2130,6 +2203,15 @@ var boundGetUser = getUser.bind( module );
  
 // janedoe
 boundGetUser();
+[ ---  end  ---- ]
+
+=== [ topic ][ json ][ topic ] ===
+[ --- start ---- ]
+- convert json object to json string
+JSON.stringify(value[, replacer [, space]])
+
+Example :
+JSON.stringify({x: 5, y: 6});        // '{"x":5,"y":6}' or '{"y":6,"x":5}'
 [ ---  end  ---- ]
 
 === [ topic ][ multiline ] ===

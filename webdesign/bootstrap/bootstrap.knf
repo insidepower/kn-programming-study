@@ -100,6 +100,17 @@ list-style: none;
 }
 [ ---  end  ---- ]
 
+=== [ topic ][ dropdown ][ hover color ] ===
+[ --- start ---- ]
+- override to give color
+.dropdown-menu li > a:hover, 
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a {
+  background-image: none;
+  background-color: blue;
+}
+[ ---  end  ---- ]
+
 === [ topic ][ navbar ][ problem ][ search on next line ] ===
 [ --- start ---- ]
 Problem: input-group-btn always go into next line of navbar-header
@@ -146,7 +157,68 @@ Solution: remove the "in" from div class
 
 === [ topic ][ example ][ grid ] ===
 [ --- start ---- ]
+- Bootstrap 3 is Mobile First CSS
+- all of the base columns are assumed to be 100% width, stacked vertically
+- e.g. when view size become small, col-md will goes back to 100% width stack
+  so col-md-6 will now have the 100% of mobile view size instead of 50%
+col-xs-*
+col-sm-*
+col-md-*
+col-lg-*
 
+Example :  Bootstrap 2 always give 50%, 50% width
+<div class="span6">I’m on the left</div>
+<div class="span6">I’m on the right</div>
+
+Example : 
+- if viewport is larger than medium-size, then split 50%
+- if viewport is smaller than medium-size, use up 100% instead of 50%
+<div class="col-md-6">I'm on the left</div>
+<div class="col-md-6">I'm on the right</div>
+
+Example : to stay as 50%-50% regardless of viewport size
+<div class="col-xs-6">I’m on the left</div>
+<div class="col-xs-6">I’m on the right</div>
+
+Example : medium-size split 50%-50%, large-size split 40%-60%
+<div class="col-md-6 col-lg-4">I’m on the left</div>
+<div class="col-md-6 col-lg-8">I’m on the right</div>
+
+Example :
+<div class="col-sm-3 col-md-6 col-lg-4">I’m on the left</div>
+<div class="col-sm-9 col-md-6 col-lg-8">I’m on the right</div>
+
+Example : mixin in less
+<div class="left-and-right">
+  <div class="left">I'm on the left</div>
+  <div class="right">I'm on the right</div>
+</div>
+
+@@@ LESS:
+.left-and-right {
+  .make-row();
+  .left {
+    .make-sm-column(1);
+    .make-md-column(7);
+    .make-lg-column(4);
+  }
+  .right {
+    .make-sm-column(11);
+    .make-md-column(5);
+    .make-lg-column(8);
+  }
+}
+
+[ ---  end  ---- ]
+
+=== [ topic ][ full width fluid content ] ===
+[ --- start ---- ]
+.my-fluid-container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
 [ ---  end  ---- ]
 
 === [ topic ][ example ][ pagination ] ===
@@ -299,4 +371,10 @@ need correct version of nodejs (version 0.6.19 is not usable!)
 sudo apt-get remove nodejs
 
 add the path to the latest node binary
+[ ---  end  ---- ]
+
+=== [ topic ][ vertical spacer ] ===
+[ --- start ---- ]
+.spacer5 { height: 5px; width: 100%; font-size: 0; margin: 0; padding: 0; border: 0; display: block; }
+.spacer10 { height: 10px; width: 100%; font-size: 0; margin: 0; padding: 0; border: 0; display: block; }
 [ ---  end  ---- ]

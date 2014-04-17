@@ -81,19 +81,6 @@ If you received an error that said Access denied for user 'root'@'localhost' (us
 [ --- start ---- ]
 rails new my_app
 cd my_app
-ls
-
-app/    -- models, views and controllers code
-bin/    -- helper
-config/ -- app, database, & route config
-db/     -- database schema and migrations
-Gemfile -- specify the required gems
-lib/    -- 
-log/    -- applications logging directory
-public/ -- webroot of the application
-test/   -- tests, agile development
-tmp/
-vendor/
 
 Example :
 $ rails new blog
@@ -142,7 +129,52 @@ edit_comment GET    /comments/:id/edit(.:format) comments#edit
              PATCH  /posts/:id(.:format)         posts#update
              PUT    /posts/:id(.:format)         posts#update
              DELETE /posts/:id(.:format)         posts#destroy
+
+/// run in development evnvironment
 $ rails server
+/// run in production evnvironment
+$ rails server -e production
+[ ---  end  ---- ]
+
+=== [ topic ][ project ][ structure ] ===
+[ --- start ---- ]
+app/    -- models, views and controllers code
+          == /model: class definition (e.g. post.rb)
+bin/    -- helper
+config/ -- app, database, & route config
+          == database.yml (specify database Rails will use)
+db/     -- database schema and migrations
+Gemfile -- specify the required gems
+lib/    -- 
+log/    -- applications logging directory
+public/ -- webroot of the application
+test/   -- tests, agile development
+tmp/
+vendor/
+
+Title: post.rb
+class Post < ActiveRecord::Base
+end
+
+Title: db/migrate/<timestamp>_create_posts.rb
+class CreatePosts < ActiveRecord::Migration
+  def change
+    create_table :posts do |t|
+      t.string :title
+      t.text :body
+
+      t.timestamps
+    end
+  end
+end
+
+Title: config/database.yml
+development:
+  adapter: sqlite3
+  database: db/development.sqlite3
+  pool: 5
+  timeout: 5000
+
 [ ---  end  ---- ]
 
 === [ topic ][ philosophy ] ===
@@ -162,7 +194,7 @@ Title: Dont Repeat Yourself - DRY
   - every piece of info should have a single, unambiguous representation
   - duplication of code fragments throughout an application is diff to
   maintain
-  - with ActiveRecords, once a model is specified, the database column name
+  - with ActiveRecord, once a model is specified, the database column name
   will be determined automatically
   - a modification to system element propagete the changes uniformly
   - this makes it easier to use code generators and auto build system
@@ -205,6 +237,128 @@ http://railsapps.github.io/rails-heroku-tutorial.html
 [ --- start ---- ]
 > ruby --version
 > rails --version
+[ ---  end  ---- ]
+
+=== [ topic ][ shell ][ interactive ] ===
+[ --- start ---- ]
+- interactive ruby shell
+> irb
+> a=2+2
+> a.class
+> a.methods
+
+- rails console (with rails development environment, e.g. Post class)
+> rails console
+> p = Post.new(:title => "My First Post", :body => "Life is great!")
+// insert into database
+> p.save
+> Post.all
+> Post.first
+[ ---  end  ---- ]
+
+=== [ topic ][ ActiveRecord ][ association ] ===
+[ --- start ---- ]
+============================================================================
+relationship        model with no foreign key     model with foreign key
+============================================================================
+one-to-one              has_one                        belongs_to
+many-to-one             has_many                       belongs_to
+many-to-many            has_and_belongs_to_many             *
+
+Example :
+class Post < ActiveRecord::Base
+  has_many :comment, dependent: :destroy
+end
+
+class Post < ActiveRecord::Base
+  has_many :comment
+end
+
+@@@ routes.rb:
+  resources :posts do 
+    resources :comments
+  end
+
+> rails console
+> p = Post.all
+> p[0].comment
+> p[0].comment.size
+> p[1].destroy
+(Ctrl-D)
+> rake routes
+
+Example : scenario
+Person has_many phone number
+Phone number has_one Person (as foreign key)
+
+Person has_one address
+Address has_many Person
+
+Person  -------  < (Address_people) - JOIN table
+   |                     V
+   |                     |
+   ^                     |
+Phone Number         (Address)
+(use foreign key)
+[ ---  end  ---- ]
+
+=== [ topic ][ database ][ migration ] ===
+[ --- start ---- ]
+> cd db
+> rm development.sqlite3 schema.rb
+/// recreate the database
+> rake db:migrate
+[ ---  end  ---- ]
+
+=== [ topic ][ database ][ ActiveRecord ] ===
+[ --- start ---- ]
+Entity = table
+Attribute = column
+- ActiveRecord can works with any SQL database
+- relational databases (MySQL etc) are not object-oriented
+- ActiveRecord encapsulates an object-relational mapping (ORM)
+
+Title: ORM Mapping
+Classes -> Table
+Objects -> Records (rows in a table)
+Attributes -> Record Values (Columns in a table)
+[ ---  end  ---- ]
+
+=== [ topic ][ ActiveRecord ][ Module ] ===
+[ --- start ---- ]
+- when create a new class by inheriting from ActiveRecord::Base. e.g. Post
+  == it is assume a database table will exist and is call posts (plural name)
+
+Example : get the record of a class (e.g. Post)
+> Post.all
+> Post.first
+// find_by(id)
+> Post.find_by(1)
+> Post.find_by_title("My First Post")
+- 
+[ ---  end  ---- ]
+
+=== [ topic ][ ActiveRecord ][ validation ] ===
+[ --- start ---- ]
+class Person < ActiveRecord::Base
+  validates_presence_of :name
+  validates_numericality_of :age, :only_integer => true
+  validates_confirmation_of :email
+  validates_length_of :password, :in => 8..20
+end
+
+Example :
+class Post < ActiveRecord::Base
+  has_many :comments, dependent: :destroy
+  validates_presence_of :title
+  validates_presence_of :body
+end
+
+class Post < ActiveRecord::Base
+  has_many :comment
+  validates_presence_of :post_id
+  validates_presence_of :body
+end
 [ ---  end  ---- ]
 
 === [ topic ][ rbenv ] ===
@@ -253,4 +407,10 @@ solution:
 // gem install will try to fix the missing dependency
 gem install rails
 gem install bundle
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ running old ruby 1.9.1 ] ===
+[ --- start ---- ]
+change the ruby path to point to
+#! /home/knxy/.rbenv/shims/ruby
 [ ---  end  ---- ]

@@ -694,6 +694,7 @@ body:before {
 - :hover has no effect on those using keyboard to navigate to the link
 - :focus will select the link that are currently under the keyboard 
 - :focus can be used on inputs and textarea
+- when do a mouse click, it will trigger :focus and :active state
 a:link {color:#FF0000;}          /* unvisited link  */ 
 a:visited {color:#00FF00;}       /* visited link    */ 
 a:hover {color:#FF00FF;}         /* mouse over link */ 
@@ -1752,6 +1753,48 @@ a {
 a:hover { color:red; background:yellow; }
 [ ---  end  ---- ]
 
+=== [ topic ][ animate ][ transform ] ===
+[ --- start ---- ]
+translate3d(x, y, z)
+
+Example : 20px right and up
+.foo { transform: translate3d(20px, 20px, 0px); }
+
+Example :
+.pictureContainer img {
+    position: relative;
+    top: 0px;
+    transition: transform .2s ease-in-out;
+}
+.pictureContainer img:hover {
+    transform: translate3d(0px, -150px, 0px);
+}
+
+Example :
+@keyframes bobble {
+    0% {
+        transform: translate3d(50px, 40px, 0px);
+        animation-timing-function: ease-in;
+    }
+    50% {
+        transform: translate3d(50px, 50px, 0px);
+        animation-timing-function: ease-out;
+    }
+    100% {
+        transform: translate3d(50px, 40px, 0px);
+    }
+}
+[ ---  end  ---- ]
+
+=== [ topic ][ animate ][ What's Wrong With Setting Margin, Top, Left? ] ===
+[ --- start ---- ]
+- each time margin, top, left is modified, browser recalculate whole layout
+- Using these properties and modifying their values sixty times a second as
+part of an animation or transition is definitely not great.
+-  set the position of the elements you are moving to fixed or absolute. This
+will avoid browser from recalculate the layout
+[ ---  end  ---- ]
+
 === [ topic ][ zoom ] ===
 [ --- start ---- ]
 - zoom / scale
@@ -1787,11 +1830,54 @@ Example 1:
 in	inch
 cm	centimeter
 mm	millimeter
-em	1em is equal to the current font size. 2em means 2 times the size of the current font. E.g., if an element is displayed with a font of 12 pt, then '2em' is 24 pt. The 'em' is a very useful unit in CSS, since it can adapt automatically to the font that the reader uses
+em	1em is equal to the current font size. 2em means 2 times the size of the
+    current font. E.g., if an element is displayed with a font of 12 pt, then
+    '2em' is 24 pt. The 'em' is a very useful unit in CSS, since it can adapt
+    automatically to the font that the reader uses
+rem evolution of em, relative to the top level html, than parent element
 ex	one ex is the x-height of a font (x-height is usually about half the font-size)
 pt	point (1 pt is the same as 1/72 inch)
 pc	pica (1 pc is the same as 12 points)
 px	pixels (a dot on the computer screen)
+
+Title: Proposal
+- use px @ HTML level
+- use rem @ module level
+- use em for actual text (h1, p...)
+
+Example :
+/* Document level adjustments */
+html {
+  font-size: 17px;
+}
+@media (max-width: 900px) {
+  html { font-size: 15px; {
+}
+@media (max-width: 400px) {
+  html { font-size: 13px; }
+}
+
+/* Modules will scale with document */
+.header {
+  font-size: 1.5rem;
+}
+.footer {
+  font-size: 0.75rem;
+}
+.sidebar {
+  font-size: 0.85rem;
+}
+
+/* Type will scale with modules */
+h1 {
+  font-size: 3em;
+}
+h2 {
+  font-size: 2.5em;
+}
+h3 {
+  font-size: 2em;
+}
 [ ---  end  ---- ]
 
 === [ topic ][ css Code Rule ] ===

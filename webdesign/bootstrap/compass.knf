@@ -1,0 +1,57 @@
+=== [ topic ][ compass ][ variable ] ===
+[ --- start ---- ]
+$ compass compile -e production --force
+output_style = (environment == :production) ? :compressed : :expanded
+[ ---  end  ---- ]
+
+=== [ topic ][ config properties ] ===
+[ --- start ---- ]
+[ ---  end  ---- ]
+
+=== [ topic ][ command line ] ===
+[ --- start ---- ]
+- image as grid place holder
+# 40px column, 10px gutter, 20px height at <images_dir>/grid.png
+compass grid-img 40+10
+# 40px column, 20px gutter, 28px height at <images_dir>/grid.png
+compass grid-img 40+20x28
+# 60px column, 20px gutter, 28px height at images/wide_grid.png
+compass grid-img 60+20x28 images/wide_grid.png
+
+- Print out statistics about your stylesheets
+compass stats
+
+- help
+compass help
+[ ---  end  ---- ]
+
+=== [ topic ][ vendor prefix ] ===
+[ --- start ---- ]
+Title: using comparess @include
+.round {
+    @include border-radius(4px);
+}
+
+output:
+.round {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;
+}
+
+Title: Compass default
+$experimental-support-for-mozilla : true !default;
+$experimental-support-for-webkit : true !default;
+$support-for-original-webkit-gradients : true !default;
+$experimental-support-for-opera : true !default;
+$experimental-support-for-microsoft : true !default;
+$experimental-support-for-khtml : true !default;
+
+Title: Override
+$experimental-support-for-opera:false;
+$experimental-support-for-khtml:false;
+@import "compass/css3";
+[ ---  end  ---- ]

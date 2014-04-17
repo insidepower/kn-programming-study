@@ -1,5 +1,7 @@
 === [ topic ][ first test ] ===
 [ --- start ---- ]
+compass create test
+
 - create a file test.scss. Put following:
 .test{
   color: blue;
@@ -265,6 +267,8 @@ p { color: #ff0000; }
 - when use !default after an assignment, if the variable has been declared 
   earlier, the previous declaration will be used
 - Variables with null values are treated as unassigned by !default:
+- e.g. we can write a variable and sass will not override the same variable
+  and include this variable before Bootstrap.
 
 Example :
 $content: "First content";
@@ -783,6 +787,30 @@ $debug 10em+12em;
 - @warn
 [ ---  end  ---- ]
 
+=== [ topic ][ bootstrap ][ sass ] ===
+[ --- start ---- ]
+gem install bootstrap-sass
+
+/// existing compass project
+# config.rb:
+require 'bootstrap-sass'
+> bundle exec compass install bootstrap
+
+/// new compass project
+bundle exec compass create my-new-project -r bootstrap-sass --using bootstrap
+[ ---  end  ---- ]
+
+=== [ topic ][ bootstrap ][ sass ][ explicit import ] ===
+[ --- start ---- ]
+cp $(bundle show bootstrap-sass)/vendor/assets/stylesheets/bootstrap.scss \
+ bootstrap-sass/sass/_bootstrap-custom.scss
+
+// Comment out components you do not want from bootstrap-custom
+@@@ in sass/application.sass, replace @import 'bootstrap':
+@import 'bootstrap-custom';
+
+[ ---  end  ---- ]
+
 === [ topic ][ problem ][ NoMethodError ] ===
 [ --- start ---- ]
 sudo gem update sass
@@ -790,4 +818,19 @@ sudo gem update sass
 $ gem list
 - if have listen v2.7.0 and v2.4.1, remove 2.7.0
 $ gem uninstall listen --version '2.7.0'
+[ ---  end  ---- ]
+
+=== [ topic ][ problem ][ could not locate gemfile ] ===
+[ --- start ---- ]
+running
+bundle exec compass create my-new-project -r bootstrap-sass --using bootstrap
+then return error: 
+Could not locate Gemfile
+
+Solution:
+run without the bundle exec
+> compass create my-new-project -r bootstrap-sass --using bootstrap
+
+reason:
+The documentation assumes you are using a Gemfile to manage the versioning of your Compass dependencies. This is a doc fail rather than one on your part, 
 [ ---  end  ---- ]

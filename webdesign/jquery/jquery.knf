@@ -225,6 +225,21 @@ $('#yourDivName').append('yourtHTML');
 $('#yourDivName').prepend('yourtHTML');
 [ ---  end  ---- ]
 
+=== [ topic ][ insert html tag ][ html ] ===
+[ --- start ---- ]
+Example : [ wrapAll ]
+$("li > a").each(function() {
+  $(this).contents().wrapAll("<span>");
+});
+
+<li><a href="...">testing</a></li>
+<li><a href="...">rich <b>c</b> with <i>i tags</i></a></li>
+
+Output:
+<li><a href="..."><span>testing</span></a></li>
+<li><a href="..."><span>rich <b>c</b> with <i>i tags</i></span></a></li> 
+[ ---  end  ---- ]
+
 === [ topic ][ changing ][ attribute ] ===
 [ --- start ---- ]
 Example 1:
@@ -450,6 +465,7 @@ $( "div.parent" ).next();
  
 // returns [] as No sibling exists before div.parent
 $( "div.parent" ).prev();
+$( "#id").prev(".selector")
  
 // Selecting all the next siblings of the selector:
  
@@ -523,8 +539,8 @@ $("*")                     Selects all elements
 $(this)                    Selects the current HTML element
 $("p.intro")               Selects all <p> elements with class="intro"
 $("p:first")               Selects the first <p> element
-$("ul                      li:first")    Selects the first <li> element of the first <ul>
-$("ul                      li:first-child")  Selects the first <li> element of every <ul>
+$("ul li:first")           Selects the first <li> element of the first <ul>
+$("ul li:first-child")     Selects the first <li> element of every <ul>
 $("[href]")                Selects all elements with an href attribute
 $("a[target='_blank']")    Selects all <a> elements with a target attribute value equal to "_blank"
 $("a[target!='_blank']")   Selects all <a> elements with a target attribute value NOT equal to "_blank"
@@ -640,6 +656,47 @@ $("#para :not([attr_all])")
 $("#para:not([attr_all])")
 - select those without attribute attr_all, then select those with id #para
 - elements without attribute attr_all would be a large set for jquery to work
+[ ---  end  ---- ]
+
+=== [ topic ][ selector ][ attribute ] ===
+[ --- start ---- ]
+[name|="value"] - elements with prefix, could be followed by a hyphen
+[name*="value"] - element contains a particular substring
+[name~="value"] - elements contains a particular word, where the word 
+                  delimited by space
+[name$="value"] - end exactly with given value
+[name="value"]  - contains exactly value
+[name!="value"] - don't have specific value
+[name^="value"] - beginning exactly with given value
+[name]          - attribute with any value
+
+Example : 
+- select href which contains "#" but not exactly just href
+- e.g. <a href="#section">
+$('a[href*=#]:not([href=#])').click(function() {
+
+[ ---  end  ---- ]
+
+=== [ topic ][ hash ][ this.hash ] ===
+[ --- start ---- ]
+- this.hash return the #id of it (not returning the class)
+
+Example :
+<a href="#foo" class="inpageLink">Click Me!<"/a>
+<a id="foo"></a>
+$('.inpageLink').click(function(){
+    var target = $(this.hash);  
+    // target = $("#foo") == document.getElemenById("foo")
+    if (target.length != 0) {
+        alert("found target" + this.hash);
+    }
+})
+- to include name, instead of id
+$(this.hash + ', a[name="' + this.hash.substr(1) + '"]')
+
+Example :
+this.hash             /// #section3
+this.hash.slice(1)    /// section3
 [ ---  end  ---- ]
 
 === [ topic ][ chaining ] ===
@@ -956,9 +1013,25 @@ myArray.sort( descending ); // [ 6, 4, 3, 1 ]
 
 [ ---  end  ---- ]
 
+=== [ topic ][ array ][ last ] ===
+[ --- start ---- ]
+var array=[1,2,3,4];
+var lastEl = array[array.length-1];
+- or - write it as a method
+Array.prototype.last = function() {return this[this.length-1];}
+var array = [1,2,3,4];
+var lastEl = array.last();
+[ ---  end  ---- ]
+
 === [ topic ][ string ][ operation ] ===
 [ --- start ---- ]
 $.trim() - remove space
+[ ---  end  ---- ]
+
+=== [ topic ][ integer ][ topic ] ===
+[ --- start ---- ]
+- 2 decimal places
+$("#number").val(parseFloat($("#number").val()).toFixed(2));
 [ ---  end  ---- ]
 
 === [ topic ][ web font ][ topic ] ===
@@ -1187,6 +1260,190 @@ $( "button" ).click(function () {
 });
 [ ---  end  ---- ]
 
+=== [ topic ][ event ][ handler ][ unbound ] ===
+[ --- start ---- ]
+off(event, function_name)
+
+Example :
+$( "#test" ).off( "click", obj.test );
+[ ---  end  ---- ]
+
+=== [ topic ][ ajax ][ context ] ===
+[ --- start ---- ]
+- the context after $.ajax return on success will be changed into the 
+  Ajax-related callback than the default invoking context
+
+Example : use original context before ajax is invoked
+$.ajax({
+    //...
+    context: this,
+    success: function(json) {
+         //...
+    }
+});
+
+- or -
+
+use $.proxy:
+$.ajax({
+    //...
+    success: $.proxy(function(json) {
+         //...
+    }, this)
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ function ][ prototype ] ===
+[ --- start ---- ]
+[ ---  end  ---- ]
+
+=== [ topic ][ json ][ parseJSON ] ===
+[ --- start ---- ]
+var result='{"rates":[{"meter":"30","rate":"0.15060","ppd":"10.000"}]}';
+console.log(result);
+$.each($.parseJSON(result), function (item, value) {
+    if (item == "rates") {
+        $.each(value, function (i, object) {
+            $.each(object, function (subI, subObject) {
+                console.log(subI + "=" + subObject);
+            });
+        });
+
+    }
+});
+[ ---  end  ---- ]
+
+=== [ topic ][ JSONP ][ topic ] ===
+[ --- start ---- ]
+JSONP or "JSON with padding" is a communication technique used in JavaScript
+programs running in web browsers to request data from a server in a different
+domain, something prohibited by typical web browsers because of the
+same-origin policy.
+[ ---  end  ---- ]
+
+=== [ topic ][ post ][ serialize ] ===
+[ --- start ---- ]
+<form name=register action='your.php' method="post">
+<input type="text" name="useremail">
+<button type=submit>
+</form>
+
+$('form[name="register"').submit(function(event){
+    event.preventDefault();
+    var formAction = $(this).attr('action');
+    // become useremail=xxx@email.com
+    var formData = $(this).serialize();
+
+    $.post(
+      formAction,
+      formData,
+      function(data){
+        if (1 == data ){
+          // on success
+          console.log("success!");
+        } else {
+          console.log("failed!");
+        }
+      }
+    )
+  })
+[ ---  end  ---- ]
+
+=== [ topic ][ data ][ custom data-attr ] ===
+[ --- start ---- ]
+<div data-customAttr="myValue">
+
+$('div').data('customAttr');
+[ ---  end  ---- ]
+
+=== [ topic ][ proxy ][ this ] ===
+[ --- start ---- ]
+- change the context of this
+
+syntax:
+jQuery.proxy( function, context )
+jQuery.proxy( context, name )
+  name- name of the function whose context will be changed
+jQuery.proxy( function, context [, additionalArguments ] )
+jQuery.proxy( context, name [, additionalArguments ] )
+
+Example : jQuery.proxy( function, context )
+<button type="button" id="test">Test</button>
+<script>
+var you = {
+  type: "person",
+  test: function( event ) {
+    $( "#log" ).append( this.type + "<br>" );
+  }
+};
+
+var youClick = $.proxy( you.test, you );
+
+$( "#test" )
+  // this === "person"
+  .on( "click", youClick )
+
+  // this === "<button> element (the default this)"
+  .on( "click", you.test );
+</script>
+
+Example : jQuery.proxy( context, name )
+var obj = {
+  name: "John",
+  test: function() {
+    $( "#log" ).append( this.name );
+    $( "#test" ).off( "click", obj.test );
+  }
+};
+$( "#btn" ).on( "click", jQuery.proxy( obj, "test" ) );
+
+Example : proxy
+<p><button type="button" id="test">Test</button></p>
+
+var me = {
+  type: "dog",
+ 
+  // Note that event comes *after* one and two
+  test: function( one, two, event ) {
+    $( "#log" )
+ 
+      // `one` maps to `you`, the 1st additional
+      // argument in the $.proxy function call
+      .append( "<h3>Hello " + one.type + ":</h3>" )
+ 
+      // The `this` keyword refers to `me`
+      // (the 2nd, context, argument of $.proxy)
+      .append( "I am a " + this.type + ", " )
+ 
+      // `two` maps to `they`, the 2nd additional
+      // argument in the $.proxy function call
+      .append( "and they are " + two.type + ".<br>" )
+ 
+      // The event type is "click"
+      .append( "Thanks for " + event.type + "ing." )
+ 
+      // The clicked element is `event.target`,
+      // and its type is "button"
+      .append( "the " + event.target.type + "." );
+  }
+};
+ 
+var you = { type: "cat" };
+var they = { type: "fish" };
+ 
+// Set up handler to execute me.test() in the context
+// of `me`, with `you` and `they` as additional arguments
+var proxy = $.proxy( me.test, me, you, they );
+ 
+$( "#test" )
+  .on( "click", proxy );
+output:
+Hello cat:
+
+I am a dog, and they are fish.
+Thanks for clicking.the button.
+[ ---  end  ---- ]
+
 === [ topic ][ animate ] ===
 [ --- start ---- ]
 $(selector).hide(speed,callback);
@@ -1347,6 +1604,18 @@ $(document).ready(function(){
 });
 [ ---  end  ---- ]
 
+=== [ topic ][ offset ][ position ] ===
+[ --- start ---- ]
+.offset() : relative to document
+.position() : relative to parent
+
+Example :
+var offset = $("#id").offset();
+console.log(offset.top, offset.left);
+// setting the offset of an element
+$( "p:last" ).offset({ top: 10, left: 30 });
+[ ---  end  ---- ]
+
 === [ topic ][ navigate to ] ===
 [ --- start ---- ]
 Example :
@@ -1362,6 +1631,107 @@ function scrollToAnchor(aid){
 $("#link").click(function() {
    scrollToAnchor('id3');
 });
+[ ---  end  ---- ]
+
+=== [ topic ][ regular expression ][ match ] ===
+[ --- start ---- ]
+Example :
+var color_reg=/(:? *)([a-zA-Z_-]+)/;
+var color=color_reg.exec($("#btn-color").html());
+color="&color="+color[color.length-1]; color;
+
+ 
+Title: Number
+//select integers only
+var intRegex = /[0-9 -()+]+$/;   
+//match any ip address
+var ipRegex = '\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b';  
+//match number in range 0-255
+var num0to255Regex = '^([01][0-9][0-9]|2[0-4][0-9]|25[0-5])$';
+//match number in range 0-999 
+var num0to999Regex = '^([0-9]|[1-9][0-9]|[1-9][0-9][0-9])$';
+//match ints and floats/decimals
+var floatRegex = '[-+]?([0-9]*\.[0-9]+|[0-9]+)'; 
+//Match Any number from 1 to 50 inclusive
+var number1to50Regex = /(^[1-9]{1}$|^[1-4]{1}[0-9]{1}$|^50$)/gm;
+
+Title: valiation
+//match email address
+var emailRegex = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$'; 
+//match credit card numbers
+var creditCardRegex = '^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$'; 
+//match username
+var usernameRegex = '/^[a-z0-9_-]{3,16}$/'; 
+//match password
+var passwordRegex = '/^[a-z0-9_-]{6,18}$/'; 
+//Match 8 to 15 character string with at least one upper case letter, one lower case letter, and one digit (useful for passwords).
+var passwordStrengthRegex = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15})/gm; 
+//match elements that could contain a phone number
+var phoneNumber = /[0-9-()+]{3,20}/;
+
+Title: date
+//MatchDate (e.g. 21/3/2006)
+var dateRegex = /(\d{1,2}\/\d{1,2}\/\d{4})/gm; 
+//match date in format MM/DD/YYYY
+var dateMMDDYYYRegex = '^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$'; 
+//match date in format DD/MM/YYYY
+var dateDDMMYYYRegex = '^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$';
+
+Title: url
+//match a url
+var urlRegex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'; 
+//match a url slug (letters/numbers/hypens)
+var urlslugRegex = '/^[a-z0-9-]+$/'; 
+//match a url string (Fixes spaces and querystrings)
+var urlRegex = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-=?]*)*\/?/
+
+Title: whitespace
+//select whitespace
+var whiteSpaceRegex = '^[ \t]+'; 
+//select whitespace and tabs
+var whiteSpaceRegex = '^[ \t]+|[ \t]+$';  
+//select whitespace and linebreaks
+var whiteSpaceRegex = '[ \t\r\n]';  
+//replace newline characters with <br /> tags
+newLineToBr = function(str) { return str.replace(/(\r\n|[\r\n])/g, '<br />'); }
+
+Title: domain name
+//match domain name (with HTTP)
+var domainRegex = /(.*?)[^w{3}\.]([a-zA-Z0-9]([a-zA-Z0-9\-]{0,65}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}/igm; 
+//match domain name (www. only) 
+var domainRegex = /[^w{3}\.]([a-zA-Z0-9]([a-zA-Z0-9\-]{0,65}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}/igm; 
+//match domain name (alternative)
+var domainRegex = /(.*?)\.(com|net|org|info|coop|int|com\.au|co\.uk|org\.uk|ac\.uk|)/igm; 
+//match sub domains: www, dev, int, stage, int.travel, stage.travel
+var subDomainRegex = /(http:\/\/|https:\/\/)?(www\.|dev\.)?(int\.|stage\.)?(travel\.)?(.*)+?/igm;
+
+Title: image
+//Match jpg, gif or png image   
+var imageRegex = /([^\s]+(?=\.(jpg|gif|png))\.\2)/gm; 
+//match all images
+var imgTagsRegex = /<img.+?src=\"(.*?)\".+?>/ig;  
+//match just .png images
+<img.+?src=\"(.*?.png)\".+?>
+
+Title: other useful
+//match RGB (color) string
+var rgbRegex = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/;  
+//match hex (color) string
+var hexRegex = '/^#?([a-f0-9]{6}|[a-f0-9]{3})$/'; 
+//Match Valid hexadecimal colour code
+var hexRegex = /(#?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?)/gm; 
+//match a HTML tag (v1)
+var htmlTagRegex = '/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/'; 
+//match HTML Tags (v2)
+var htmlTagRegex = /(\<(/?[^\>]+)\>)/gm; 
+//match /product/123456789
+var productUrlRegex = '(\/product\/)?+[0-9]+';  
+//Match Letters, numbers and hyphens
+var lnhRegex = /([A-Za-z0-9-]+)/gm;  
+//match all .js includes    
+var jsTagsRegex = /<script.+?src=\"(.+?\.js(?:\?v=\d)*).+?script>/ig;  
+//match all .css includes
+var cssTagsRegex = /<link.+?href=\"(.+?\.css(?:\?v=\d)*).+?>/ig;
 [ ---  end  ---- ]
 
 === [ topic ][ callback ] ===

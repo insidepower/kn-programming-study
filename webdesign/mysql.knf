@@ -4,6 +4,7 @@ mysql -h host -u user -p
 /// from same machine then can omit host
 mysql -u root -p
 quit
+mysql -u root -h 127.0.0.1 -p
 [ ---  end  ---- ]
 
 === [ topic ][ database ][ design ][ normalizing ] ===
@@ -127,6 +128,67 @@ Title: Backup and Restore remotely
 mysql> GRANT ALL ON menagerie.* TO 'your_mysql_name'@'your_client_host';
 [ ---  end  ---- ]
 
+=== [ topic ][ permission ][ denied ] ===
+[ --- start ---- ]
+- mysql user table prefers explicit match over wildcard
+
+Example :
+// using existing linux user (which may not exists in mysql)
+// this will resort to use ''@localhost
+mysqladmin ping
+mysqladmin -uroot ping
+
+Example :
+MariaDB [uangelic]> show grants for ''@localhost;
++--------------------------------------+
+| Grants for @localhost                |
++--------------------------------------+
+| GRANT USAGE ON *.* TO ''@'localhost' |
++--------------------------------------+
+- this explains why running the command (as Linux user) without password works
+$ mysqladmin ping
+
+user 'root' can match either [1] the explicit 'root'@localhost' row or [2] the
+wildcard ''@'localhost' row. Since there's an explicit entry for [1] in the
+table mysql.user, it'll be used. This in turn requires a password so when i
+try to connect as 'root' without a password i'm rejected. - See more at:
+http://www.tikalk.com/alm/solution-mysql-error-1045-access-denied-userlocalhost-breaks-openstack#sthash.9uOzWoDy.dpuf
+
+[ ---  end  ---- ]
+
+=== [ topic ][ first topic ][ topic ] ===
+[ --- start ---- ]
+The password is stored in /etc/mysql/debian.cnf
+# Automatically generated for Debian scripts. DO NOT TOUCH!
+[client]
+host = localhost
+user = debian-sys-maint
+password = TOP-SECRET
+socket = /var/run/mysqld/mysqld.sock
+[mysql_upgrade]
+password = TOP-SECRET
+
+#replace the password from debian.cnf
+INSERT INTO `mysql`.`user` (
+  `Host`, `User`, `Password`, `Select_priv`, `Insert_priv`, `Update_priv`,
+  `Delete_priv`, `Create_priv`, `Drop_priv`, `Reload_priv`, `Shutdown_priv`,
+  `Process_priv`, `File_priv`, `Grant_priv`, `References_priv`, `Index_priv`,
+  `Alter_priv`, `Show_db_priv`, `Super_priv`, `Create_tmp_table_priv`,
+  `Lock_tables_priv`, `Execute_priv`, `Repl_slave_priv`, `Repl_client_priv`,
+  `Create_view_priv`, `Show_view_priv`, `Create_routine_priv`,
+  `Alter_routine_priv`, `Create_user_priv`, `ssl_type`, `ssl_cipher`,
+  `x509_issuer`, `x509_subject`, `max_questions`, `max_updates`,
+  `max_connections`, `max_user_connections`)
+VALUES (
+  'localhost',
+  'debian-sys-maint',
+  password('TOP-SECRET'),
+  'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y',
+  'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N', 'N', 'N', '', '', '', '', 0,
+  0, 0, 0);
+FLUSH PRIVILEGES;
+[ ---  end  ---- ]
+
 === [ topic ][ basic ] ===
 [ --- start ---- ]
 - letter insensitive
@@ -138,7 +200,7 @@ select user();
 SELECT SIN(PI()/4), (4+1)*5;
 [ ---  end  ---- ]
 
-=== [ topic ][ example ] ===
+=== [ topic ][ example ] ==d
 [ --- start ---- ]
 SELECT * FROM my_table WHERE name = 'Smith AND age < 30;
 [ ---  end  ---- ]
@@ -180,6 +242,7 @@ create table MyTable
 === [ topic ][ table ][ rename ] ===
 [ --- start ---- ]
 RENAME TABLE  `database-name`.`table-name` TO  `database-name`.`new-table-name`;
+RENAME TABLE `sku` to `universal_prdt_code`;
 [ ---  end  ---- ]
 
 === [ topic ][ insert ] ===
@@ -197,6 +260,12 @@ insert_time=now()
 INSERT INTO debugger (time_now, query_comment) VALUES (now(), @query);
 [ ---  end  ---- ]
 
+=== [ topic ][ table ][ alter ] ===
+[ --- start ---- ]
+Title: add comment
+ALTER TABLE  `sku` COMMENT =  'Store Keeping Unit';
+[ ---  end  ---- ]
+
 === [ topic ][ select ] === 
 [ --- start ---- ]
 select * from customrs;
@@ -204,6 +273,15 @@ SELECT column_name,column_name FROM table_name;
 
 - only return distinct (unique )
 select distinct COLUMN_NAME,COLUMN_NAME from TABLE_NAME;
+
+Example : [ select ][ = ]
+mysql> SET @t1=1, @t2=2, @t3:=4;
+mysql> SELECT @t1, @t2, @t3, @t4 := @t1+@t2+@t3;
++------+------+------+--------------------+
+| @t1  | @t2  | @t3  | @t4 := @t1+@t2+@t3 |
++------+------+------+--------------------+
+|    1 |    2 |    4 |                  7 | 
++------+------+------+--------------------+
 [ ---  end  ---- ]
 
 === [ topic ][ select ][ vertical ] ===
@@ -347,7 +425,7 @@ UPDATE products
   SET quantity = quantity + 50, price = 1.23 WHERE name = 'Pen Red';
 
 Example : value from another table
-update cl_wedding_gown t1 
+update wedding_gown t1 
     ->   inner join sizes t2
     -> set t1.size=t2.id
     -> where t1.size_old=t2.size;
@@ -358,6 +436,21 @@ UPDATE tableB t1
              ON t1.name = t2.name
 SET t1.value = IF(t2.value > 0, t2.value, t1.value)
 WHERE t2.name = 'Joe'
+[ ---  end  ---- ]
+
+=== [ topic ][ update ][ select ] ===
+[ --- start ---- ]
+Example :
+UPDATE nominees
+SET    votes = (select votes + 1
+                FROM   (SELECT votes
+                        FROM   nominees
+                        WHERE  ID = 1) T) 
+[ ---  end  ---- ]
+
+=== [ topic ][ update ][ column on same table ] ===
+[ --- start ---- ]
+update sku set universal_prdt_code=prdt_code;
 [ ---  end  ---- ]
 
 === [ topic ][ delete ] ===
@@ -779,6 +872,8 @@ create user username@"Ideapad-Lenovo" identified by 'password';
 create user username@'192.168.1.1200' identified by 'password';
 GRANT ALL ON databaseName.* TO 'your_mysql_name'@'your_client_host';
 flush privileges;
+
+create wineuser@"greengrass.local" identified by 'ua';
 [ ---  end  ---- ]
 
 === [ topic ][ grant ][ topic ] ===
@@ -797,6 +892,10 @@ GRANT SELECT ON my_database.* TO my_user@"%" IDENTIFIED BY 'my_password';
 REVOKE ALL PRIVILEGES ON my_database.* FROM my_user@"%";
 GRANT SELECT, UPDATE ON my_database.* TO my_user@"%" IDENTIFIED BY
 'my_password';
+
+Example :
+grant all privileges on uangelic.* to "user"@'%' identified by 'newpassword';
+flush privileges;
 [ ---  end  ---- ]
 
 === [ topic ][ table ][ create ] ===
@@ -846,7 +945,7 @@ SHOW [FULL] COLUMNS {FROM | IN} tbl_name [{FROM | IN} db_name]
 
 - "full" : include collation and comments, as well as the privileges 
 - displays information about the columns in a given table
-> show full columns from prdt_cl_wedding_gown;
+> show full columns from prdt_wedding_gown;
 
 Example : drop foreign key
 > SHOW CREATE TABLE products \G
@@ -885,6 +984,13 @@ assessmentid | q1 | q2 | q3 | q4 | q5 | q6
 alter table product_catalogue modify category char(20) not null
 [ ---  end  ---- ]
 
+=== [ topic ][ table ][ rename ][ column ] ===
+[ --- start ---- ]
+ALTER TABLE xyz CHANGE manufacurerid manufacturerid INT;
+ALTER TABLE  `table_name` CHANGE  `column_name_old`  `column_name_new`
+VARCHAR( 5 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'EG'
+[ ---  end  ---- ]
+
 === [ topic ][ explain vs describe ] ===
 [ --- start ---- ]
 - explain : give information about query, so it can be optimized
@@ -902,6 +1008,19 @@ MySQL unique keys can be NULL whereas primary keys cannot be
 
 [ ---  end  ---- ]
 
+=== [ topic ][ primary key ][ dropping ] ===
+[ --- start ---- ]
+- change auto_increment before dropping primary key
+
+ALTER TABLE user_customer_permission MODIFY id INT NOT NULL;
+ALTER TABLE user_customer_permission DROP PRIMARY KEY;
+[ ---  end  ---- ]
+
+=== [ topic ][ unique key vs primary key ] ===
+[ --- start ---- ]
+
+[ ---  end  ---- ]
+
 === [ topic ][ foreign key ] ===
 [ --- start ---- ]
 - foreign key ("column name") references "referenced-table-name"
@@ -912,6 +1031,10 @@ MySQL unique keys can be NULL whereas primary keys cannot be
 - MySQL require indexes on foreign keys and referenced keys
   == so that foreign key can be checked fast and not require a 
      table scan
+- disable foreign key check 
+SET FOREIGN_KEY_CHECKS=0;
+- enable foreign key check
+SET FOREIGN_KEY_CHECKS=1;
 
 syntax:
 ALTER TABLE tableName ADD FOREIGN KEY (columnNmae) 
@@ -976,6 +1099,27 @@ Create Table: CREATE TABLE `prdt_admin` (
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
+[ ---  end  ---- ]
+
+=== [ topic ][ foreign key ][ show ] ===
+[ --- start ---- ]
+Title: table constraints
+select * 
+from information_schema.table_constraints
+where constraint_schema = 'YOUR_DB'
+
+Title: column constraints
+select *
+from information_schema.key_column_usage
+where constraint_schema = 'YOUR_DB'
+
+Title: referential constraints
+select *
+from information_schema.referential_constraints
+where constraint_schema = 'YOUR_DB'
+
+Title: default
+information_schema.columns.column_default
 [ ---  end  ---- ]
 
 === [ topic ][ optimization ][ index ] ===
@@ -1391,6 +1535,43 @@ BOOL, BOOLEAN
 - the values TRUE and FALSE are merely aliases for 1 and 0
 [ ---  end  ---- ]
 
+=== [ topic ][ variable ][ topic ] ===
+[ --- start ---- ]
+data type:  integer, decimal, floating-point, 
+            binary or nonbinary string, or NULL value
+- Assignment of decimal and real values does not preserve the 
+precision or scale of the value. 
+- don't assign and read the value within the same statement
+Example : /// WRONG!!!!!
+SELECT @a, @a:=@a+1, ...;
+Example : /// WRONG!!!!!
+mysql> SET @a='test';
+mysql> SELECT @a,(@a:=20) FROM tbl_name;
+Example : /// WRONG!!!!!
+SELECT (@aa:=id) AS a, (@aa+3) AS b FROM tbl_name HAVING b=5;
+
+
+Example :
+DECLARE total_count INT DEFAULT 0
+SET total_count = 10;
+
+Example :
+mysql> SET @v1 = b'1000001';
+mysql> SET @v2 = CAST(b'1000001' AS UNSIGNED), @v3 = b'1000001'+0;
+mysql> SELECT @v1, @v2, @v3;
+
+Example :
+declare v_queueid int unsigned default 1;
+select queueid into v_queueid from queues where
+ description like 'Main' and enabled = 1 limit 1;
+[ ---  end  ---- ]
+
+=== [ topic ][ variable ][ @var vs var ] ===
+[ --- start ---- ]
+@var is user define variable, value persist until session ends
+var is either local procedure variable, input/output parameter, system var
+[ ---  end  ---- ]
+
 === [ topic ][ control flow function ] ===
 [ --- start ---- ]
 Title: If
@@ -1458,7 +1639,7 @@ $query= "SELECT user_id FROM users WHERE username=? and password=?";	//query def
 [ --- start ---- ]
 Example :
 CREATE PROCEDURE test(IN offset INT, IN limit INT)
-SET @query = "SELECT * FROM cl_wedding_gowns WHERE publish=1 LIMIT ?, ? ";
+SET @query = "SELECT * FROM wedding_gowns WHERE publish=1 LIMIT ?, ? ";
 SET @a = offset;
 SET @b = limit;
 
@@ -1584,6 +1765,27 @@ included, don't allow table names to be specified dynamically.
 - use EXECUTE IMMEDIATE
 - or use EXECUTE
 
+Example : // select into passed parameter
+CREATE PROCEDURE CountOrderByStatus(
+         IN orderStatus VARCHAR(25),
+         OUT total INT)
+BEGIN
+    SELECT count(orderNumber)
+    INTO total
+    FROM orders
+    WHERE status = orderStatus;
+END$$
+
+Example :
+CREATE PROCEDURE set_counter(INOUT count INT(4),IN inc INT(4))
+BEGIN
+    SET count = count + inc;
+END$$
+
+@@@ caller:
+CALL CountOrderByStatus('Shipped',@total);
+SELECT @total;
+
 Example :
 CREATE PROCEDURE test_proc(IN serviceName VARCHAR(10), IN newsInfoTable VARCHAR(100))
 BEGIN                  
@@ -1601,6 +1803,47 @@ BEGIN
 END$$
 [ ---  end  ---- ]
 
+=== [ topic ][ parameter markers ][ ? ] ===
+[ --- start ---- ]
+"Parameter markers can be used only where data values should appear, not for
+SQL keywords, identifiers, and so forth."
+
+/// WRONG!!!
+PREPARE stmt FROM 'SELECT id INTO ? FROM t1';
+- We can not use ? instead of identifier (variable name).
+
+/// WRONG!!!
+PREPARE stmt FROM 'SELECT id INTO rid FROM t1';
+in the string being prepared, then server simply do not know what that rid refers to in statement you are trying to prepare. 
+- use user-defined variables instead
+Example :
+SET @tbl_id := 0;
+  SET @qry = 'SELECT count(*) into @tb_id FROM zerodb2.tour_template';
+  PREPARE statement FROM @qry;
+  EXECUTE statement;
+[ ---  end  ---- ]
+
+=== [ topic ][ procedure ][ conditional ][ if ] ===
+[ --- start ---- ]
+DELIMITER //
+
+CREATE FUNCTION SimpleCompare(n INT, m INT)
+  RETURNS VARCHAR(20)
+
+  BEGIN
+    DECLARE s VARCHAR(20);
+
+    IF n > m THEN SET s = '>';
+    ELSEIF n = m THEN SET s = '=';
+    ELSE SET s = '<';
+    END IF;
+
+    SET s = CONCAT(n, ' ', s, ' ', m);
+
+    RETURN s;
+  END //
+[ ---  end  ---- ]
+
 === [ topic ][ procedure ][ show ] ===
 [ --- start ---- ]
 HOW PROCEDURE STATUS;
@@ -1615,6 +1858,48 @@ SHOW PROCEDURE STATUS
 WHERE Db = DATABASE() AND Type = 'PROCEDURE'
 
 SELECT * FROM INFORMATION_SCHEMA.ROUTINES
+
+SHOW WARNINGS;
+[ ---  end  ---- ]
+
+=== [ topic ][ procedure ][ variable ] ===
+[ --- start ---- ]
+- prepare statement can only select into user define variable @xxx
+
+CREATE PROCEDURE test_delete (
+  OUT myparam INT 
+)
+BEGIN
+
+  -- SELECT 5 INTO myparam;
+  SET @query='SELECT 5 INTO myparam';
+
+
+END$$
+
+[ ---  end  ---- ]
+
+=== [ topic ][ procedure ][ loop ] ===
+[ --- start ---- ]
+CREATE PROCEDURE sp_fetch_forever( )
+READS SQL DATA
+BEGIN
+  DECLARE l_dept_id INT;
+  DECLARE c_dept CURSOR FOR
+  SELECT department_id
+  FROM departments;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET l_last_row=1;
+
+  OPEN c_dept;
+  dept_cursor: LOOP
+    FETCH c_dept INTO l_dept_id;
+    IF (l_last_row=1) THEN
+      LEAVE dept_cursor;
+    END IF;
+  END LOOP dept_cursor;
+
+  CLOSE c_dept;
+END
 [ ---  end  ---- ]
 
 === [ topic ][ case ][ topic ] ===
@@ -1676,6 +1961,39 @@ set user_session_id = 2;
 else set user_session_id =3;
 
 end case; 
+[ ---  end  ---- ]
+
+=== [ topic ][ case ][ check column value and assign new value ] ===
+=== [ topic ][ case ][ control flow ] ===
+[ --- start ---- ]
+- IFNULL(exprA, exprB) : if exprA not null, return exprA else exprB
+Example :
+DECLARE tpasses INT;
+DECLARE tfails INT;
+
+SELECT 
+    SUM(CASE WHEN score >= 40 THEN 1 ELSE 0 END) AS passes, 
+    SUM(CASE WHEN score < 40 THEN 1 ELSE 0 END) AS fails 
+INTO tpasses, tfails 
+FROM scores
+
+Example :
+mysql> SELECT IF(1>2,2,3);
+        -> 3
+mysql> SELECT IF(1<2,'yes','no');
+        -> 'yes'
+mysql> SELECT IF(STRCMP('test','test1'),'no','yes');
+        -> 'no'
+
+Example :
+mysql> SELECT IFNULL(1,0);
+        -> 1
+mysql> SELECT IFNULL(NULL,10);
+        -> 10
+mysql> SELECT IFNULL(1/0,10);
+        -> 10
+mysql> SELECT IFNULL(1/0,'yes');
+        -> 'yes'
 [ ---  end  ---- ]
 
 === [ topic ][ mysqli_fetch ][ MYSQLI_ASSOC ] ===
@@ -1851,6 +2169,76 @@ update xx
 commit; /// actual commit take places
 [ ---  end  ---- ]
 
+=== [ topic ][ group by ] ===
+[ --- start ---- ]
+- using COUNT(*) to count occurrences of (GROUP BY)
+
+Example :
+SELECT prdt_category, prdt_code, COUNT(*)
+  FROM wedding_gowns
+  GROUP BY prdt_category, prdt_code;
+
+Output:
++---------------+-----------+----------+
+| prdt_category | prdt_code | COUNT(*) |
++---------------+-----------+----------+
+| WG            |      0001 |        1 |
+| WG            |      0002 |        1 |
+| WG            |      0003 |        1 |
+| WG            |      0004 |        1 |
+
+Example :
+- Returns a count of the number of rows with different non-NULL expr values
+SELECT COUNT(DISTINCT results) FROM student;
+
+Example :
+- returns a string result with the concatenated non-NULL values from a group.
+- It returns NULL if there are no non-NULL values
+SELECT student_name,
+    ->     GROUP_CONCAT(test_score)
+    ->     FROM student
+    ->     GROUP BY student_name;
+
+- or -
+
+mysql> SELECT student_name,
+    ->     GROUP_CONCAT(DISTINCT test_score
+    ->               ORDER BY test_score DESC SEPARATOR ' ')
+    ->     FROM student
+    ->     GROUP BY student_name;
+
+Example :
+SELECT student_name, MIN(test_score), MAX(test_score)
+    ->        FROM student
+    ->        GROUP BY student_name;
+
++--------------+-----------------+--------------+
+| student_name | MIN(  `score` ) | MAX( score ) |
++--------------+-----------------+--------------+
+| stua         |              30 |           50 |
+| stub         |             100 |          100 |
+| stuc         |              70 |           70 |
+| stud         |              80 |           99 |
++--------------+-----------------+--------------+
+
+if without group by:
+SELECT  `student_name` , MIN(  `score` ) , MAX( score )  FROM  `scores`;
++--------------+-----------------+--------------+
+| student_name | MIN(  `score` ) | MAX( score ) |
++--------------+-----------------+--------------+
+| stua         |              30 |          100 |
++--------------+-----------------+--------------+
+[ ---  end  ---- ]
+
+=== [ topic ][ duplicate ] ===
+[ --- start ---- ]
+- find the duplicates of same name and email
+SELECT name, email, COUNT(*)
+FROM users
+GROUP BY name, email
+HAVING COUNT(*) > 1
+[ ---  end  ---- ]
+
 === [ topic ][ to learn ] ===
 [ --- start ---- ]
 EXPLAIN PARTITIONS SELECT * FROM statistics WHERE user_id = 1\G
@@ -1869,6 +2257,85 @@ TIMESTAMP - range of '1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC.
           - This does not occur for other types such as DATETIME.
 [ ---  end  ---- ]
 
+=== [ topic ][ term ] ===
+[ --- start ---- ]
+SKU = stock keeping unit (to distinctly identified an item in stock)
+UPC = Universal Product Code (can link to many SKU, as a general code)
+
+Others:
+International Article Number (EAN), Global Trade Item Number (GTIN),
+[ ---  end  ---- ]
+
+=== [ topic ][ auto_increment ][ offset ] ===
+[ --- start ---- ]
+- reset auto_increment value to start at offset
+- useful e.g. when some row are deleted, and wish to start from there
+- MySQL does not permit you to decrease the AUTO_INCREMENT value
+
+Example : next increment number would be 12
+CREATE TABLE IF NOT EXISTS `sizes` (
+  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `size` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+[ ---  end  ---- ]
+
+=== [ topic ][ alter ][ reset ][ auto_increment ] ===
+[ --- start ---- ]
+- MySQL does not permit you to decrease the AUTO_INCREMENT value
+ALTER TABLE tablename AUTO_INCREMENT = 22;
+[ ---  end  ---- ]
+
+=== [ topic ][ auto_increment ][ check ] ===
+[ --- start ---- ]
+Example :
+SELECT `AUTO_INCREMENT`
+FROM  INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'DatabaseName'
+AND   TABLE_NAME   = 'TableName';
+
+Example :
+SHOW TABLE STATUS FROM `DatabaseName` LIKE 'TableName' ;
+[ ---  end  ---- ]
+
+=== [ topic ][ advanced ][  ] ===
+[ --- start ---- ]
+SELECT PLD.FROM, IF(PLD.isAvailable, 'Yes', 'No') AS isAvailable, PL.*
+FROM (
+    SELECT   plid
+      ,MIN(available_date) AS `FROM`
+      ,MAX(available_date) AS `UNTIL`
+      ,DATEDIFF('2012-04-01', '2012-04-10') = COUNT(*) - 1 AS `isAvailable`
+    FROM     parking_lot_dates
+    WHERE    available_date BETWEEN '2012-04-01' AND '2012-04-10'
+    GROUP BY plid
+  ) AS PLD LEFT JOIN parking_lots AS PL ON (
+    PLD.isAvailable AND PL.plid = PLD.plid
+  )
+WHERE NOT (PLD.isAvailable AND PL.plid IS NULL)
+[ ---  end  ---- ]
+
+=== [ topic ][ temporary table ][  ] ===
+[ --- start ---- ]
+- ENGINE=MEMORY is not supported when table contains BLOB/TEXT columns
+
+Example :
+CREATE TEMPORARY TABLE IF NOT EXISTS table2 AS (SELECT * FROM table1)
+
+Example : - with index, PRIMARY key works also
+CREATE TEMPORARY TABLE IF NOT EXISTS 
+  temp_table ( INDEX(col_2) ) 
+ENGINE=MyISAM 
+AS (
+  SELECT col_1, coll_2, coll_3
+  FROM mytable
+)
+
+Example :
+CREATE TEMPORARY TABLE temp1 ENGINE=MEMORY 
+as (select * from table1)
+[ ---  end  ---- ]
+
 === [ topic ][ help ][  ] ===
 [ --- start ---- ]
 > ?
@@ -1881,6 +2348,62 @@ TIMESTAMP - range of '1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC.
 [ --- start ---- ]
 underline : index
 dotted line: column with comment
+[ ---  end  ---- ]
+
+=== [ topic ][ error ][ code ] ===
+[ --- start ---- ]
+1036 HY000 Table ‘%s’ is read only
+ERROR 1045 (28000): Access denied for user
+[ ---  end  ---- ]
+
+=== [ topic ][ debug ][ sql_mode ] ===
+[ --- start ---- ]
+Example :
+SET sql_mode='STRICT_ALL_TABLES'
+Create Table WidgetsMyISAM (
+     WidgetID Int Not Null
+    ,Name varchar(50) Not Null)
+Insert Into WidgetsMyISAM (WidgetID, Name)
+Values
+ (1,'Widget XYZ')
+,('a','Widget ABC');
+Output:
+ERROR 1366 (HY000): Incorrect integer value: 'a' for column 'WidgetID' at row 2
+mysql> Select * From WidgetsMyISAM;
++----------+------------+
+| WidgetID | Name       |
++----------+------------+
+|        1 | Widget XYZ |
++----------+------------+
+1 row in set (0.00 sec)
+
+Example :
+SET sql_mode='STRICT_TRANS_TABLES';
+Insert Into WidgetsMyISAM (WidgetID, Name)
+Values
+ (1,'Widget XYZ')
+,('a','Widget ABC');
+ 
+Query OK, 2 rows affected, 1 warning (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 1
+ 
+mysql> Show Warnings;
++---------+------+-------------------------------------------------------------+
+| Level   | Code | Message                                                     |
++---------+------+-------------------------------------------------------------+
+| Warning | 1366 | Incorrect integer value: 'a' for column 'WidgetID' at row 2 |
++---------+------+-------------------------------------------------------------+
+1 row in set (0.00 sec)
+ 
+Select * From WidgetsMyISAM;
+ 
++----------+------------+
+| WidgetID | Name       |
++----------+------------+
+|        1 | Widget XYZ |
+|        0 | Widget ABC |
++----------+------------+
+2 rows in set (0.00 sec)
 [ ---  end  ---- ]
 
 === [ topic ][ debug ][ prepared statement ] ===
@@ -1939,6 +2462,52 @@ uncomment following line
 general_log_file        = /var/log/mysql/mysql.log
 general_log             = 1
 sudo service mysql restart
+
+Example :
+SELECT @@global.general_log;
+SELECT @@global.general_log_file;
+SELECT @@global.log_output;
+SET GLOBAL general_log:=1;
+SET GLOBAL log_output := 'FILE';
+FLUSH LOGS;
+
+Example :
+- if cant restart mysql server, create it inside mysql
+CREATE TABLE `slow_log` (
+   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP 
+                          ON UPDATE CURRENT_TIMESTAMP,
+   `user_host` mediumtext NOT NULL,
+   `query_time` time NOT NULL,
+   `lock_time` time NOT NULL,
+   `rows_sent` int(11) NOT NULL,
+   `rows_examined` int(11) NOT NULL,
+   `db` varchar(512) NOT NULL,
+   `last_insert_id` int(11) NOT NULL,
+   `insert_id` int(11) NOT NULL,
+   `server_id` int(10) unsigned NOT NULL,
+   `sql_text` mediumtext NOT NULL,
+   `thread_id` bigint(21) unsigned NOT NULL
+  ) ENGINE=CSV DEFAULT CHARSET=utf8 COMMENT='Slow log'
+
+ CREATE TABLE `general_log` (
+   `event_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+                          ON UPDATE CURRENT_TIMESTAMP,
+   `user_host` mediumtext NOT NULL,
+   `thread_id` bigint(21) unsigned NOT NULL,
+   `server_id` int(10) unsigned NOT NULL,
+   `command_type` varchar(64) NOT NULL,
+   `argument` mediumtext NOT NULL
+  ) ENGINE=CSV DEFAULT CHARSET=utf8 COMMENT='General log'
+
+- Enable Query logging on the database
+SET global general_log = 1;
+SET global log_output = 'table';
+
+- View the log
+select * from mysql.general_log
+
+- Disable Query logging on the database
+SET global general_log = 0;
 [ ---  end  ---- ]
 
 === [ topic ][ problem ][ not able to add foreign key ] ===
